@@ -1,0 +1,22 @@
+{
+  "name": "ainn-maping-translator",
+  "version": "1.0.0",
+  "description": "Translate Mapping to Resolver",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/oeg-upm/ainn-mapping-translator.git"
+  },
+  "author": "Ahmad Alobaid and Freddy Priyatna",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/oeg-upm/ainn-mapping-translator/issues"
+  },
+  "homepage": "https://github.com/oeg-upm/ainn-mapping-translator#readme",
+  "dependencies": {
+    "express": "^4.16.3"
+  }
+}

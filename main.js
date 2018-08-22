@@ -11,10 +11,16 @@ const bodyParser = require('body-parser')
 const express = require('express')
 const app = express()
 const urlencodedParser = bodyParser.urlencoded({ extended: false })
+app.set('view engine', 'pug')
 
 
 app.get('/', (req, res) =>
   res.send('Hello World!'))
+
+
+app.get('/test', function (req, res) {
+  res.render('transform', {message: 'Hello there!' })
+})
 
 app.post('/transform', urlencodedParser, function (req, res) {
   if (!req.body) return res.sendStatus(400)
@@ -44,7 +50,7 @@ function transform(prog_lang, map_lang, dataset_type){
 }
 
 function   create_resolver(prog_lang, map_lang, dataset_type){
-  
+
 }
 
 

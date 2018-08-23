@@ -18,9 +18,14 @@ app.get('/', (req, res) =>
   res.send('Hello World!'))
 
 
-app.get('/test', function (req, res) {
+app.get('/testAhmad', function (req, res) {
   get_jsonld_from_mapping()
-  res.render('transform', {message: 'Hello there!' })
+  res.render('transform', {message: 'Hello there from Ahmad!' })
+})
+
+app.get('/testFreddy', function (req, res) {
+  create_schema_python_mongodb()
+  res.render('transform', {message: 'Hello there from Freddy!' })
 })
 
 app.post('/transform', urlencodedParser, function (req, res) {
@@ -85,7 +90,24 @@ function create_schema(prog_lang, map_lang, dataset_type){
     
 }
 
+function create_schema_python_mongodb(){
+  var fs = require('fs');
+ 
+  fs.readFile('templates/python/mongodb/schema.hbs', 'utf8', function(err, contents) {
+    //console.log(contents);
+    var replacedContents = contents
 
+    replacedContents = replacedContents.replace(/{{MappingClass}}/g, 'Request');
+    replacedContents = replacedContents.replace(/{{MappingClassModel}}/g, 'RequestModel');
+    replacedContents = replacedContents.replace(/{{mappingClass}}/g, 'request');
+
+    console.log(replacedContents);
+
+  });
+ 
+  //console.log('after calling readFile');
+
+}
 
 
 

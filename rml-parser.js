@@ -35,12 +35,12 @@ exports.get_predicate_object_map_list = function(j){
 
 //input: original json and modified json and an id of PredicateObjectMap
 //output: predicate name (ie name)
-exports.get_predicate = function(predicate_object_map){
-    
+exports.get_predicate = function(j, predicate_object_map){
+    return "Get Predicate to be implemented"
 }
 
 //input: original json and modified json and an id of PredicateObjectMap
 //output: object column  (ie nombre)
-exports.get_object = function(predicate_object_map){
-    
+exports.get_object = function(j, predicate_object_map){
+    return "Get Object to be implemented"
 }

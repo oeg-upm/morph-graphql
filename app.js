@@ -98,7 +98,7 @@ function get_jsonld_from_mapping(mapping_url){
 
         pairsOfPredicateObject[predicate] = object
     }
-    console.log('pairsOfPredicateObject = ' + pairsOfPredicateObject)
+    console.log('pairsOfPredicateObject = ' + JSON.stringify(pairsOfPredicateObject))
 
     return 
 

@@ -2,15 +2,15 @@ import graphene
 from graphene.relay import Node
 from graphene_mongo import MongoengineConnectionField, MongoengineObjectType
 
-from models import {{ MappingClass }} as {{ MappingClassModel }}
+from models import {{MappingClass}} as {{MappingClassModel}}
 
-class {{ MappingClass }}(MongoengineObjectType):
+class {{MappingClass}}(MongoengineObjectType):
     class Meta:
-        model = {{ MappingClassModel}}
+        model = {{MappingClassModel}}
         interfaces = (Node, )
 
 class Query(graphene.ObjectType):
     node = Node.Field()
-    {{ mappingClass}}= MongoengineConnectionField({{ MappingClass}})
+    {{mappingClass}}= MongoengineConnectionField({{MappingClass}})
 
-schema = graphene.Schema(query=Query, types=[ {{ MappingClass}} ])
+schema = graphene.Schema(query=Query, types=[ {{MappingClass}} ])

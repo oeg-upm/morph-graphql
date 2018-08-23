@@ -1,2 +1,2 @@
-# ainn-mapping-translator
-Translate R2RML mappings intro Resolvers
+# mapping-translator
+Translate OBDA mappings (R2RML/RML) into GraphQL Resolvers

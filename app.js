@@ -23,8 +23,9 @@ app.get('/', (req, res) =>
 
 
 app.get('/testAhmad', function (req, res) {
-  get_jsonld_from_mapping()
-  res.render('transform', {message: 'Hello there from Ahmad!' })
+  //get_jsonld_from_mapping()
+    generate_schema("Persona", "Person",{"nombre": "name"})
+    res.render('transform', {message: 'Hello there from Ahmad!' })
 })
 
 app.get('/testFreddy', function (req, res) {
@@ -161,5 +162,68 @@ function getClassNameFromMapping(mappingURL){
 }
 
 
+function generate_schema(class_name, logical_source, predicate_object){
+    // class_name: in graph ql
+    // logical_source: table name
+    //predicate_object: mapping between graph ql attributes and concept properties in the db
+    var t=""
+    t+= generate_schema_header(logical_source)
+    t+= generate_schema_class(class_name, logical_source, predicate_object)
+    t+= generate_schema_body(class_name, logical_source)
+    console.log(t)
+}
+
+function generate_schema_header(logical_source){
+    var db_model_as_name = logical_source+"Model"
+    var t="import graphene\n"
+    t+="from graphene_mongo import MongoengineObjectType\n"
+    t+="from models import "+logical_source+" as "+db_model_as_name+"\n"
+    return t
+}
+
+function generate_schema_class(class_name, logical_source, predicate_object){
+    var db_model_as_name = logical_source+"Model"
+    var v_att,i,t = "class "+class_name+"(graphene.ObjectType):\n"
+    var predicates = Object.keys(predicate_object)
+    for(i=0;i<predicates.length;i++){
+        v_att = predicates[i]
+        t+="\t"+v_att+" = graphene.String()\n"
+    }
+    for(i=0;i<predicates.length;i++){
+        v_att = predicates[i]
+        a_att = predicate_object[predicates[i]]
+        t+="\tdef resolve_"+v_att+"(self, info):\n"
+        t+="\t\treturn "+db_model_as_name+".objects.get(id=self.id)."+a_att+"\n"
+    }
+    return t
+}
+
+function generate_schema_body(class_name, logical_source){
+    var db_model_as_name = logical_source+"Model"
+    var t=""
+    t+= "class Query(graphene.ObjectType):\n"
+    t+= "\t"+class_name+"s = graphene.List("+class_name+")\n"
+    t+= "\tdef resolve_personas(self, info):\n"
+    t+= "\t\treturn list("+db_model_as_name+".objects.all())\n"
+    t+= "schema = graphene.Schema(query=Query)\n"
+    return t
+}
+
+
+
 
 app.listen(8082, () => console.log('Example app listening on port 8082!'))
+
+
+
+
+
+
+
+
+
+
+
+
+
+

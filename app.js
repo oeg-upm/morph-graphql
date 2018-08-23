@@ -19,6 +19,7 @@ app.get('/', (req, res) =>
 
 
 app.get('/test', function (req, res) {
+  get_jsonld_from_mapping()
   res.render('transform', {message: 'Hello there!' })
 })
 
@@ -49,14 +50,39 @@ function transform(prog_lang, map_lang, dataset_type){
   create_resolver(prog_lang, map_lang, dataset_type)
 }
 
-function   create_resolver(prog_lang, map_lang, dataset_type){
-
+function get_jsonld_from_mapping(){
+    var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
+    var xhttp = new XMLHttpRequest();
+    xhttp.open("GET", "http://rdf-translator.appspot.com/convert/n3/json-ld/https://raw.githubusercontent.com/oeg-upm/mapping-translator/master/example/43LR95CY57.rml.ttl", false);
+    xhttp.send();
+    console.log('reply: ');
+    //console.log(xhttp.responseText);
+    var j = JSON.parse(xhttp.responseText);
+    var i;
+    var item
+    for(i=0;i<j["@graph"].length;i++){
+        item = j["@graph"][i];
+        if("rr:class" in item){
+            con_arr = item["rr:class"]["@id"].split(":")
+            model_name =  con_arr[con_arr.length-1]
+            console.log("model name: "+model_name)
+        }
+        else
+    }
 }
 
+function create_resolver(prog_lang, map_lang, dataset_type, mapping_data){
+    
+}
+
+function create_resolver_python_mongodb(mapping_data){
+        mapping_data
+}
 
 function create_schema(prog_lang, map_lang, dataset_type){
-
+    
 }
+
 
 
 

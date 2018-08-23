@@ -86,6 +86,20 @@ function get_jsonld_from_mapping(mapping_url){
 
     var listOfPredicateObject = rmlparser.get_predicate_object_map_list(j)
     console.log('listOfPredicateObject = ' + listOfPredicateObject)
+
+    var pairsOfPredicateObject = {}
+    for(i=0;i<listOfPredicateObject.length;i++){
+        predicateObjectMap = listOfPredicateObject[i];
+        predicate = rmlparser.get_predicate(j, predicateObjectMap)
+        console.log('predicate = ' + predicate)
+
+        object = rmlparser.get_object(j, predicateObjectMap)
+        console.log('object = ' + object)
+
+        pairsOfPredicateObject[predicate] = object
+    }
+    console.log('pairsOfPredicateObject = ' + pairsOfPredicateObject)
+
     return 
 
 

@@ -16,7 +16,7 @@
         <43LR95CY57>
         rml:logicalSource [
             #https://www.zaragoza.es/sede/servicio/equipamiento/category/740.json
-            rml:source  "740.json";
+            rml:source  "Personas";
             rml:referenceFormulation ql:JSONPath;
             rml:iterator "$.equipamiento.*"
 
@@ -24,13 +24,13 @@
 
         rr:subjectMap [
             rml:reference "id";
-            rr:class schema:Pharmacy
+            rr:class schema:Person
         ];
 
         
         rr:predicateObjectMap [
           rr:predicate schema:name;
-          rr:objectMap    [ rml:reference "title" ]
+          rr:objectMap    [ rml:reference "nombre" ]
         ];
     
     .

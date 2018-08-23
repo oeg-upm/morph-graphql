@@ -11,6 +11,9 @@ const bodyParser = require('body-parser')
 const express = require('express')
 const app = express()
 const urlencodedParser = bodyParser.urlencoded({ extended: false })
+var url = require('url');
+
+
 app.set('view engine', 'pug')
 app.use(express.static('views'))
 
@@ -24,7 +27,14 @@ app.get('/testAhmad', function (req, res) {
 })
 
 app.get('/testFreddy', function (req, res) {
-  create_schema_python_mongodb()
+  var q = url.parse(req.url, true).query;
+  var mappingUrl = q.mappingUrl
+  console.log("mappingUrl = "+ mappingUrl)
+
+  var className = getClassNameFromMapping(mappingUrl)
+  console.log("className = "+ className)
+
+  createSchemaPythonMongodb(className)
   res.render('transform', {message: 'Hello there from Freddy!' })
 })
 
@@ -90,16 +100,17 @@ function create_schema(prog_lang, map_lang, dataset_type){
     
 }
 
-function create_schema_python_mongodb(){
+function createSchemaPythonMongodb(className){
   var fs = require('fs');
  
   fs.readFile('templates/python/mongodb/schema.hbs', 'utf8', function(err, contents) {
     //console.log(contents);
     var replacedContents = contents
 
-    replacedContents = replacedContents.replace(/{{MappingClass}}/g, 'Request');
-    replacedContents = replacedContents.replace(/{{MappingClassModel}}/g, 'RequestModel');
-    replacedContents = replacedContents.replace(/{{mappingClass}}/g, 'request');
+    
+    replacedContents = replacedContents.replace(/{{MappingClass}}/g, className);
+    replacedContents = replacedContents.replace(/{{MappingClassModel}}/g, className + 'Model');
+    replacedContents = replacedContents.replace(/{{mappingClass}}/g, 'all' + className);
 
     console.log(replacedContents);
 
@@ -109,7 +120,30 @@ function create_schema_python_mongodb(){
 
 }
 
+function getClassNameFromMapping(mappingURL){
+  var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
+  var xhttp = new XMLHttpRequest();
+  xhttp.open("GET", "http://rdf-translator.appspot.com/convert/n3/json-ld/" + mappingURL, false);
+  xhttp.send();
+  //console.log('reply: ');
+  //console.log(xhttp.responseText);
+  var j = JSON.parse(xhttp.responseText);
+  var i;
+  var item
+  for(i=0;i<j["@graph"].length;i++){
+      item = j["@graph"][i];
+      if("rr:class" in item){
+          con_arr = item["rr:class"]["@id"].split(":")
+          model_name =  con_arr[con_arr.length-1]
+          console.log("model name: "+model_name)
+      }
+      else{
+          
+      }
+  }
 
+  return model_name
+}
 
 
 

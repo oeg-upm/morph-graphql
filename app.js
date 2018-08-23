@@ -45,8 +45,9 @@ app.get('/transform', function (req, res){
 app.post('/transform', urlencodedParser, function (req, res) {
   if (!req.body) return res.sendStatus(400)
       if(req.body.prog_lang && req.body.dataset_type && req.body.mapping_url){
-         tranform(req.body.prog_lang, "r2rml", req.body.dataset_type, req.body.mapping_url)
-      }
+         transform(req.body.prog_lang, "r2rml", req.body.dataset_type, req.body.mapping_url)
+         res.json({"msg": "success!"})
+       }
       else{
         res.json({ "error": "parameters are not passed" });
         //res.send(JSON.stringify({"error":'expecting map_lang, prog_lang, and dataset_type' }))

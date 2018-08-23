@@ -12,6 +12,7 @@ const express = require('express')
 const app = express()
 const urlencodedParser = bodyParser.urlencoded({ extended: false })
 var url = require('url');
+var rmlparser = require('./rml-parser');
 
 
 app.set('view engine', 'pug')
@@ -60,44 +61,11 @@ function transform(prog_lang, map_lang, dataset_type, mapping_url){
 }
 
 
-//input: original json and modified json
-//output: classnamne:String ie Person
-function get_class_name(j){
-    var model_name
-    for(i=0;i<j["@graph"].length;i++){
-        item = j["@graph"][i];
-        if("rr:class" in item){
-            con_arr = item["rr:class"]["@id"].split(":")
-            model_name =  con_arr[con_arr.length-1]
-            console.log("model name: "+model_name)
-            break
-        }
-    }
-    return model_name
-}
 
-//input: original json and modified json
-//output: tablename:String ie personas
-function get_logical_source(j){
-    //table
-}
 
-//input: original json and modified json
-//output: List of PredicateObjectMap id
-function get_predicate_object_map_list(j){
-}
 
-//input: original json and modified json and an id of PredicateObjectMap
-//output: predicate name (ie name)
-function get_predicate(predicate_object_map){
-    
-}
 
-//input: original json and modified json and an id of PredicateObjectMap
-//output: object column  (ie nombre)
-function get_object(predicate_object_map){
-    
-}
+
 
 function get_jsonld_from_mapping(mapping_url){
     var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
@@ -112,25 +80,13 @@ function get_jsonld_from_mapping(mapping_url){
     //var subjectMap_id
     //var class_name
     var graph
-    var className = get_class_name(j)
+    //var className = get_class_name(j)
+    var className = rmlparser.get_class_name(j)
     console.log('className = ' + className)
+
+    var listOfPredicateObject = rmlparser.get_predicate_object_map_list(j)
+    console.log('listOfPredicateObject = ' + listOfPredicateObject)
     return 
-
-    
-
-    
-    
-    for(i=0;i<j["@graph"].length;i++){
-        item = j["@graph"][i];
-        if("rr:class" in item){
-            //            class_name = item["rr:class"]["@id"].split(":")
-            con_arr = item["rr:class"]["@id"].split(":")
-            model_name =  con_arr[con_arr.length-1]
-            console.log("model name: "+model_name)
-            //data[model_name]=[]
-            break
-        }
-    }
 
     var pred_obj_map_ids = []
     for(i=0;i<j["@graph"].length;i++){
@@ -139,6 +95,7 @@ function get_jsonld_from_mapping(mapping_url){
             pred_obj_map_ids.push(item["rr:predicateObjectMap"]["@id"])
         }
     }
+    
     var pred_obj_map_list = []
     for(i=0;i<j["@graph"].length;i++){
         item = j["@graph"][i];
@@ -152,6 +109,7 @@ function get_jsonld_from_mapping(mapping_url){
 }
 
 function create_resolver(prog_lang, map_lang, dataset_type, mapping_data){
+  get_jsonld_from_mapping(mapping_data)
     
 }
 

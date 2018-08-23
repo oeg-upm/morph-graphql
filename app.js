@@ -59,11 +59,13 @@ function transform(prog_lang, map_lang, dataset_type, mapping_url){
 }
 
 
+//input: original json and modified json
+//output: classnamne:String ie Person
 function get_class_name(j){
     var model_name
     for(i=0;i<j["@graph"].length;i++){
         item = j["@graph"][i];
-        if("rr:class" in item){'
+        if("rr:class" in item){
             con_arr = item["rr:class"]["@id"].split(":")
             model_name =  con_arr[con_arr.length-1]
             console.log("model name: "+model_name)
@@ -73,14 +75,26 @@ function get_class_name(j){
     return model_name
 }
 
+//input: original json and modified json
+//output: tablename:String ie personas
 function get_logical_source(j){
     //table
 }
 
+//input: original json and modified json
+//output: List of PredicateObjectMap id
 function get_predicate_object_map_list(j){
 }
 
+//input: original json and modified json and an id of PredicateObjectMap
+//output: predicate name (ie name)
 function get_predicate(predicate_object_map){
+    
+}
+
+//input: original json and modified json and an id of PredicateObjectMap
+//output: object column  (ie nombre)
+function get_object(predicate_object_map){
     
 }
 
@@ -97,7 +111,9 @@ function get_jsonld_from_mapping(mapping_url){
     //var subjectMap_id
     //var class_name
     var graph
-    get_class_name(j)
+    var className = get_class_name(j)
+    console.log('className = ' + className)
+    return 
 
     
 
@@ -105,7 +121,7 @@ function get_jsonld_from_mapping(mapping_url){
     
     for(i=0;i<j["@graph"].length;i++){
         item = j["@graph"][i];
-        if("rr:class" in item){'
+        if("rr:class" in item){
             //            class_name = item["rr:class"]["@id"].split(":")
             con_arr = item["rr:class"]["@id"].split(":")
             model_name =  con_arr[con_arr.length-1]
@@ -119,7 +135,7 @@ function get_jsonld_from_mapping(mapping_url){
     for(i=0;i<j["@graph"].length;i++){
         item = j["@graph"][i];
         if("rr:predicateObjectMap" in item){
-            pred_obj_map_ids.push(item["rr:predicateObjectMap"]["@id"]
+            pred_obj_map_ids.push(item["rr:predicateObjectMap"]["@id"])
         }
     }
     var pred_obj_map_list = []
@@ -127,16 +143,7 @@ function get_jsonld_from_mapping(mapping_url){
         item = j["@graph"][i];
          for(k=0;k<pred_obj_map_ids.length;k++){
               if(item["id@"]==pred_obj_map_ids[k]){
-                    pred_obj_map_list.push({"predicate",""})
-                                  
-                                  
-                                  "rr:objectMap": {
-                                  "@id": "_:ub182bL32C27"
-                                  },
-                                  "rr:predicate": {
-                                  "@id": "schema:name"
-                                  }
-                                  
+                    pred_obj_map_list.push({"predicate":""})                                  
               }
         }
     }

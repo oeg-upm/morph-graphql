@@ -12,7 +12,7 @@ const express = require('express')
 const app = express()
 const urlencodedParser = bodyParser.urlencoded({ extended: false })
 app.set('view engine', 'pug')
-
+app.use(express.static('views'))
 
 app.get('/', (req, res) =>
   res.send('Hello World!'))

@@ -67,7 +67,9 @@ function get_jsonld_from_mapping(){
             model_name =  con_arr[con_arr.length-1]
             console.log("model name: "+model_name)
         }
-        else
+        else{
+            
+        }
     }
 }
 

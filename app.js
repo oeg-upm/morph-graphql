@@ -88,13 +88,7 @@ function get_jsonld_from_mapping(mapping_url){
     console.log('listOfPredicateObject = ' + listOfPredicateObject)
     return 
 
-    var pred_obj_map_ids = []
-    for(i=0;i<j["@graph"].length;i++){
-        item = j["@graph"][i];
-        if("rr:predicateObjectMap" in item){
-            pred_obj_map_ids.push(item["rr:predicateObjectMap"]["@id"])
-        }
-    }
+
     
     var pred_obj_map_list = []
     for(i=0;i<j["@graph"].length;i++){

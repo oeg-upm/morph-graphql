@@ -1,5 +1,18 @@
 html
   head
     title= Transform
-  body
-    h1= message
+
+    script(src="https://code.jquery.com/jquery-3.1.1.min.js",integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=",crossorigin="anonymous")
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.3/semantic.min.js")
+
+    link(href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.3/semantic.min.css", type="text/css", rel="stylesheet")
+
+    body
+        h1= message
+        <form class="ui form" method="POST" enctype="multipart/form-data">
+            <div class="field">
+            <label>Mapping URL</label>
+            <input type="text" name="mapping-url" placeholder="http://...">
+            </div>
+            <button class="ui button" type="submit">Submit</button>
+        </form>

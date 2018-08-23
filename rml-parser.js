@@ -35,8 +35,20 @@ exports.get_predicate_object_map_list = function(j){
 
 //input: original json and modified json and an id of PredicateObjectMap
 //output: predicate name (ie name)
-exports.get_predicate = function(j, predicate_object_map){
-    return "Get Predicate to be implemented"
+exports.get_predicate = function(json, predicate_object_map_id){
+    var i,something
+    for(i=0;i<json["@graph"].length;i++)
+{
+    item = json["@graph"][i]
+    if(item["@id"]==predicate_object_map_id){
+         something = item['rr:predicate']['@id']
+    }
+}
+
+
+
+
+    return something.split(":")[1]
 }
 
 //input: original json and modified json and an id of PredicateObjectMap

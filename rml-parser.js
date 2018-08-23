@@ -17,7 +17,16 @@ exports.get_class_name = function (j){
 //input: original json and modified json
 //output: tablename:String ie personas
 exports.get_logical_source = function (j){
-    //table
+    var logical_source
+    for(i=0;i<j["@graph"].length;i++){
+        item = j["@graph"][i];
+        if("rml:source" in item){
+            logical_source =  item["rml:source"]
+            console.log("logical_source: "+logical_source)
+            break
+        }
+    }
+    return logical_source
 }
 
 //input: original json and modified json

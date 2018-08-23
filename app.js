@@ -81,16 +81,18 @@ function get_jsonld_from_mapping(mapping_url){
     //var subjectMap_id
     //var class_name
     var graph
+    var res_data = {}
     //var className = get_class_name(j)
     var className = rmlparser.get_class_name(j)
+    res_data["class_name"] = className
     console.log('className = ' + className)
 
     var listOfPredicateObject = rmlparser.get_predicate_object_map_list(j)
     console.log('listOfPredicateObject = ' + listOfPredicateObject)
 
     var logicalSource = rmlparser.get_logical_source(j)
+    res_data["logical_source"] = logicalSource
     console.log('logicalSource = ' + logicalSource)
-
     var pairsOfPredicateObject = {}
     for(i=0;i<listOfPredicateObject.length;i++){
         predicateObjectMap = listOfPredicateObject[i];
@@ -102,31 +104,20 @@ function get_jsonld_from_mapping(mapping_url){
 
         pairsOfPredicateObject[predicate] = object
     }
+    res_data["predicate_object"] = pairsOfPredicateObject
     console.log('pairsOfPredicateObject = ' + JSON.stringify(pairsOfPredicateObject))
-
-    return 
-
-
-    
-    var pred_obj_map_list = []
-    for(i=0;i<j["@graph"].length;i++){
-        item = j["@graph"][i];
-         for(k=0;k<pred_obj_map_ids.length;k++){
-              if(item["id@"]==pred_obj_map_ids[k]){
-                    pred_obj_map_list.push({"predicate":""})                                  
-              }
-        }
-    }
-    
+    console.log('res_data: '+JSON.stringify(res_data))
+    return res_data
 }
 
 function create_resolver(prog_lang, map_lang, dataset_type, mapping_data){
-  get_jsonld_from_mapping(mapping_data)
-    
+  var data
+    data = get_jsonld_from_mapping(mapping_data)
+    generate_schema(data["class_name"], data["logical_source"], data["predicate_object"])
 }
 
 function create_resolver_python_mongodb(mapping_data){
-        mapping_data
+    
 }
 
 function create_schema(prog_lang, map_lang, dataset_type){

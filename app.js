@@ -210,8 +210,8 @@ function generate_schema_body(class_name, logical_source){
     var db_model_as_name = logical_source+"Model"
     var t=""
     t+= "class Query(graphene.ObjectType):\n"
-    t+= "\t"+class_name+"s = graphene.List("+class_name+")\n"
-    t+= "\tdef resolve_personas(self, info):\n"
+    t+= "\t"+class_name+" = graphene.List("+class_name+")\n"
+    t+= "\tdef resolve_"+class_name+"(self, info):\n"
     t+= "\t\treturn list("+db_model_as_name+".objects.all())\n"
     t+= "schema = graphene.Schema(query=Query)\n"
     return t

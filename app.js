@@ -47,7 +47,7 @@ app.get('/transform', function (req, res){
 app.post('/transform', urlencodedParser, function (req, res) {
   if (!req.body) return res.sendStatus(400)
       if(req.body.prog_lang && req.body.dataset_type && req.body.mapping_url){
-         transform(req.body.prog_lang, "r2rml", req.body.dataset_type, req.body.mapping_url)
+         transform(req.body.prog_lang, req.mapping_language, req.body.dataset_type, req.body.mapping_url)
          res.json({"msg": "success!"})
        }
       else{
@@ -61,55 +61,6 @@ function transform(prog_lang, map_lang, dataset_type, mapping_url){
   create_resolver(prog_lang, map_lang, dataset_type, mapping_url)
 }
 
-
-
-
-
-
-
-/*
-function get_jsonld_from_mapping(mapping_url){
-    var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
-    var xhttp = new XMLHttpRequest();
-    xhttp.open("GET", "http://rdf-translator.appspot.com/convert/n3/json-ld/"+mapping_url, false);
-    xhttp.send();
-    console.log('reply: ');
-    var j = JSON.parse(xhttp.responseText);
-    var i;
-    var item, new_item
-    var k, keys
-    //var subjectMap_id
-    //var class_name
-    var graph
-    var res_data = {}
-    //var className = get_class_name(j)
-    var className = rmlparser.get_class_name(j)
-    res_data["class_name"] = className
-    console.log('className = ' + className)
-
-    var listOfPredicateObject = rmlparser.get_predicate_object_map_list(j)
-    console.log('listOfPredicateObject = ' + listOfPredicateObject)
-
-    var logicalSource = rmlparser.get_logical_source(j)
-    res_data["logical_source"] = logicalSource
-    console.log('logicalSource = ' + logicalSource)
-    var pairsOfPredicateObject = {}
-    for(i=0;i<listOfPredicateObject.length;i++){
-        predicateObjectMap = listOfPredicateObject[i];
-        predicate = rmlparser.get_predicate(j, predicateObjectMap)
-        console.log('predicate = ' + predicate)
-
-        object = rmlparser.get_object(j, predicateObjectMap)
-        console.log('object = ' + object)
-
-        pairsOfPredicateObject[predicate] = object
-    }
-    res_data["predicate_object"] = pairsOfPredicateObject
-    console.log('pairsOfPredicateObject = ' + JSON.stringify(pairsOfPredicateObject))
-    console.log('res_data: '+JSON.stringify(res_data))
-    return res_data
-}
-*/
 
 function create_resolver(prog_lang, map_lang, dataset_type, mapping_data){
   var data

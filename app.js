@@ -3,6 +3,8 @@ const express = require('express')
 const app = express()
 const urlencodedParser = bodyParser.urlencoded({ extended: false })
 const url = require('url');
+const fs = require('fs');
+const uuid = require('uuid');
 const rmlparser = require('./rml-parser');
 //var mongodbpythontransformer = require('./transformers/mongodb/python/mongodb-python-transformer');
 const mongodbpythontransformer = require('./mongodb-python-transformer');
@@ -34,7 +36,12 @@ function create_resolver(prog_lang, map_lang, dataset_type, mapping_url){
     console.log("map_lang = "+ map_lang)
     console.log("dataset_type = "+ dataset_type)
     console.log("mapping_url = "+ mapping_url)
-
+    var random_text = uuid.v4();
+    var project_dir = './tmp/'+random_text+"/";
+    if (!fs.existsSync(project_dir)){
+        fs.mkdirSync(project_dir);
+    }
+    
     var data;
     if(map_lang == 'rml') {
         data = rmlparser.get_jsonld_from_mapping(mapping_url)
@@ -49,6 +56,11 @@ function create_resolver(prog_lang, map_lang, dataset_type, mapping_url){
 
         var schema = mongodbpythontransformer.generateSchema(class_name, logical_source, predicate_object)
         console.log("generated schema = \n" + schema )
+        fs.writeFile(project_dir+"schema.py", schema, function (err){
+                     if(err){
+                        console.log('ERROR: '+err);
+                     }
+                     });
     } else {
         console.log(prog_lang + "/" +  dataset_type + " is not supported yet!")
     }

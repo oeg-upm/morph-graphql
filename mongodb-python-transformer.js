@@ -1,3 +1,5 @@
+var fs = require('fs');
+
 exports.generate_schema_header = function(logical_source) {
     var db_model_as_name = logical_source+"Model"
     var t="import graphene\n"
@@ -35,7 +37,6 @@ exports.generate_schema_body = function(class_name, logical_source){
 }
 
 exports.createSchemaPythonMongodb = function(className){
-    var fs = require('fs');
    
     fs.readFile('templates/python/mongodb/schema.hbs', 'utf8', function(err, contents) {
       //console.log(contents);

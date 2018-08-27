@@ -62,12 +62,18 @@ function create_resolver(prog_lang, map_lang, dataset_type, mapping_url){
         var schema = mongodbpythontransformer.generateSchema(class_name, logical_source, predicate_object)
         console.log("generated schema = \n" + schema )
         
+        fs.writeFile(project_dir+"schema.py", schema, function (err){
+            if(err){
+               console.log('ERROR saving schema: '+err);
+            }
+            });
+
         var model = mongodbpythontransformer.generateModel(class_name, logical_source, predicate_object)
         console.log("generated model = \n" + model )
         
-        fs.writeFile(project_dir+"schema.py", schema, function (err){
+        fs.writeFile(project_dir+"model.py", model, function (err){
                      if(err){
-                        console.log('ERROR: '+err);
+                        console.log('ERROR saving model: '+err);
                      }
                      });
     } else {

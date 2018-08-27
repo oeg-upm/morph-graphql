@@ -81,6 +81,17 @@ function create_resolver(prog_lang, map_lang, dataset_type, mapping_url, db_name
         fs.writeFileSync(project_dir+"app.py", pyapp_content);
         fs.writeFileSync(project_dir+"requirements.txt", mongodbpythontransformer.generate_requirements());
         fs.writeFileSync(project_dir+"startup.sh", mongodbpythontransformer.generate_statup_script());
+        const { exec } = require('child_process');
+        exec('zip -r ./tmp/'+random_text+".zip ./tmp/"+random_text, function(err, stdout, stderr){
+             if (err) {
+            // node couldn't execute the command
+             console.log('ERROR: '+err)
+             return;
+             }
+             // the *entire* stdout and stderr (buffered)
+             console.log(`stdout: ${stdout}`);
+             console.log(`stderr: ${stderr}`);
+             });
     } else {
         console.log(prog_lang + "/" +  dataset_type + " is not supported yet!")
     }

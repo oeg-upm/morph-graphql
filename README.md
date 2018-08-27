@@ -15,3 +15,5 @@ Translate OBDA mappings (R2RML/RML) into GraphQL Resolvers
 5. Your graphql application is now ready at http://localhost:5000/graphql
 
 
+# Screenshot
+![screenshot](https://github.com/oeg-upm/mapping-translator/raw/master/example/screenshot.png)

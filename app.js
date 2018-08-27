@@ -60,7 +60,7 @@ function create_resolver(prog_lang, map_lang, dataset_type, mapping_url, db_name
         var predicate_object = data["predicate_object"]
 
         var schema = mongodbpythontransformer.generateSchema(class_name, logical_source, predicate_object)
-        console.log("generated schema = \n" + schema )
+        //console.log("generated schema = \n" + schema )
         
         fs.writeFile(project_dir+"schema.py", schema, function (err){
             if(err){
@@ -69,7 +69,7 @@ function create_resolver(prog_lang, map_lang, dataset_type, mapping_url, db_name
             });
 
         var model = mongodbpythontransformer.generateModel(class_name, logical_source, predicate_object)
-        console.log("generated model = \n" + model )
+        //console.log("generated model = \n" + model )
         
         fs.writeFile(project_dir+"models.py", model, function (err){
                      if(err){

@@ -5,12 +5,18 @@ exports.generate_schema_header = function(logical_source) {
     var t="import graphene\n"
     t+="from graphene_mongo import MongoengineObjectType\n"
     t+="from models import "+logical_source+" as "+db_model_as_name+"\n"
+    t+="def get_mapped_kwargs(mapping, vkwargs):\n"
+    t+="\toriginal_kwargs = {}\n"
+    t+="\tfor kw in vkwargs.keys():\n"
+    t+="\t\toriginal_kwargs[mapping[kw]] = vkwargs[kw]\n"
+    t+="\treturn original_kwargs\n"
+    console.log("Generating schema header\n\n\n\n\n\n")
     return t
 }
 
 exports.generate_schema_class = function(class_name, logical_source, predicate_object){
     var db_model_as_name = logical_source+"Model"
-    var v_att,i,t = "class "+class_name+"(graphene.ObjectType):\n"
+    var v_att,i,t = "\nclass "+class_name+"(graphene.ObjectType):\n"
     var predicates = Object.keys(predicate_object)
     for(i=0;i<predicates.length;i++){
         v_att = predicates[i]
@@ -22,16 +28,35 @@ exports.generate_schema_class = function(class_name, logical_source, predicate_o
         t+="\tdef resolve_"+v_att+"(self, info):\n"
         t+="\t\treturn "+db_model_as_name+".objects.get(id=self.id)."+a_att+"\n"
     }
-    return t
+    
+    var att_mapping = class_name+"_mappin"
+    var t_mapping = att_mapping + " = {\n"
+    for(i=0;i<predicates.length;i++){
+        v_att = predicates[i]
+        a_att = predicate_object[predicates[i]]
+        t_mapping+= "'"+v_att+"': '"+a_att+"',\n"
+    }
+    t_mapping+="}\n\n"
+    return t_mapping+t
 }
 
-exports.generate_schema_body = function(class_name, logical_source){
+exports.generate_schema_body = function(class_name, logical_source, predicate_object){
     var db_model_as_name = logical_source+"Model"
+    var i, att_mapping = class_name+"_mappin"
+    var predicates = Object.keys(predicate_object)
+    var filter_fields=""
+    for(i=0;i<predicates.length;i++){
+        v_att = predicates[i]
+        filter_fields+= "," + v_att + "=graphene.String()"
+    }
     var t=""
     t+= "class Query(graphene.ObjectType):\n"
-    t+= "\t"+class_name+" = graphene.List("+class_name+")\n"
-    t+= "\tdef resolve_"+class_name+"(self, info):\n"
-    t+= "\t\treturn list("+db_model_as_name+".objects.all())\n"
+    t+= "\t"+class_name+" = graphene.List("+class_name+filter_fields+")\n"
+//    t+= "\tdef resolve_"+class_name+"(self, info):\n"
+//    t+= "\t\treturn list("+db_model_as_name+".objects.all())\n"
+    t+= "\tdef resolve_"+class_name+"(self, info, **kwargs):\n"
+    t+= "\t\toriginal_kwargs = get_mapped_kwargs("+att_mapping+", kwargs)\n"
+    t+= "\t\treturn list("+db_model_as_name+".objects.filter(**original_kwargs))\n"
     t+= "schema = graphene.Schema(query=Query)\n"
     return t
 }
@@ -56,7 +81,7 @@ exports.createSchemaPythonMongodb = function(className){
     var schema =""
     schema += this.generate_schema_header(logical_source)
     schema += this.generate_schema_class(class_name, logical_source, predicate_object)
-    schema += this.generate_schema_body(class_name, logical_source)
+    schema += this.generate_schema_body(class_name, logical_source, predicate_object)
     return schema 
   }
 

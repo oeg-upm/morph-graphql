@@ -63,7 +63,7 @@ exports.generate_mutation = function(class_name, predicate_object){
     t+= "\n"
 
     t+= "class Mutation(graphene.ObjectType):\n"
-    t+= "\tcreate_" + class_name + " = Create" + class_name + ".Field()\n"
+    t+= "\tcreate_" + this.toLowerCaseFirstChar(class_name) + " = Create" + class_name + ".Field()\n"
 
    return t
 }

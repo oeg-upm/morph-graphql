@@ -62,3 +62,10 @@ exports.createSchemaPythonMongodb = function(className){
     schema += this.generate_schema_body(class_name, logical_source)
     return schema 
   }
+
+
+exports.generate_app = function(){
+    var content=fs.readFileSync('./example/persona-python-mongodb/app.py');
+    return content;
+}
+

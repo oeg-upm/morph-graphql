@@ -61,6 +61,9 @@ function create_resolver(prog_lang, map_lang, dataset_type, mapping_url){
                         console.log('ERROR: '+err);
                      }
                      });
+        var pyapp_content = mongodbpythontransformer.generate_app();
+        //console.log("pyapp_content: "+pyapp_content)
+        fs.writeFileSync(project_dir+"app.py", pyapp_content);
     } else {
         console.log(prog_lang + "/" +  dataset_type + " is not supported yet!")
     }

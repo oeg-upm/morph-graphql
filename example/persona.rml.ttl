@@ -16,7 +16,7 @@
         <43LR95CY57>
         rml:logicalSource [
             #https://www.zaragoza.es/sede/servicio/equipamiento/category/740.json
-            rml:source  "Personas";
+            rml:source  "personas";
             rml:referenceFormulation ql:JSONPath;
             rml:iterator "$.equipamiento.*"
 

@@ -40,24 +40,31 @@ exports.toLowerCaseFirstChar = function(str) {
     return str.substr( 0, 1 ).toLowerCase() + str.substr( 1 );
 }
 
-exports.generate_mutation = function(class_name, predicate_object){
+exports.generate_mutation = function(class_name, logical_source, predicate_object){
     var t="\n"
     t+= "class Create" + class_name +"(graphene.Mutation):\n"
     t+= "\tclass Arguments:\n"
+    /*
     var predicates = Object.keys(predicate_object)
     console.log("predicates = " + predicates)
-
     for(i=0;i<predicates.length;i++){
         t += "\t\t" +predicates[i] + "= graphene.String(required=True)\n"
     }
     t+= "\n"
-
+    */
+    
+    var objects = Object.values(predicate_object)
+    console.log("objects = " + objects)
+    for(i=0;i<objects.length;i++){
+        t += "\t\t" +objects[i] + "= graphene.String(required=True)\n"
+    }
+    t+= "\n"
 
     t+= "\t" + this.toLowerCaseFirstChar(class_name) + " = graphene.Field("+ class_name +")\n"
     t+= "\n"
 
     t+= "\tdef mutate(self, info, **kwargs):\n"
-    t+= "\t\t" + this.toLowerCaseFirstChar(class_name) + " = " + class_name + "Model(**kwargs)\n"
+    t+= "\t\t" + this.toLowerCaseFirstChar(class_name) + " = " + logical_source + "Model(**kwargs)\n"
     t+= "\t\t" + this.toLowerCaseFirstChar(class_name) + ".save()\n"
     t+= "\t\treturn Create" + class_name + "(" + this.toLowerCaseFirstChar(class_name) + "=" + this.toLowerCaseFirstChar(class_name) + ")\n"
     t+= "\n"
@@ -93,7 +100,7 @@ exports.createSchemaPythonMongodb = function(className){
     schema += "\n"
     schema += this.generate_schema_body(class_name, logical_source)
     schema += "\n"
-    schema += this.generate_mutation(class_name, predicate_object)
+    schema += this.generate_mutation(class_name, logical_source, predicate_object)
     schema += "\n"
     schema += "schema = graphene.Schema(query=Query, mutation=Mutation)\n"
     

@@ -49,7 +49,7 @@ app.get('/transform', function (req, res){
 app.post('/transform', urlencodedParser, function (req, res) {
   if (!req.body) return res.sendStatus(400)
       if(req.body.prog_lang && req.body.dataset_type && req.body.mapping_url){
-         transform(req.body.prog_lang, req.mapping_language, req.body.dataset_type, req.body.mapping_url)
+         transform(req.body.prog_lang, req.body.mapping_language, req.body.dataset_type, req.body.mapping_url)
          res.json({"msg": "success!"})
        }
       else{
@@ -64,8 +64,20 @@ function transform(prog_lang, map_lang, dataset_type, mapping_url){
 }
 
 
-function create_resolver(prog_lang, map_lang, dataset_type, mapping_data){
-    var data = rmlparser.get_jsonld_from_mapping(mapping_data)
+function create_resolver(prog_lang, map_lang, dataset_type, mapping_url){
+    console.log("prog_lang = "+ prog_lang)
+    console.log("map_lang = "+ map_lang)
+    console.log("dataset_type = "+ dataset_type)
+    console.log("mapping_url = "+ mapping_url)
+
+    var data;
+    if(map_lang == 'rml') {
+        data = rmlparser.get_jsonld_from_mapping(mapping_url)
+    } else {
+        console.log(map_lang + " is not supported yet!")
+    }
+
+    
     generate_schema(data["class_name"], data["logical_source"], data["predicate_object"])
 }
 
@@ -77,29 +89,6 @@ function create_schema(prog_lang, map_lang, dataset_type){
     
 }
 
-/*
-function createSchemaPythonMongodb(className){
-  var fs = require('fs');
- 
-  fs.readFile('templates/python/mongodb/schema.hbs', 'utf8', function(err, contents) {
-    //console.log(contents);
-    var replacedContents = contents
-
-    
-    replacedContents = replacedContents.replace(/{{MappingClass}}/g, className);
-    replacedContents = replacedContents.replace(/{{MappingClassModel}}/g, className + 'Model');
-    replacedContents = replacedContents.replace(/{{mappingClass}}/g, 'all' + className);
-
-    console.log(replacedContents);
-
-  });
- 
-  //console.log('after calling readFile');
-
-}
-*/
-
-
 
 function generate_schema(class_name, logical_source, predicate_object){
     // class_name: in graph ql
@@ -109,14 +98,14 @@ function generate_schema(class_name, logical_source, predicate_object){
     t+= mongodbpythontransformer.generate_schema_header(logical_source)
     t+= mongodbpythontransformer.generate_schema_class(class_name, logical_source, predicate_object)
     t+= mongodbpythontransformer.generate_schema_body(class_name, logical_source)
-    console.log(t)
+    console.log("generated resolver = \n" + t)
 }
 
 
 
 
 
-app.listen(8082, () => console.log('Example app listening on port 8082!'))
+app.listen(8082, () => console.log('Mapping Translator is listening on port 8082!'))
 
 
 

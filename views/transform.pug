@@ -16,11 +16,11 @@ html
 
 
             <form class="ui form" method="POST" >
-            <div class="field">
-            <label>Mapping Content</label>
-            <textarea></textarea>
-            </div>
-            <h3>OR</h3>
+            //- <div class="field">
+            //- <label>Mapping Content</label>
+            //- <textarea></textarea>
+            //- </div>
+            //- <h3>OR</h3>
             <div class="field">
             <label>Mapping URL</label>
             <input type="text" name="mapping_url" placeholder="http://...">
@@ -37,6 +37,11 @@ html
             <option value="mongodb">Mongo DB</option>
             </select>
             <br>
+            <label for="mapping_language_id">Select your mapping language </label>
+            <select class="ui dropdown" id='mapping_language_id' name='mapping_language' type='text'>
+            <option value="mongodb">RML</option>
+            </select>
+            <br>            
             <button class="ui button" type="submit">Submit</button>
             </form>
         </div>

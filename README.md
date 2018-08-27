@@ -17,3 +17,5 @@ Translate OBDA mappings (R2RML/RML) into GraphQL Resolvers
 
 # Screenshot
 ![screenshot](https://github.com/oeg-upm/mapping-translator/raw/master/example/screenshot.png)
+
+![screenshot-graphql](https://github.com/oeg-upm/mapping-translator/raw/master/example/screenshot-graphql.png)

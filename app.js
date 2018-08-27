@@ -43,7 +43,7 @@ app.get('/testFreddy', function (req, res) {
 })
 
 app.get('/transform', function (req, res){
-    res.render('transform', {message: 'Hello there from Ahmad!' })
+    res.render('transform', {message: 'Welcome to Mapping Translator!\nTranslate your OBDA mappings to GraphQL Resolvers'})
 })
 
 app.post('/transform', urlencodedParser, function (req, res) {
@@ -77,8 +77,12 @@ function create_resolver(prog_lang, map_lang, dataset_type, mapping_url){
         console.log(map_lang + " is not supported yet!")
     }
 
+    if(prog_lang == 'python' && dataset_type == 'mongodb') {
+        generate_schema(data["class_name"], data["logical_source"], data["predicate_object"])
+    } else {
+        console.log(prog_lang + "/" +  dataset_type + " is not supported yet!")
+    }
     
-    generate_schema(data["class_name"], data["logical_source"], data["predicate_object"])
 }
 
 function create_resolver_python_mongodb(mapping_data){

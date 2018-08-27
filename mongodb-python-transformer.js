@@ -53,3 +53,11 @@ exports.createSchemaPythonMongodb = function(className){
     //console.log('after calling readFile');
   
   }
+
+  exports.generateSchema = function(class_name, logical_source, predicate_object) {
+    var schema =""
+    schema += this.generate_schema_header(logical_source)
+    schema += this.generate_schema_class(class_name, logical_source, predicate_object)
+    schema += this.generate_schema_body(class_name, logical_source)
+    return schema 
+  }

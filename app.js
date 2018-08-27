@@ -24,7 +24,7 @@ app.get('/', (req, res) =>
 
 app.get('/testAhmad', function (req, res) {
   //get_jsonld_from_mapping()
-    generate_schema("Persona", "Person",{"nombre": "name"})
+    generate_schema("Person", "Persona",{"name": "nombre"})
     res.render('transform', {message: 'Hello there from Ahmad!' })
 })
 
@@ -67,7 +67,7 @@ function transform(prog_lang, map_lang, dataset_type, mapping_url){
 
 
 
-
+/*
 function get_jsonld_from_mapping(mapping_url){
     var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
     var xhttp = new XMLHttpRequest();
@@ -109,10 +109,11 @@ function get_jsonld_from_mapping(mapping_url){
     console.log('res_data: '+JSON.stringify(res_data))
     return res_data
 }
+*/
 
 function create_resolver(prog_lang, map_lang, dataset_type, mapping_data){
   var data
-    data = get_jsonld_from_mapping(mapping_data)
+    data = rmlparser.get_jsonld_from_mapping(mapping_data)
     generate_schema(data["class_name"], data["logical_source"], data["predicate_object"])
 }
 

@@ -75,3 +75,45 @@ exports.get_object = function(json, predicate_object_map_id){
 
     return omReference
 }
+
+exports.get_jsonld_from_mapping = function(mapping_url) {
+    var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
+    var xhttp = new XMLHttpRequest();
+    xhttp.open("GET", "http://rdf-translator.appspot.com/convert/n3/json-ld/"+mapping_url, false);
+    xhttp.send();
+    console.log('reply: ');
+    var j = JSON.parse(xhttp.responseText);
+    var i;
+    var item, new_item
+    var k, keys
+    //var subjectMap_id
+    //var class_name
+    var graph
+    var res_data = {}
+    //var className = get_class_name(j)
+    var className = this.get_class_name(j)
+    res_data["class_name"] = className
+    console.log('className = ' + className)
+
+    var listOfPredicateObject =  this.get_predicate_object_map_list(j)
+    console.log('listOfPredicateObject = ' + listOfPredicateObject)
+
+    var logicalSource = this.get_logical_source(j)
+    res_data["logical_source"] = logicalSource
+    console.log('logicalSource = ' + logicalSource)
+    var pairsOfPredicateObject = {}
+    for(i=0;i<listOfPredicateObject.length;i++){
+        predicateObjectMap = listOfPredicateObject[i];
+        predicate = this.get_predicate(j, predicateObjectMap)
+        console.log('predicate = ' + predicate)
+
+        object = this.get_object(j, predicateObjectMap)
+        console.log('object = ' + object)
+
+        pairsOfPredicateObject[predicate] = object
+    }
+    res_data["predicate_object"] = pairsOfPredicateObject
+    console.log('pairsOfPredicateObject = ' + JSON.stringify(pairsOfPredicateObject))
+    console.log('res_data: '+JSON.stringify(res_data))
+    return res_data
+}

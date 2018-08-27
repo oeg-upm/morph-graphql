@@ -29,7 +29,7 @@ exports.generate_schema_class = function(class_name, logical_source, predicate_o
         t+="\t\treturn "+db_model_as_name+".objects.get(id=self.id)."+a_att+"\n"
     }
     
-    var att_mapping = class_name+"_mappin"
+    var att_mapping = class_name+"_mapping"
     var t_mapping = att_mapping + " = {\n"
     for(i=0;i<predicates.length;i++){
         v_att = predicates[i]
@@ -42,7 +42,7 @@ exports.generate_schema_class = function(class_name, logical_source, predicate_o
 
 exports.generate_schema_body = function(class_name, logical_source, predicate_object){
     var db_model_as_name = logical_source+"Model"
-    var i, att_mapping = class_name+"_mappin"
+    var i, att_mapping = class_name+"_mapping"
     var predicates = Object.keys(predicate_object)
     var filter_fields=""
     for(i=0;i<predicates.length;i++){
@@ -52,14 +52,46 @@ exports.generate_schema_body = function(class_name, logical_source, predicate_ob
     var t=""
     t+= "class Query(graphene.ObjectType):\n"
     t+= "\t"+class_name+" = graphene.List("+class_name+filter_fields+")\n"
-//    t+= "\tdef resolve_"+class_name+"(self, info):\n"
-//    t+= "\t\treturn list("+db_model_as_name+".objects.all())\n"
     t+= "\tdef resolve_"+class_name+"(self, info, **kwargs):\n"
     t+= "\t\toriginal_kwargs = get_mapped_kwargs("+att_mapping+", kwargs)\n"
     t+= "\t\treturn list("+db_model_as_name+".objects.filter(**original_kwargs))\n"
-    t+= "schema = graphene.Schema(query=Query)\n"
+
     return t
 }
+
+exports.toLowerCaseFirstChar = function(str) {
+    return str.substr( 0, 1 ).toLowerCase() + str.substr( 1 );
+}
+
+exports.generate_mutation = function(class_name, logical_source, predicate_object){
+    var att_mapping = class_name+"_mapping"
+    var t="\n"
+    t+= "class Create" + class_name +"(graphene.Mutation):\n"
+    t+= "\tclass Arguments:\n"
+    
+    var predicates = Object.keys(predicate_object)
+    //var objects = Object.values(predicate_object)
+//    console.log("objects = " + objects)
+    for(i=0;i<predicates.length;i++){
+        t += "\t\t" +predicates[i] + "= graphene.String(required=True)\n"
+    }
+    t+= "\n"
+
+    t+= "\t" + this.toLowerCaseFirstChar(class_name) + " = graphene.Field("+ class_name +")\n"
+    t+= "\n"
+    t+= "\tdef mutate(self, info, **kwargs):\n"
+    t+= "\t\toriginal_kwargs = get_mapped_kwargs("+att_mapping+", kwargs)\n"
+    t+= "\t\t" + this.toLowerCaseFirstChar(class_name) + " = " + logical_source + "Model(**original_kwargs)\n"
+    t+= "\t\t" + this.toLowerCaseFirstChar(class_name) + ".save()\n"
+    t+= "\t\treturn Create" + class_name + "(" + this.toLowerCaseFirstChar(class_name) + "=" + this.toLowerCaseFirstChar(class_name) + ")\n"
+    t+= "\n"
+
+    t+= "class Mutation(graphene.ObjectType):\n"
+    t+= "\tcreate_" + this.toLowerCaseFirstChar(class_name) + " = Create" + class_name + ".Field()\n"
+
+   return t
+}
+
 
 exports.createSchemaPythonMongodb = function(className){   
     fs.readFile('templates/python/mongodb/schema.hbs', 'utf8', function(err, contents) {
@@ -80,9 +112,15 @@ exports.createSchemaPythonMongodb = function(className){
   exports.generateSchema = function(class_name, logical_source, predicate_object) {
     var schema =""
     schema += this.generate_schema_header(logical_source)
+    schema += "\n"
     schema += this.generate_schema_class(class_name, logical_source, predicate_object)
+    schema += "\n"
     schema += this.generate_schema_body(class_name, logical_source, predicate_object)
-    return schema 
+    schema += "\n"
+    schema += this.generate_mutation(class_name, logical_source, predicate_object)
+    schema += "\n"
+    schema += "schema = graphene.Schema(query=Query, mutation=Mutation)\n"
+    return schema
   }
 
 

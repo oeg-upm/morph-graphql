@@ -22,8 +22,9 @@ app.get('/transform', function (req, res){
 app.post('/transform', urlencodedParser, function (req, res) {
   if (!req.body) return res.sendStatus(400)
       if(req.body.prog_lang && req.body.dataset_type && req.body.mapping_url && req.body.db_name){
-        create_resolver(req.body.prog_lang, req.body.mapping_language, req.body.dataset_type, req.body.mapping_url, req.body.db_name)
-         res.json({"msg": "success!"})
+        var random_text = create_resolver(req.body.prog_lang, req.body.mapping_language, req.body.dataset_type, req.body.mapping_url, req.body.db_name)
+         //res.json({"msg": "success!"})
+         res.download('./tmp/'+random_text+".zip")
        }
       else{
         res.json({ "error": "parameters are not passed" });
@@ -62,7 +63,7 @@ function create_resolver(prog_lang, map_lang, dataset_type, mapping_url, db_name
         var schema = mongodbpythontransformer.generateSchema(class_name, logical_source, predicate_object)
         //console.log("generated schema = \n" + schema )
         
-        fs.writeFile(project_dir+"schema.py", schema, function (err){
+        fs.writeFileSync(project_dir+"schema.py", schema, function (err){
             if(err){
                console.log('ERROR saving schema: '+err);
             }
@@ -71,7 +72,7 @@ function create_resolver(prog_lang, map_lang, dataset_type, mapping_url, db_name
         var model = mongodbpythontransformer.generateModel(class_name, logical_source, predicate_object)
         //console.log("generated model = \n" + model )
         
-        fs.writeFile(project_dir+"models.py", model, function (err){
+        fs.writeFileSync(project_dir+"models.py", model, function (err){
                      if(err){
                         console.log('ERROR saving model: '+err);
                      }
@@ -81,8 +82,8 @@ function create_resolver(prog_lang, map_lang, dataset_type, mapping_url, db_name
         fs.writeFileSync(project_dir+"app.py", pyapp_content);
         fs.writeFileSync(project_dir+"requirements.txt", mongodbpythontransformer.generate_requirements());
         fs.writeFileSync(project_dir+"startup.sh", mongodbpythontransformer.generate_statup_script());
-        const { exec } = require('child_process');
-        exec('zip -r ./tmp/'+random_text+".zip ./tmp/"+random_text, function(err, stdout, stderr){
+        const { execSync } = require('child_process');
+        execSync('cd ./tmp;zip -r '+random_text+".zip "+random_text, function(err, stdout, stderr){
              if (err) {
             // node couldn't execute the command
              console.log('ERROR: '+err)
@@ -95,6 +96,7 @@ function create_resolver(prog_lang, map_lang, dataset_type, mapping_url, db_name
     } else {
         console.log(prog_lang + "/" +  dataset_type + " is not supported yet!")
     }
+    return random_text;
     
 }
 

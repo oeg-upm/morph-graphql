@@ -134,6 +134,7 @@ exports.generate_app = function(db_name){
     t+="app.add_url_rule('/graphql',view_func=GraphQLView.as_view('graphql',schema=schema, graphiql=True))\n"
     t+="if __name__ == '__main__':\n"
     t+="\tconnect('"+db_name+"', alias='default')\n"
+    t+="\tprint('You can access your GraphQL application on http://127.0.0.1:5000/graphql')\n"
     t+="\tapp.run()\n"
     //var content=fs.readFileSync('./example/persona-python-mongodb/app.py');
 //    var content=t

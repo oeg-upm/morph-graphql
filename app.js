@@ -36,6 +36,11 @@ function create_resolver(prog_lang, map_lang, dataset_type, mapping_url){
     console.log("map_lang = "+ map_lang)
     console.log("dataset_type = "+ dataset_type)
     console.log("mapping_url = "+ mapping_url)
+
+    if (!fs.existsSync("tmp")){
+        fs.mkdirSync("tmp");
+    }
+
     var random_text = uuid.v4();
     var project_dir = './tmp/'+random_text+"/";
     if (!fs.existsSync(project_dir)){
@@ -56,9 +61,19 @@ function create_resolver(prog_lang, map_lang, dataset_type, mapping_url){
 
         var schema = mongodbpythontransformer.generateSchema(class_name, logical_source, predicate_object)
         console.log("generated schema = \n" + schema )
+        
         fs.writeFile(project_dir+"schema.py", schema, function (err){
+            if(err){
+               console.log('ERROR saving schema: '+err);
+            }
+            });
+
+        var model = mongodbpythontransformer.generateModel(class_name, logical_source, predicate_object)
+        console.log("generated model = \n" + model )
+        
+        fs.writeFile(project_dir+"model.py", model, function (err){
                      if(err){
-                        console.log('ERROR: '+err);
+                        console.log('ERROR saving model: '+err);
                      }
                      });
     } else {

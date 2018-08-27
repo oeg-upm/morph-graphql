@@ -36,13 +36,11 @@ exports.generate_schema_body = function(class_name, logical_source){
     return t
 }
 
-exports.createSchemaPythonMongodb = function(className){
-   
+exports.createSchemaPythonMongodb = function(className){   
     fs.readFile('templates/python/mongodb/schema.hbs', 'utf8', function(err, contents) {
       //console.log(contents);
       var replacedContents = contents
-  
-      
+        
       replacedContents = replacedContents.replace(/{{MappingClass}}/g, className);
       replacedContents = replacedContents.replace(/{{MappingClassModel}}/g, className + 'Model');
       replacedContents = replacedContents.replace(/{{mappingClass}}/g, 'all' + className);
@@ -51,8 +49,7 @@ exports.createSchemaPythonMongodb = function(className){
   
     });
    
-    //console.log('after calling readFile');
-  
+    //console.log('after calling readFile');  
   }
 
   exports.generateSchema = function(class_name, logical_source, predicate_object) {
@@ -61,4 +58,20 @@ exports.createSchemaPythonMongodb = function(className){
     schema += this.generate_schema_class(class_name, logical_source, predicate_object)
     schema += this.generate_schema_body(class_name, logical_source)
     return schema 
+  }
+
+  exports.generateModel = function(class_name, logical_source, predicate_object) {
+      var model = ""
+      model += "from mongoengine import Document\n"
+      model += "from mongoengine.fields import StringField\n"
+      model += "\n\n"
+      model += "class " + logical_source + "(Document):\n"
+      model += "\tmeta = {'collection': '"+ logical_source +"'}\n"
+      var objects = Object.values(predicate_object)
+
+      for(i=0;i<objects.length;i++){
+        model += "\t" + objects[i] + "= StringField(required=True)"
+      }
+
+      return model
   }

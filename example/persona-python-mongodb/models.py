@@ -3,6 +3,6 @@ from mongoengine.fields import StringField
 
 
 class Personas(Document):
-    meta = {'collection': 'persona'}
+    meta = {'collection': 'personas'}
     nombre = StringField(required=True)
 

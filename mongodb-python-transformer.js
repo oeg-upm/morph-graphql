@@ -36,13 +36,11 @@ exports.generate_schema_body = function(class_name, logical_source){
     return t
 }
 
-exports.createSchemaPythonMongodb = function(className){
-   
+exports.createSchemaPythonMongodb = function(className){   
     fs.readFile('templates/python/mongodb/schema.hbs', 'utf8', function(err, contents) {
       //console.log(contents);
       var replacedContents = contents
-  
-      
+        
       replacedContents = replacedContents.replace(/{{MappingClass}}/g, className);
       replacedContents = replacedContents.replace(/{{MappingClassModel}}/g, className + 'Model');
       replacedContents = replacedContents.replace(/{{mappingClass}}/g, 'all' + className);
@@ -51,8 +49,7 @@ exports.createSchemaPythonMongodb = function(className){
   
     });
    
-    //console.log('after calling readFile');
-  
+    //console.log('after calling readFile');  
   }
 
   exports.generateSchema = function(class_name, logical_source, predicate_object) {
@@ -64,8 +61,45 @@ exports.createSchemaPythonMongodb = function(className){
   }
 
 
-exports.generate_app = function(){
-    var content=fs.readFileSync('./example/persona-python-mongodb/app.py');
+exports.generate_app = function(db_name){
+    var t="from flask import Flask\n"
+    t+="from flask_graphql import GraphQLView\n"
+    t+="from schema import schema\n"
+    t+="from mongoengine import connect\n"
+    t+="app = Flask(__name__)\n"
+    t+="app.debug = True\n"
+    t+="app.add_url_rule('/graphql',view_func=GraphQLView.as_view('graphql',schema=schema, graphiql=True))\n"
+    t+="if __name__ == '__main__':\n"
+    t+="\tconnect('"+db_name+"', alias='default')\n"
+    t+="\tapp.run()\n"
+    //var content=fs.readFileSync('./example/persona-python-mongodb/app.py');
+//    var content=t
+//    return content;
+    return t;
+}
+
+exports.generate_requirements = function(){
+    var content=fs.readFileSync('./example/persona-python-mongodb/requirements.txt');
     return content;
+}
+
+exports.generate_statup_script = function(){
+    var content=fs.readFileSync('./example/persona-python-mongodb/startup.sh');
+    return content;
+}
+
+exports.generateModel = function(class_name, logical_source, predicate_object) {
+      var model = ""
+      model += "from mongoengine import Document\n"
+      model += "from mongoengine.fields import StringField\n"
+      model += "\n\n"
+      model += "class " + logical_source + "(Document):\n"
+      model += "\tmeta = {'collection': '"+ logical_source +"'}\n"
+      var objects = Object.values(predicate_object)
+
+      for(i=0;i<objects.length;i++){
+        model += "\t" + objects[i] + "= StringField(required=True)"
+      }
+      return model
 }
 

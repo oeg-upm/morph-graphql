@@ -21,8 +21,8 @@ app.get('/transform', function (req, res){
 
 app.post('/transform', urlencodedParser, function (req, res) {
   if (!req.body) return res.sendStatus(400)
-      if(req.body.prog_lang && req.body.dataset_type && req.body.mapping_url){
-        create_resolver(req.body.prog_lang, req.body.mapping_language, req.body.dataset_type, req.body.mapping_url)
+      if(req.body.prog_lang && req.body.dataset_type && req.body.mapping_url && req.body.db_name){
+        create_resolver(req.body.prog_lang, req.body.mapping_language, req.body.dataset_type, req.body.mapping_url, req.body.db_name)
          res.json({"msg": "success!"})
        }
       else{
@@ -31,11 +31,16 @@ app.post('/transform', urlencodedParser, function (req, res) {
       }
 })
 
-function create_resolver(prog_lang, map_lang, dataset_type, mapping_url){
+function create_resolver(prog_lang, map_lang, dataset_type, mapping_url, db_name){
     console.log("prog_lang = "+ prog_lang)
     console.log("map_lang = "+ map_lang)
     console.log("dataset_type = "+ dataset_type)
     console.log("mapping_url = "+ mapping_url)
+    console.log("database name = "+db_name)
+    if (!fs.existsSync("tmp")){
+        fs.mkdirSync("tmp");
+    }
+
     var random_text = uuid.v4();
     var project_dir = './tmp/'+random_text+"/";
     if (!fs.existsSync(project_dir)){
@@ -56,14 +61,26 @@ function create_resolver(prog_lang, map_lang, dataset_type, mapping_url){
 
         var schema = mongodbpythontransformer.generateSchema(class_name, logical_source, predicate_object)
         console.log("generated schema = \n" + schema )
+        
         fs.writeFile(project_dir+"schema.py", schema, function (err){
+            if(err){
+               console.log('ERROR saving schema: '+err);
+            }
+            });
+
+        var model = mongodbpythontransformer.generateModel(class_name, logical_source, predicate_object)
+        console.log("generated model = \n" + model )
+        
+        fs.writeFile(project_dir+"models.py", model, function (err){
                      if(err){
-                        console.log('ERROR: '+err);
+                        console.log('ERROR saving model: '+err);
                      }
                      });
-        var pyapp_content = mongodbpythontransformer.generate_app();
+        var pyapp_content = mongodbpythontransformer.generate_app(db_name);
         //console.log("pyapp_content: "+pyapp_content)
         fs.writeFileSync(project_dir+"app.py", pyapp_content);
+        fs.writeFileSync(project_dir+"requirements.txt", mongodbpythontransformer.generate_requirements());
+        fs.writeFileSync(project_dir+"startup.sh", mongodbpythontransformer.generate_statup_script());
     } else {
         console.log(prog_lang + "/" +  dataset_type + " is not supported yet!")
     }

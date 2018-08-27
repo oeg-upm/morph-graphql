@@ -117,3 +117,28 @@ exports.get_jsonld_from_mapping = function(mapping_url) {
     console.log('res_data: '+JSON.stringify(res_data))
     return res_data
 }
+
+exports.getClassNameFromMapping = function(mappingURL){
+    var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
+    var xhttp = new XMLHttpRequest();
+    xhttp.open("GET", "http://rdf-translator.appspot.com/convert/n3/json-ld/" + mappingURL, false);
+    xhttp.send();
+    //console.log('reply: ');
+    //console.log(xhttp.responseText);
+    var j = JSON.parse(xhttp.responseText);
+    var i;
+    var item
+    for(i=0;i<j["@graph"].length;i++){
+        item = j["@graph"][i];
+        if("rr:class" in item){
+            con_arr = item["rr:class"]["@id"].split(":")
+            model_name =  con_arr[con_arr.length-1]
+            console.log("model name: "+model_name)
+        }
+        else{
+            
+        }
+    }
+  
+    return model_name
+  }

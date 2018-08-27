@@ -13,6 +13,8 @@ const app = express()
 const urlencodedParser = bodyParser.urlencoded({ extended: false })
 var url = require('url');
 var rmlparser = require('./rml-parser');
+//var mongodbpythontransformer = require('./transformers/mongodb/python/mongodb-python-transformer');
+var mongodbpythontransformer = require('./mongodb-python-transformer');
 
 
 app.set('view engine', 'pug')
@@ -33,10 +35,10 @@ app.get('/testFreddy', function (req, res) {
   var mappingUrl = q.mappingUrl
   console.log("mappingUrl = "+ mappingUrl)
 
-  var className = getClassNameFromMapping(mappingUrl)
+  var className = rmlparser.getClassNameFromMapping(mappingUrl)
   console.log("className = "+ className)
 
-  createSchemaPythonMongodb(className)
+  mongodbpythontransformer.createSchemaPythonMongodb(className)
   res.render('transform', {message: 'Hello there from Freddy!' })
 })
 
@@ -63,8 +65,7 @@ function transform(prog_lang, map_lang, dataset_type, mapping_url){
 
 
 function create_resolver(prog_lang, map_lang, dataset_type, mapping_data){
-  var data
-    data = rmlparser.get_jsonld_from_mapping(mapping_data)
+    var data = rmlparser.get_jsonld_from_mapping(mapping_data)
     generate_schema(data["class_name"], data["logical_source"], data["predicate_object"])
 }
 
@@ -76,6 +77,7 @@ function create_schema(prog_lang, map_lang, dataset_type){
     
 }
 
+/*
 function createSchemaPythonMongodb(className){
   var fs = require('fs');
  
@@ -95,31 +97,8 @@ function createSchemaPythonMongodb(className){
   //console.log('after calling readFile');
 
 }
+*/
 
-function getClassNameFromMapping(mappingURL){
-  var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
-  var xhttp = new XMLHttpRequest();
-  xhttp.open("GET", "http://rdf-translator.appspot.com/convert/n3/json-ld/" + mappingURL, false);
-  xhttp.send();
-  //console.log('reply: ');
-  //console.log(xhttp.responseText);
-  var j = JSON.parse(xhttp.responseText);
-  var i;
-  var item
-  for(i=0;i<j["@graph"].length;i++){
-      item = j["@graph"][i];
-      if("rr:class" in item){
-          con_arr = item["rr:class"]["@id"].split(":")
-          model_name =  con_arr[con_arr.length-1]
-          console.log("model name: "+model_name)
-      }
-      else{
-          
-      }
-  }
-
-  return model_name
-}
 
 
 function generate_schema(class_name, logical_source, predicate_object){
@@ -127,47 +106,12 @@ function generate_schema(class_name, logical_source, predicate_object){
     // logical_source: table name
     //predicate_object: mapping between graph ql attributes and concept properties in the db
     var t=""
-    t+= generate_schema_header(logical_source)
-    t+= generate_schema_class(class_name, logical_source, predicate_object)
-    t+= generate_schema_body(class_name, logical_source)
+    t+= mongodbpythontransformer.generate_schema_header(logical_source)
+    t+= mongodbpythontransformer.generate_schema_class(class_name, logical_source, predicate_object)
+    t+= mongodbpythontransformer.generate_schema_body(class_name, logical_source)
     console.log(t)
 }
 
-function generate_schema_header(logical_source){
-    var db_model_as_name = logical_source+"Model"
-    var t="import graphene\n"
-    t+="from graphene_mongo import MongoengineObjectType\n"
-    t+="from models import "+logical_source+" as "+db_model_as_name+"\n"
-    return t
-}
-
-function generate_schema_class(class_name, logical_source, predicate_object){
-    var db_model_as_name = logical_source+"Model"
-    var v_att,i,t = "class "+class_name+"(graphene.ObjectType):\n"
-    var predicates = Object.keys(predicate_object)
-    for(i=0;i<predicates.length;i++){
-        v_att = predicates[i]
-        t+="\t"+v_att+" = graphene.String()\n"
-    }
-    for(i=0;i<predicates.length;i++){
-        v_att = predicates[i]
-        a_att = predicate_object[predicates[i]]
-        t+="\tdef resolve_"+v_att+"(self, info):\n"
-        t+="\t\treturn "+db_model_as_name+".objects.get(id=self.id)."+a_att+"\n"
-    }
-    return t
-}
-
-function generate_schema_body(class_name, logical_source){
-    var db_model_as_name = logical_source+"Model"
-    var t=""
-    t+= "class Query(graphene.ObjectType):\n"
-    t+= "\t"+class_name+" = graphene.List("+class_name+")\n"
-    t+= "\tdef resolve_"+class_name+"(self, info):\n"
-    t+= "\t\treturn list("+db_model_as_name+".objects.all())\n"
-    t+= "schema = graphene.Schema(query=Query)\n"
-    return t
-}
 
 
 

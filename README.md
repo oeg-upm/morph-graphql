@@ -14,6 +14,23 @@ Translate OBDA mappings (R2RML/RML) into GraphQL Resolvers
 4. unzip that zip file and run the "startup.sh" script
 5. Your graphql application is now ready at http://localhost:5000/graphql
 
+## Example (Person is mapped to collection Persona, name is mapped to field nombre)
+- mapping: https://raw.githubusercontent.com/oeg-upm/mapping-translator/master/example/persona.rml.ttl
+
+## To query all persons 
+```
+query { Person { name } }
+```
+## To add a person
+```
+mutation {
+  createPerson(name: "Bob") {
+    person {
+      name
+    }
+  }
+}
+```
 
 # Screenshot
 ![screenshot](https://github.com/oeg-upm/mapping-translator/raw/master/example/screenshot.png)

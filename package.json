@@ -27,6 +27,7 @@
     "nodemon": "^1.18.3",
     "pug": "^2.0.3",
     "uuid": "^3.3.2",
-    "xmlhttprequest": "^1.8.0"
+    "xmlhttprequest": "^1.8.0",
+    "zip-local": "^0.3.4"
   }
 }

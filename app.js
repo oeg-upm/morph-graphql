@@ -9,11 +9,45 @@ const rmlparser = require('./rml-parser');
 //var mongodbpythontransformer = require('./transformers/mongodb/python/mongodb-python-transformer');
 const mongodbpythontransformer = require('./mongodb-python-transformer');
 
+const archiver = require('archiver');
+/**
+ * @param {String} source
+ * @param {String} out
+ * @returns {Promise}
+ */
+function zipDirectory(source, out) {
+    const archive = archiver('zip', { zlib: { level: 9 }});
+    const lambdaStream = fs.createWriteStream(out);
+  
+    return new Promise((resolve, reject) => {
+      archive
+        .directory(source, false)
+        .on('error', err => reject(err))
+        .pipe(lambdaStream)
+      ;
+  
+      lambdaStream.on('close', () => resolve());
+      archive.finalize();
+    });
+  }
+
 app.set('view engine', 'pug')
 app.use(express.static('views'))
 
-app.get('/', (req, res) =>
-  res.send('Hello World!'))
+//app.get('/', (req, res) =>
+//  res.send('Hello World!'))
+
+app.get('/', function (req, res){
+    res.render('transform', {message: 'Welcome to Mapping Translator!\nTranslate your OBDA mappings to GraphQL Resolvers'})
+})
+
+
+
+app.get('/testzip', function (req, res){
+    zipDirectory("tmp/5d288b25-4793-468e-a791-30c99c569441", "tmp/5d288b25-4793-468e-a791-30c99c569441.zip")
+    res.render('transform', {message: 'Welcome to Mapping Translator!\nTranslate your OBDA mappings to GraphQL Resolvers'})
+})
+
 
 app.get('/transform', function (req, res){
     res.render('transform', {message: 'Welcome to Mapping Translator!\nTranslate your OBDA mappings to GraphQL Resolvers'})
@@ -82,6 +116,14 @@ function create_resolver(prog_lang, map_lang, dataset_type, mapping_url, db_name
         fs.writeFileSync(project_dir+"app.py", pyapp_content);
         fs.writeFileSync(project_dir+"requirements.txt", mongodbpythontransformer.generate_requirements());
         fs.writeFileSync(project_dir+"startup.sh", mongodbpythontransformer.generate_statup_script());
+
+        zipDirectory("tmp/" + random_text, "tmp/" + random_text + ".zip")
+
+
+
+
+
+		/*
         const { execSync } = require('child_process');
         execSync('cd ./tmp;zip -r '+random_text+".zip "+random_text, function(err, stdout, stderr){
              if (err) {
@@ -93,6 +135,7 @@ function create_resolver(prog_lang, map_lang, dataset_type, mapping_url, db_name
              console.log(`stdout: ${stdout}`);
              console.log(`stderr: ${stderr}`);
              });
+			 */
     } else {
         console.log(prog_lang + "/" +  dataset_type + " is not supported yet!")
     }

@@ -26,7 +26,7 @@ exports.generateSchema = function(class_name, logical_source, predicate_object) 
   schema += predicates.map(function(predicate) { return "\t\t" + predicate + ":String\n"})
 
   schema += "\t}"  + "\n"
-  console.log("schema = \n" + schema)
+  //console.log("schema = \n" + schema)
   console.log("\n\n\n")
   return schema;
 }
@@ -43,7 +43,7 @@ exports.generateModel = function(class_name, logical_source, predicate_object) {
   */
   model += predicates.map(function(predicate) { return "\t" + predicate + "() { return this." + predicate + " }\n"})
   model += `}`
-  console.log("model = \n" + model)
+  //console.log("model = \n" + model)
   console.log("\n\n\n")
   return model;
 }
@@ -80,7 +80,7 @@ exports.generateResolvers = function(class_name, logical_source, predicate_objec
 
     return `\t\tif(${predicate} != null) { sqlWhere.push("${object} = '"+ ${predicate} +"'") }\n`
   }).join("\n")
-  console.log("equalityString = " + equalityString)
+  //console.log("equalityString = " + equalityString)
   resolvers += equalityString
 
   resolvers += '\t\tlet sql = "";\n'
@@ -107,7 +107,7 @@ exports.generateResolvers = function(class_name, logical_source, predicate_objec
   resolvers += '\t\t});\n'
   resolvers += `\t}\n`
 
-  console.log("resolvers = \n" + resolvers)
+  //console.log("resolvers = \n" + resolvers)
   console.log("\n\n\n")
 
   return resolvers;
@@ -160,7 +160,7 @@ exports.generateApp = function(class_name, logical_source, predicate_object, db_
   appString += "\t.finally(() => app.listen(port));\n"
   appString += "\n"
   appString += "console.log('Running a GraphQL API server at localhost:4001/graphql');\n"
-  console.log("appString = \n" + appString)
+  //console.log("appString = \n" + appString)
 
   return appString;
 }

@@ -21,6 +21,12 @@ html
             //- <textarea></textarea>
             //- </div>
             //- <h3>OR</h3>
+
+            <label for="dataset_type_id">Select your database type </label>
+            <select class="ui dropdown" id='dataset_type_id' name='dataset_type' type='text'>
+            <option value="mongodb">Mongo DB</option>
+            <option value="sqlite">SQLite</option>
+            </select>            
             <div class="field">
             <label>Database Name</label>
             <input type="text" name="db_name" placeholder="my_database_name"/>
@@ -29,23 +35,20 @@ html
             <label>Mapping URL</label>
             <input type="url" name="mapping_url" placeholder="http://...">
             </div>
-
-
-            <label for="prog_lang_id">Select the target programing language </label>
-            <select class="ui dropdown" id='prog_lang_id' name='prog_lang' type='text'>
-            <option value="python">Python</option>
-            </select>
-            <br>
-            <label for="dataset_type_id">Select your dataset type </label>
-            <select class="ui dropdown" id='dataset_type_id' name='dataset_type' type='text'>
-            <option value="mongodb">Mongo DB</option>
-            </select>
-            <br>
             <label for="mapping_language_id">Select your mapping language </label>
             <select class="ui dropdown" id='mapping_language_id' name='mapping_language' type='text'>
             <option value="rml">RML</option>
             </select>
             <br>            
+            <label for="prog_lang_id">Select the target programing language </label>
+            <select class="ui dropdown" id='prog_lang_id' name='prog_lang' type='text'>
+            <option value="python">Python</option>
+            <option value="javascript">JavaScript</option>
+            </select>
+            <br>
+
+            <br>
+
             <button class="ui button" type="submit">Submit</button>
             </form>
         </div>

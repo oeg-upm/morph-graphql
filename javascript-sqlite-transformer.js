@@ -170,8 +170,13 @@ exports.generate_requirements = function(){
     return content;
 }
 
-exports.generate_statup_script = function(){
-    var content=fs.readFileSync('./example/persona-python-mongodb/startup.sh');
+exports.generate_statup_script_sh = function(){
+    var content=fs.readFileSync('./transformers/javascript/startup.sh');
     return content;
+}
+
+exports.generate_statup_script_bat = function(){
+  var content=fs.readFileSync('./transformers/javascript/startup.bat');
+  return content;
 }
 

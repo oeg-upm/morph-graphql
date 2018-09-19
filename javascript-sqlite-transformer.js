@@ -12,7 +12,9 @@ exports.generateSchema = function(class_name, logical_source, predicate_object) 
     schema += `\t${predicates[i]}: String`
   }
   */
-  schema += predicates.map(function(predicate) { return predicate + ":String"}).join(",")
+  schema += predicates.map(function(predicate) { 
+    return predicate + ":String"
+  }).join(",")
   schema += `): [${class_name}]`  + "\n"
   schema += "\t}"  + "\n"
   
@@ -23,11 +25,13 @@ exports.generateSchema = function(class_name, logical_source, predicate_object) 
     schema += `\t\t${predicates[i]}: String` + "\n"
   }
   */
-  schema += predicates.map(function(predicate) { return "\t\t" + predicate + ":String\n"})
+  schema += predicates.map(function(predicate) { 
+    return "\t\t" + predicate + ":String"
+  }).join("\n") + "\n"
 
   schema += "\t}"  + "\n"
   //console.log("schema = \n" + schema)
-  console.log("\n\n\n")
+  //console.log("\n\n\n")
   return schema;
 }
 
@@ -41,10 +45,12 @@ exports.generateModel = function(class_name, logical_source, predicate_object) {
     model += `\t${predicates[i]}() { return this.${predicates[i]} }\n`
   }
   */
-  model += predicates.map(function(predicate) { return "\t" + predicate + "() { return this." + predicate + " }\n"})
+  model += predicates.map(function(predicate) { 
+    return "\t" + predicate + "() { return this." + predicate + " }"
+  }).join("\n") + " \n";
   model += `}`
   //console.log("model = \n" + model)
-  console.log("\n\n\n")
+  //console.log("\n\n\n")
   return model;
 }
 
@@ -53,14 +59,16 @@ exports.generateResolvers = function(class_name, logical_source, predicate_objec
   var objects = Object.values(predicate_object_maps)
 
   var resolvers = "";
-  resolvers += `\t${class_name}: function(`
+  resolvers += `\t${class_name}: function({`
   /*
   for(i=0;i<predicates.length;i++){
     resolvers += `${predicates[i]}`
   }
   */
-  resolvers += predicates.map(function(predicate) { return "{" + predicate + "}"}).join(",")
-  resolvers += `\t) {\n`
+  resolvers += predicates.map(function(predicate) { 
+    return predicate
+  }).join(",")
+  resolvers += `}) {\n`
   resolvers += `\t\tlet sqlSelectFrom = 'SELECT * FROM ${logical_source}'\n`
   resolvers += `\t\tlet sqlWhere = []\n`
 
@@ -78,10 +86,10 @@ exports.generateResolvers = function(class_name, logical_source, predicate_objec
     let object = predicate_object_maps[predicate];
     //console.log("object = " + object)
 
-    return `\t\tif(${predicate} != null) { sqlWhere.push("${object} = '"+ ${predicate} +"'") }\n`
+    return `\t\tif(${predicate} != null) { sqlWhere.push("${object} = '"+ ${predicate} +"'") }`
   }).join("\n")
   //console.log("equalityString = " + equalityString)
-  resolvers += equalityString
+  resolvers += equalityString + "\n"
 
   resolvers += '\t\tlet sql = "";\n'
   resolvers += '\t\tif(sqlWhere.length == 0) { sql = sqlSelectFrom } else { sql = sqlSelectFrom + " WHERE " + sqlWhere.join("AND") }\n';
@@ -98,8 +106,8 @@ exports.generateResolvers = function(class_name, logical_source, predicate_objec
   */
   resolvers += predicates.map(function(predicate) { 
     let object = predicate_object_maps[predicate];
-    return `\t\t\t\t\instance.${predicate} = row["${object}"];\n`
-  });
+    return `\t\t\t\t\instance.${predicate} = row["${object}"];`
+  }).join("\n") + "\n";
 
   resolvers += '\t\t\t\tallInstances.push(instance);\n'
   resolvers += '\t\t\t})\n'
@@ -108,7 +116,7 @@ exports.generateResolvers = function(class_name, logical_source, predicate_objec
   resolvers += `\t}\n`
 
   //console.log("resolvers = \n" + resolvers)
-  console.log("\n\n\n")
+  //console.log("\n\n\n")
 
   return resolvers;
 }

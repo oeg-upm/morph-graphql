@@ -14,6 +14,37 @@ exports.get_class_name = function (j){
     return model_name
 }
 
+exports.getSubjectMapId = function(json){
+    var subjectMapId = null;
+
+    for(i=0;i<json["@graph"].length;i++) {
+        item = json["@graph"][i]
+        if("rr:subjectMap" in item){
+            subjectMapId = item["rr:subjectMap"]["@id"]
+            break
+        }
+    }
+
+    return subjectMapId;
+}
+
+exports.getSubjectMapRef = function(json, subjectMapId){
+    console.log("subjectMapId = "+subjectMapId)
+
+    var subjectMapRef = null;
+    
+    for(i=0;i<json["@graph"].length;i++) {
+        item = json["@graph"][i]
+
+        if(item["@id"]==subjectMapId){
+            subjectMapRef = item['rml:reference']
+            break;
+        }
+    }
+
+    return subjectMapRef
+}
+
 //input: original json and modified json
 //output: tablename:String ie personas
 exports.get_logical_source = function (j){
@@ -76,6 +107,7 @@ exports.get_object = function(json, predicate_object_map_id){
     return omReference
 }
 
+
 exports.get_jsonld_from_mapping = function(mapping_url) {
     var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
     var xhttp = new XMLHttpRequest();
@@ -95,7 +127,13 @@ exports.get_jsonld_from_mapping = function(mapping_url) {
     res_data["class_name"] = className
     //console.log('className = ' + className)
 
+    let smId = this.getSubjectMapId(j);
+    let subjectMapRef = this.getSubjectMapRef(j, smId)
+
+    
     var listOfPredicateObject =  this.get_predicate_object_map_list(j)
+    
+
     //console.log('listOfPredicateObject = ' + listOfPredicateObject)
 
     var logicalSource = this.get_logical_source(j)
@@ -112,6 +150,11 @@ exports.get_jsonld_from_mapping = function(mapping_url) {
 
         pairsOfPredicateObject[predicate] = object
     }
+    console.log('pairsOfPredicateObject = ' + pairsOfPredicateObject)
+
+    pairsOfPredicateObject["identifier"] = subjectMapRef
+    console.log('pairsOfPredicateObject = ' + pairsOfPredicateObject)
+
     res_data["predicate_object"] = pairsOfPredicateObject
     //console.log('pairsOfPredicateObject = ' + JSON.stringify(pairsOfPredicateObject))
     //console.log('res_data: '+JSON.stringify(res_data))
@@ -142,3 +185,5 @@ exports.getClassNameFromMapping = function(mappingURL){
   
     return model_name
   }
+
+  

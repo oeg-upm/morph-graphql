@@ -2,8 +2,7 @@ var fs = require('fs');
 
 exports.generateSchema = function(class_name, logical_source, predicate_object) {
   var predicates = Object.keys(predicate_object)
-  var objects = Object.values(predicate_object)
-
+  
   var schema  ="";
   schema += "\ttype Query {" + "\n"
   //schema += `\t${class_name}: [${class_name}]` + "\n"
@@ -34,8 +33,7 @@ exports.generateSchema = function(class_name, logical_source, predicate_object) 
 
 exports.generateModel = function(class_name, logical_source, predicate_object) {
   var predicates = Object.keys(predicate_object)
-  var objects = Object.values(predicate_object)
-
+  
   var model = "";
   model += `class ${class_name} {\n`
   /*
@@ -50,9 +48,9 @@ exports.generateModel = function(class_name, logical_source, predicate_object) {
   return model;
 }
 
-exports.generateResolvers = function(class_name, logical_source, predicate_object) {
-  var predicates = Object.keys(predicate_object)
-  var objects = Object.values(predicate_object)
+exports.generateResolvers = function(class_name, logical_source, predicate_object_maps) {
+  var predicates = Object.keys(predicate_object_maps)
+  var objects = Object.values(predicate_object_maps)
 
   var resolvers = "";
   resolvers += `\t${class_name}: function(`
@@ -64,24 +62,45 @@ exports.generateResolvers = function(class_name, logical_source, predicate_objec
   resolvers += predicates.map(function(predicate) { return "{" + predicate + "}"}).join(",")
   resolvers += `\t) {\n`
   resolvers += `\t\tlet sqlSelectFrom = 'SELECT * FROM ${logical_source}'\n`
-  resolvers += `\t\tlet sqlWhere = ""\n`
+  resolvers += `\t\tlet sqlWhere = []\n`
 
+  /*
   for(i=0;i<predicates.length;i++){
-    resolvers += "\t\tif(" + predicates.map(function(predicate) { return predicate + " != null"}).join(" && ") + ") {\n"
+    resolvers += "\t\tif(" + predicates.map(function(predicate) { 
+      return predicate + " != null"}
+      ).join(" && ") + ") {\n"
     resolvers += `\t\t\tsqlWhere = sqlWhere + " ${objects[i]} = '"+ ${predicates[i]} +"'"\n`
   }
   resolvers += "\t\t}\n"
+  */
+  
+  let equalityString = predicates.map(function(predicate) {
+    let object = predicate_object_maps[predicate];
+    //console.log("object = " + object)
+
+    return `\t\tif(${predicate} != null) { sqlWhere.push("${object} = '"+ ${predicate} +"'") }\n`
+  }).join("\n")
+  console.log("equalityString = " + equalityString)
+  resolvers += equalityString
+
   resolvers += '\t\tlet sql = "";\n'
-  resolvers += '\t\tif(sqlWhere == "") { sql = sqlSelectFrom } else { sql = sqlSelectFrom + " WHERE " + sqlWhere }\n';
+  resolvers += '\t\tif(sqlWhere.length == 0) { sql = sqlSelectFrom } else { sql = sqlSelectFrom + " WHERE " + sqlWhere.join("AND") }\n';
   resolvers += '\t\tlet data = db.all(sql);\n'
   resolvers += '\t\tlet allInstances = [];\n'
   resolvers += '\t\treturn data.then(rows => {\n';
   resolvers += '\t\t\trows.forEach((row) => {\n';
 
   resolvers += "\t\t\t\t" + `let instance = new ${class_name}();\n`
+  /*
   for(i=0;i<predicates.length;i++){
     resolvers += `\t\t\t\t\instance.${predicates[i]} = row["${objects[i]}"];\n`
-  }  
+  }
+  */
+  resolvers += predicates.map(function(predicate) { 
+    let object = predicate_object_maps[predicate];
+    return `\t\t\t\t\instance.${predicate} = row["${object}"];\n`
+  });
+
   resolvers += '\t\t\t\tallInstances.push(instance);\n'
   resolvers += '\t\t\t})\n'
   resolvers += '\t\t\treturn allInstances;\n'
@@ -147,7 +166,7 @@ exports.generateApp = function(class_name, logical_source, predicate_object, db_
 }
 
 exports.generate_requirements = function(){
-    var content=fs.readFileSync('./example/persona-python-mongodb/requirements.txt');
+    var content=fs.readFileSync('./transformers/javascript/sqlite/package.json');
     return content;
 }
 

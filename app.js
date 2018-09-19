@@ -8,6 +8,7 @@ const uuid = require('uuid');
 const rmlparser = require('./rml-parser');
 //var mongodbpythontransformer = require('./transformers/mongodb/python/mongodb-python-transformer');
 const mongodbpythontransformer = require('./mongodb-python-transformer');
+const javascriptsqlitetransformer = require('./javascript-sqlite-transformer');
 var JSZip = require("jszip");
 var zipper = require('zip-local');
 const archiver = require('archiver');
@@ -200,10 +201,12 @@ async function create_resolver(prog_lang, map_lang, dataset_type, mapping_url, d
         console.log(map_lang + " is not supported yet!")
     }
 
+    var class_name = data["class_name"]
+    var logical_source = data["logical_source"]
+    var predicate_object = data["predicate_object"]
+
     if(prog_lang == 'python' && dataset_type == 'mongodb') {
-        var class_name = data["class_name"]
-        var logical_source = data["logical_source"]
-        var predicate_object = data["predicate_object"]
+
 
         var schema = mongodbpythontransformer.generateSchema(class_name, logical_source, predicate_object)
         //console.log("generated schema = \n" + schema )
@@ -250,6 +253,19 @@ async function create_resolver(prog_lang, map_lang, dataset_type, mapping_url, d
         //zipper.sync.zip("tmp/" + random_text).compress().save("tmp/" + random_text + ".zip");
 
         //zipDirectory2("tmp/" + random_text, "tmp/" + random_text + ".zip")
+    } else if(prog_lang == 'javascript' && dataset_type == 'sqlite') {
+
+        let appString = javascriptsqlitetransformer.generateApp(class_name, logical_source, predicate_object, db_name)
+        fs.writeFileSync(project_dir+"app.js", appString, function (err){
+            if(err){
+               console.log('ERROR saving schema: '+err);
+            }
+        });
+        fs.writeFileSync(project_dir+"package.json", javascriptsqlitetransformer.generate_requirements());
+
+        await zipDirectory("tmp/" + random_text, "tmp/" + random_text + ".zip");
+        return random_text;
+
     } else {
         console.log(prog_lang + "/" +  dataset_type + " is not supported yet!")
     }

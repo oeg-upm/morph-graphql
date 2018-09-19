@@ -262,6 +262,8 @@ async function create_resolver(prog_lang, map_lang, dataset_type, mapping_url, d
             }
         });
         fs.writeFileSync(project_dir+"package.json", javascriptsqlitetransformer.generate_requirements());
+        fs.writeFileSync(project_dir+"startup.sh", javascriptsqlitetransformer.generate_statup_script_sh());
+        fs.writeFileSync(project_dir+"startup.bat", javascriptsqlitetransformer.generate_statup_script_bat());
 
         await zipDirectory("tmp/" + random_text, "tmp/" + random_text + ".zip");
         return random_text;

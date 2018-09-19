@@ -18,5 +18,5 @@
     "start": "node server.js"
   },
   "author": "UPM",
-  "license": "Apache"
+  "license": "ISC"
 }

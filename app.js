@@ -165,7 +165,9 @@ app.post('/transform', urlencodedParser, function (req, res) {
         //var random_text = create_resolver(req.body.prog_lang, req.body.mapping_language, req.body.dataset_type, req.body.mapping_url, req.body.db_name)
         //res.download('./tmp/'+random_text+".zip")
 
-        var random_text_promise = create_resolver(req.body.prog_lang, req.body.mapping_language, req.body.dataset_type, req.body.mapping_url, req.body.db_name)
+        var random_text_promise = create_resolver(req.body.prog_lang, 
+            req.body.mapping_language, req.body.dataset_type, 
+            req.body.mapping_url, req.body.db_name, req.body.port_no)
         random_text_promise.then(
             random_text => res.download('./tmp/'+random_text+".zip"),
         )
@@ -178,12 +180,19 @@ app.post('/transform', urlencodedParser, function (req, res) {
       }
 })
 
-async function create_resolver(prog_lang, map_lang, dataset_type, mapping_url, db_name){
+async function create_resolver(prog_lang, map_lang, dataset_type, mapping_url, 
+    db_name, port_no){
+
     console.log("prog_lang = "+ prog_lang)
     console.log("map_lang = "+ map_lang)
     console.log("dataset_type = "+ dataset_type)
     console.log("mapping_url = "+ mapping_url)
     console.log("database name = "+db_name)
+    console.log("port_no = "+ port_no)
+    if(port_no == null || port_no == undefined ) { port_no = 4321 }
+    console.log("port_no = "+ port_no)
+
+
     if (!fs.existsSync("tmp")){
         fs.mkdirSync("tmp");
     }
@@ -255,7 +264,8 @@ async function create_resolver(prog_lang, map_lang, dataset_type, mapping_url, d
         //zipDirectory2("tmp/" + random_text, "tmp/" + random_text + ".zip")
     } else if(prog_lang == 'javascript' && dataset_type == 'sqlite') {
 
-        let appString = javascriptsqlitetransformer.generateApp(class_name, logical_source, predicate_object, db_name)
+        let appString = javascriptsqlitetransformer.generateApp(class_name, 
+            logical_source, predicate_object, db_name, port_no)
         fs.writeFileSync(project_dir+"app.js", appString, function (err){
             if(err){
                console.log('ERROR saving schema: '+err);

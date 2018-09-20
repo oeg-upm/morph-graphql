@@ -139,7 +139,8 @@ exports.toLowerCaseFirstChar = function(str) {
     return str.substr( 0, 1 ).toLowerCase() + str.substr( 1 );
 }
 
-exports.generateApp = function(class_name, logical_source, predicate_object, db_name) {
+exports.generateApp = function(class_name, logical_source, predicate_object, 
+  db_name, port_no) {
   var appString = "";
   var schemaString = this.generateSchema(class_name, logical_source, predicate_object)
   var modelString = this.generateModel(class_name, logical_source, predicate_object)
@@ -161,14 +162,14 @@ exports.generateApp = function(class_name, logical_source, predicate_object, db_
   appString += resolversString + "\n"
   appString += "};\n"
   appString += "const app = express();\n"
-  appString += "const port = process.env.PORT || 4001;\n"
+  appString += `const port = process.env.PORT || ${port_no};\n`
   appString += "app.use('/graphql', graphqlHTTP({schema: schema,  rootValue: root,  graphiql: true,}));\n"
   appString += "Promise.resolve().then(() => db.open('" + db_name + "', { Promise }))\n"
   appString += "\t.catch(err => console.error(err.stack))\n"
   appString += "\t.finally(() => app.listen(port));\n"
   appString += "\n"
-  appString += "console.log('Running a GraphQL API server at localhost:4001/graphql');\n"
-  //console.log("appString = \n" + appString)
+  appString += `console.log('Running a GraphQL API server at localhost:${port_no}/graphql');\n`
+  console.log("appString = \n" + appString)
 
   return appString;
 }

@@ -144,7 +144,7 @@ exports.generateMutationResolvers = function(class_name, logical_source, predica
   
 
   mutationResolverString += `\tnew${class_name}: function({${predicates.join(",")}}) {\n`
-  mutationResolverString += `\t\tif(identifier == undefined) { identifier = uuid.v4() }\n`
+  mutationResolverString += `\t\tif(identifier == undefined) { identifier = uuid.v4().substring(0,8) }\n`
   let valuesString = predicates.map(function(predicate) { return "'${" + predicate + "}'"}).join(",")
   //console.log("valuesString = " + valuesString)
 

@@ -67,7 +67,17 @@ exports.get_predicate_object_map_list = function(j){
     for(i=0;i<j["@graph"].length;i++){
         item = j["@graph"][i];
         if("rr:predicateObjectMap" in item){
-            pred_obj_map_ids.push(item["rr:predicateObjectMap"]["@id"])
+            let predicateObjectMaps = item["rr:predicateObjectMap"];
+            console.log(`predicateObjectMaps = ${predicateObjectMaps}`)
+            if(Array.isArray(predicateObjectMaps)) {
+                predicateObjectMaps.forEach(function(predicateObjectMap) {
+                    pred_obj_map_ids.push(predicateObjectMap["@id"])    
+                })
+            } else {
+                pred_obj_map_ids.push(predicateObjectMaps["@id"])
+            }
+
+            
         }
     }
     return pred_obj_map_ids
@@ -132,9 +142,7 @@ exports.get_jsonld_from_mapping = function(mapping_url) {
 
     
     var listOfPredicateObject =  this.get_predicate_object_map_list(j)
-    
-
-    //console.log('listOfPredicateObject = ' + listOfPredicateObject)
+    console.log('listOfPredicateObject = ' + listOfPredicateObject)
 
     var logicalSource = this.get_logical_source(j)
     res_data["logical_source"] = logicalSource
@@ -142,6 +150,8 @@ exports.get_jsonld_from_mapping = function(mapping_url) {
     var pairsOfPredicateObject = {}
     for(i=0;i<listOfPredicateObject.length;i++){
         predicateObjectMap = listOfPredicateObject[i];
+        console.log('\tpredicateObjectMap = ' + predicateObjectMap)
+
         predicate = this.get_predicate(j, predicateObjectMap)
         //console.log('predicate = ' + predicate)
 

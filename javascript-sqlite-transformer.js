@@ -5,19 +5,21 @@ exports.generateSchema = function(class_name, logical_source, predicate_object) 
   
   var schema  ="";
   schema += "\ttype Query {" + "\n"
-  //schema += `\t${class_name}: [${class_name}]` + "\n"
   schema += `\t\t${class_name}(`
-  /*
-  for(i=0;i<predicates.length;i++){
-    schema += `\t${predicates[i]}: String`
-  }
-  */
   schema += predicates.map(function(predicate) { 
     return predicate + ":String"
   }).join(",")
   schema += `): [${class_name}]`  + "\n"
   schema += "\t}"  + "\n"
   
+  schema += "\ttype Mutation {" + "\n"
+  schema += `\t\tnew${class_name}(`
+  schema += predicates.map(function(predicate) { 
+    return predicate + ":String"
+  }).join(",")
+  schema += `): ${class_name}`  + "\n"
+  schema += "\t}"  + "\n"
+
   schema +=  "\n"
   schema += `\ttype ${class_name} {` +  "\n"
   /*
@@ -55,6 +57,16 @@ exports.generateModel = function(class_name, logical_source, predicate_object) {
 }
 
 exports.generateResolvers = function(class_name, logical_source, predicate_object_maps) {
+  let queryResolversString = this.generateQueryResolvers(class_name, logical_source, predicate_object_maps);
+  let mutationResolversString = this.generateMutationResolvers(class_name, logical_source, predicate_object_maps);
+  let resolversString = queryResolversString + "\t,\n" + mutationResolversString;
+
+  //console.log("resolversString = \n" + resolversString)
+  //console.log("\n\n\n")
+  return resolversString;
+}
+
+exports.generateQueryResolvers = function(class_name, logical_source, predicate_object_maps) {
   var predicates = Object.keys(predicate_object_maps)
   var objects = Object.values(predicate_object_maps)
 
@@ -121,6 +133,34 @@ exports.generateResolvers = function(class_name, logical_source, predicate_objec
   return resolvers;
 }
 
+exports.generateMutationResolvers = function(class_name, logical_source, predicate_object_maps) {
+  let predicates = Object.keys(predicate_object_maps)
+  let objects = Object.values(predicate_object_maps)
+  let columnNames = objects.join(",");
+
+  mutationResolverString = ""
+  mutationResolverString += `\tnew${class_name}: function({${predicates.join(",")}}) {\n`
+  let valuesString = predicates.map(function(predicate) { return "'${" + predicate + "}'"}).join(",")
+  //console.log("valuesString = " + valuesString)
+
+  let sqlString = "`INSERT INTO " + logical_source + "(" + columnNames +") VALUES(" + valuesString +")`"
+  //console.log("sqlString = " + sqlString)
+
+  mutationResolverString += `\t\tlet sqlInsert = ${sqlString}\n`;
+  mutationResolverString += `\t\tlet status = db.run(sqlInsert).then(dbStatus => { return dbStatus });\n`
+
+  
+  let newInstanceString = predicates.map(function(predicate) {
+    return `\t\tnewInstance.${predicate} = ${predicate}`
+  }).join("\n")
+  mutationResolverString += `\t\tlet newInstance = new ${class_name}()\n`;
+  mutationResolverString += newInstanceString + "\n";
+  mutationResolverString += `\t\treturn newInstance\n`;
+  mutationResolverString += `\t}\n`
+  return mutationResolverString;
+}
+
+
 exports.transform = function(class_name, logical_source, predicate_object) {
   var predicates = Object.keys(predicate_object)
   var objects = Object.values(predicate_object)
@@ -169,7 +209,7 @@ exports.generateApp = function(class_name, logical_source, predicate_object,
   appString += "\t.finally(() => app.listen(port));\n"
   appString += "\n"
   appString += `console.log('Running a GraphQL API server at localhost:${port_no}/graphql');\n`
-  console.log("appString = \n" + appString)
+  //console.log("appString = \n" + appString)
 
   return appString;
 }

@@ -190,7 +190,6 @@ async function create_resolver(prog_lang, map_lang, dataset_type, mapping_url,
     console.log("database name = "+db_name)
     console.log("port_no = "+ port_no)
     if(port_no == null || port_no == undefined ) { port_no = 4321 }
-    console.log("port_no = "+ port_no)
 
 
     if (!fs.existsSync("tmp")){

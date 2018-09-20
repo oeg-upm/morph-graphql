@@ -17,13 +17,13 @@
 	];
 
 	rr:predicateObjectMap [
-		rr:predicate schema:name;
-		rr:objectMap    [ rml:reference "nombre" ]
+	  rr:predicate schema:name;
+	  rr:objectMap    [ rml:reference "nombre" ]
 	];
-
+	
 	rr:predicateObjectMap [
-		rr:predicate schema:email;
-		rr:objectMap    [ rml:reference "correo" ]
-	];	
+	  rr:predicate schema:email;
+	  rr:objectMap    [ rml:reference "correo" ]
+	];
 .
-    
+

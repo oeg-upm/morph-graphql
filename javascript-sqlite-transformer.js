@@ -138,8 +138,13 @@ exports.generateMutationResolvers = function(class_name, logical_source, predica
   let objects = Object.values(predicate_object_maps)
   let columnNames = objects.join(",");
 
+  
   mutationResolverString = ""
+  
+  
+
   mutationResolverString += `\tnew${class_name}: function({${predicates.join(",")}}) {\n`
+  mutationResolverString += `\t\tif(identifier == undefined) { identifier = uuid.v4() }\n`
   let valuesString = predicates.map(function(predicate) { return "'${" + predicate + "}'"}).join(",")
   //console.log("valuesString = " + valuesString)
 
@@ -190,6 +195,7 @@ exports.generateApp = function(class_name, logical_source, predicate_object,
   appString += "const express = require('express');\n"
   appString += "const graphqlHTTP = require('express-graphql');\n"
   appString += "const Promise = require('bluebird');\n"
+  appString += "const uuid = require('uuid');\n"
   appString += "\n"
   appString += "var { buildSchema } = require('graphql');\n"
   appString += "\n"

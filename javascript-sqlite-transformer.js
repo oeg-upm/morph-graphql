@@ -13,7 +13,7 @@ exports.generateSchema = function(class_name, logical_source, predicate_object) 
   schema += "\t}"  + "\n"
   
   schema += "\ttype Mutation {" + "\n"
-  schema += `\t\tnew${class_name}(`
+  schema += `\t\tcreate${class_name}(`
   schema += predicates.map(function(predicate) { 
     return predicate + ":String"
   }).join(",")
@@ -143,7 +143,7 @@ exports.generateMutationResolvers = function(class_name, logical_source, predica
   
   
 
-  mutationResolverString += `\tnew${class_name}: function({${predicates.join(",")}}) {\n`
+  mutationResolverString += `\tcreate${class_name}: function({${predicates.join(",")}}) {\n`
   mutationResolverString += `\t\tif(identifier == undefined) { identifier = uuid.v4().substring(0,8) }\n`
   let valuesString = predicates.map(function(predicate) { return "'${" + predicate + "}'"}).join(",")
   //console.log("valuesString = " + valuesString)

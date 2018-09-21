@@ -17,7 +17,8 @@ Translate OBDA mappings (R2RML/RML) into GraphQL Resolvers
 ## Example 2: with JavaScript and Sqlite (assuming that you have npm and node installed)
 1. ```mkdir output```
 2. ```cd output```
-3. ```curl -X POST ```
+3. Download the example database ```wget https://github.com/oeg-upm/mapping-translator/raw/master/example/sqlite/personas.sqlite```
+4. Translate the corresponding RML: ```curl -X POST ```
 ```  http://mappingtranslator.mappingpedia.linkeddata.es/transform ```
 ```  -H 'Content-Type: application/json' ```
 ```  -d '{ "prog_lang": "javascript", ```
@@ -26,9 +27,9 @@ Translate OBDA mappings (R2RML/RML) into GraphQL Resolvers
 ```"db_name":"personas.sqlite",```
 ```"mapping_language":"rml"```
 ```}' > output.zip```
-4. ```unzip output.zip```
-5. ```npm install```
-6. ```node app.js```
+5. ```unzip output.zip```
+6. ```npm install```
+7. ```node app.js```
 
 ## Example (Person is mapped to collection Persona, name is mapped to field nombre)
 - mapping: https://raw.githubusercontent.com/oeg-upm/mapping-translator/master/example/persona.rml.ttl

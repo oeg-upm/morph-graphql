@@ -32,8 +32,8 @@ Translate OBDA mappings (R2RML/RML) into GraphQL Resolvers
 7. ```node app.js```
 8. Go to http://localhost:4321 from your browser, use some of the queries below
 
-## Example (Person is mapped to Personas, name is mapped to nombre, email is mapped to correo)
-- mapping: https://raw.githubusercontent.com/oeg-upm/mapping-translator/master/example/persona.rml.ttl
+## The mappings used in the examples (Person is mapped to Personas, name is mapped to nombre, email is mapped to correo)
+- url: https://raw.githubusercontent.com/oeg-upm/mapping-translator/master/example/persona.rml.ttl
 
 ## To query all persons 
 ```

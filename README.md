@@ -15,7 +15,7 @@ Translate OBDA mappings (R2RML/RML) into GraphQL Resolvers
 5. Your graphql application is now ready at http://localhost:5000/graphql
 
 ## Example 2: with JavaScript and Sqlite (assuming that you have npm and node installed)
-1. ```curl -X POST \```
+1. ```curl -X POST ```
 ```  http://mappingtranslator.mappingpedia.linkeddata.es/transform ```
 ```  -H 'Content-Type: application/json' ```
 ```  -d '{ "prog_lang": "javascript", ```

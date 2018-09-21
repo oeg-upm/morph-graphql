@@ -225,6 +225,8 @@ async function create_resolver(prog_lang, map_lang, dataset_type, mapping_url,
     var class_name = data["class_name"]
     var logical_source = data["logical_source"]
     var predicate_object = data["predicate_object"]
+    var listOfPredicateObjectMap = data["predicate_objectmap"]
+    
 
     if(prog_lang == 'python' && dataset_type == 'mongodb') {
 
@@ -277,7 +279,8 @@ async function create_resolver(prog_lang, map_lang, dataset_type, mapping_url,
     } else if(prog_lang == 'javascript' && dataset_type == 'sqlite') {
 
         let appString = javascriptsqlitetransformer.generateApp(class_name, 
-            logical_source, predicate_object, db_name, port_no)
+            logical_source, predicate_object, listOfPredicateObjectMap, 
+            db_name, port_no)
         fs.writeFileSync(project_dir+"app.js", appString, function (err){
             if(err){
                console.log('ERROR saving schema: '+err);

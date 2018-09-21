@@ -27,6 +27,11 @@
 	];
 	
 	rr:predicateObjectMap [
+	  rr:predicate schema:name;
+	  rr:objectMap    [ rr:template  "{nombre} {apellido}" ]
+	];
+	
+	rr:predicateObjectMap [
 	  rr:predicate schema:email;
 	  rr:objectMap    [ rml:reference "correo" ]
 	];

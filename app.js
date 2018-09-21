@@ -13,6 +13,9 @@ var JSZip = require("jszip");
 var zipper = require('zip-local');
 const archiver = require('archiver');
 
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
+
 /**
  * @param {String} source
  * @param {String} out
@@ -159,9 +162,20 @@ app.get('/transform', function (req, res){
     res.render('transform', {message: 'Welcome to Mapping Translator!\nTranslate your OBDA mappings to GraphQL Resolvers'})
 })
 
-app.post('/transform', urlencodedParser, function (req, res) {
-  if (!req.body) return res.sendStatus(400)
-      if(req.body.prog_lang && req.body.dataset_type && req.body.mapping_url && req.body.db_name){
+//app.post('/transform', urlencodedParser, function (req, res) {
+app.post('/transform', function (req, res) {
+  if (!req.body) { return res.sendStatus(400) }
+  console.log("req.body.keys = " + req.body.keys)
+  console.log("req.body.length = " + req.body.length)
+  console.log(`req.body.prog_lang = ${req.body.prog_lang}`)
+  console.log(`req.body.dataset_type = ${req.body.dataset_type}`)
+  console.log(`req.body.mapping_url = ${req.body.mapping_url}`)
+  console.log(`req.body.db_name = ${req.body.db_name}`)
+  console.log(`req.body.port_no = ${req.body.port_no}`)
+
+  
+    if(req.body.prog_lang && req.body.dataset_type && 
+        req.body.mapping_url && req.body.db_name){
         //var random_text = create_resolver(req.body.prog_lang, req.body.mapping_language, req.body.dataset_type, req.body.mapping_url, req.body.db_name)
         //res.download('./tmp/'+random_text+".zip")
 
@@ -173,11 +187,10 @@ app.post('/transform', urlencodedParser, function (req, res) {
         )
          //res.json({"msg": "success!"})
          
-       }
-      else{
+    } else {
         res.json({ "error": "parameters are not passed" });
         //res.send(JSON.stringify({"error":'expecting map_lang, prog_lang, and dataset_type' }))
-      }
+    }
 })
 
 async function create_resolver(prog_lang, map_lang, dataset_type, mapping_url, 

@@ -36,7 +36,7 @@
 		  rr:predicate schema:email;
 		  rr:objectMap [
 #		  	rmlc:columns  ["nombre","apellido"];
-		  	rmlc:functions "substr(nombre,0,1) || apellido || '@fi.upm.es')"
+		  	rmlc:functions "lower(substr(nombre,1,1) || apellido || '@fi.upm.es')"
 		  ]
 	];
 .

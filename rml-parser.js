@@ -125,7 +125,7 @@ exports.get_predicate_object_map_list = function(j){
         item = j["@graph"][i];
         if("rr:predicateObjectMap" in item){
             let predicateObjectMaps = item["rr:predicateObjectMap"];
-            console.log(`predicateObjectMaps = ${predicateObjectMaps}`)
+            //console.log(`predicateObjectMaps = ${predicateObjectMaps}`)
             if(Array.isArray(predicateObjectMaps)) {
                 predicateObjectMaps.forEach(function(predicateObjectMap) {
                     pred_obj_map_ids.push(predicateObjectMap["@id"])    
@@ -246,8 +246,8 @@ exports.get_jsonld_from_mapping = function(mapping_url) {
         pairsOfPredicateObject[predicate] = object
 
         objectMap = this.getObjectMap(j, predicateObjectMap);
-        console.log(`objectMap.referenceValue = ${objectMap.referenceValue}`)
-        console.log(`objectMap.template = ${objectMap.template}`)
+        //console.log(`objectMap.referenceValue = ${objectMap.referenceValue}`)
+        //console.log(`objectMap.template = ${objectMap.template}`)
         pairsOfPredicateObjectMap[predicate] = objectMap
     }
     //console.log('pairsOfPredicateObject = ' + pairsOfPredicateObject)

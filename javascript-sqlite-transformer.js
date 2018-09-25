@@ -111,7 +111,8 @@ exports.generateQueryResolvers = function(class_name, logical_source,
     return filtered
   }, []).join(",")
   resolvers += `}) {\n`
-  resolvers += `\t\tlet sqlSelectFrom = 'SELECT ${projections} FROM ${logical_source}'\n`
+  let sqlSelectFrom = `SELECT ${projections} FROM ${logical_source}`
+  resolvers += "\t\tlet sqlSelectFrom = `" + sqlSelectFrom + "`\n"
   resolvers += `\t\tlet sqlWhere = []\n`
 
   /*
@@ -135,8 +136,9 @@ exports.generateQueryResolvers = function(class_name, logical_source,
   resolvers += equalityString + "\n"
 
   resolvers += '\t\tlet sql = "";\n'
-  resolvers += '\t\tif(sqlWhere.length == 0) { sql = sqlSelectFrom } else { sql = sqlSelectFrom + " WHERE " + sqlWhere.join("AND") }\n';
+  resolvers += '\t\tif(sqlWhere.length == 0) { sql = sqlSelectFrom} else { sql = sqlSelectFrom + " WHERE " + sqlWhere.join("AND") }\n';
   resolvers += '\t\tlet data = db.all(sql);\n'
+  resolvers += "\t\tconsole.log(`sql = ${sql}`)\n"
   resolvers += '\t\tlet allInstances = [];\n'
   resolvers += '\t\treturn data.then(rows => {\n';
   resolvers += '\t\t\trows.forEach((row) => {\n';
@@ -151,11 +153,14 @@ exports.generateQueryResolvers = function(class_name, logical_source,
     let objectMap = listOfPredicateObjectMap[predicate];
     if(objectMap.referenceValue) {
       filtered.push(`\t\t\t\t\instance.${predicate} = row["${objectMap.referenceValue}"];`)
-    }  else if(objectMap.template) {
+    } else if(objectMap.template) {
       //let templateString = objectMap.template.replaceAll("{", '${row["').replace("}", '"]}')
       let templateString = objectMap.template.split("{").join('${row["').split("}").join('"]}')
       templateString = "`" + templateString + "`" 
       filtered.push(`\t\t\t\t\instance.${predicate} = ${templateString}`)
+    } else if(objectMap.functionString) {
+      let alias = '`${row["' + objectMap.getHashCode() + '"]}`';
+      filtered.push(`\t\t\t\t\instance.${predicate} = ${alias}`)
     }
     return filtered
   }, []).join("\n") + "\n";

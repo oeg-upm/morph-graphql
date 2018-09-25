@@ -1,3 +1,10 @@
+class TermMap {
+    getConstantValue() { return this.constantValue }
+    getColumnName() { return this.columnName }
+    getTemplate() { return this.template }
+    getReferenceValue() { return this.referenceValue }
+}
+
 //input: original json and modified json
 //output: classnamne:String ie Person
 exports.get_class_name = function (j){
@@ -29,7 +36,7 @@ exports.getSubjectMapId = function(json){
 }
 
 exports.getSubjectMapRef = function(json, subjectMapId){
-    console.log("subjectMapId = "+subjectMapId)
+    //console.log("subjectMapId = "+subjectMapId)
 
     var subjectMapRef = null;
     
@@ -44,6 +51,25 @@ exports.getSubjectMapRef = function(json, subjectMapId){
 
     return subjectMapRef
 }
+
+exports.getSubjectMap = function(json, subjectMapId){
+    var subjectMap = new TermMap();
+    
+    for(i=0;i<json["@graph"].length;i++) {
+        item = json["@graph"][i]
+
+        if(item["@id"]==subjectMapId){
+            subjectMap.referenceValue = item['rml:reference'];
+            subjectMap.template = item['rr:template'];
+            break;
+        }
+    }
+
+    console.log("subjectMap.referenceValue: " + subjectMap.referenceValue)
+    console.log("subjectMap.template: " + subjectMap.template)
+    return subjectMap
+}
+
 
 //input: original json and modified json
 //output: tablename:String ie personas
@@ -107,14 +133,44 @@ exports.get_object = function(json, predicate_object_map_id){
         }
     }
     
+    let objectMap = new TermMap();
+
     for(i=0;i<json["@graph"].length;i++) {
         item = json["@graph"][i]
         if(item["@id"]==objectMapId){
             omReference = item['rml:reference']
+            objectMap.referenceValue = item['rml:reference'];
+            objectMap.template = item['rr:template'];
         }
     }
 
     return omReference
+}
+
+//input: original json and modified json and an id of PredicateObjectMap
+//output: object map
+exports.getObjectMap = function(json, predicate_object_map_id){
+    var i,objectMapIdm, omReference
+    for(i=0;i<json["@graph"].length;i++) {
+        item = json["@graph"][i]
+        if(item["@id"]==predicate_object_map_id){
+            objectMapId = item['rr:objectMap']['@id']
+        }
+    }
+    
+    let objectMap = new TermMap();
+
+    for(i=0;i<json["@graph"].length;i++) {
+        item = json["@graph"][i]
+        if(item["@id"]==objectMapId){
+            omReference = item['rml:reference']
+            objectMap.referenceValue = item['rml:reference'];
+            objectMap.template = item['rr:template'];
+        }
+    }
+
+
+    return objectMap
 }
 
 
@@ -139,33 +195,45 @@ exports.get_jsonld_from_mapping = function(mapping_url) {
 
     let smId = this.getSubjectMapId(j);
     let subjectMapRef = this.getSubjectMapRef(j, smId)
+    let subjectMap = this.getSubjectMap(j, smId)
 
     
     var listOfPredicateObject =  this.get_predicate_object_map_list(j)
-    console.log('listOfPredicateObject = ' + listOfPredicateObject)
+    //console.log('listOfPredicateObject = ' + listOfPredicateObject)
 
     var logicalSource = this.get_logical_source(j)
     res_data["logical_source"] = logicalSource
     //console.log('logicalSource = ' + logicalSource)
     var pairsOfPredicateObject = {}
+    pairsOfPredicateObject["identifier"] = subjectMapRef
+
+    var pairsOfPredicateObjectMap = {}
+    pairsOfPredicateObjectMap["identifier"] = subjectMap
+
     for(i=0;i<listOfPredicateObject.length;i++){
         predicateObjectMap = listOfPredicateObject[i];
-        console.log('\tpredicateObjectMap = ' + predicateObjectMap)
+        //console.log('\tpredicateObjectMap = ' + predicateObjectMap)
 
         predicate = this.get_predicate(j, predicateObjectMap)
         //console.log('predicate = ' + predicate)
 
         object = this.get_object(j, predicateObjectMap)
         //console.log('object = ' + object)
-
         pairsOfPredicateObject[predicate] = object
-    }
-    console.log('pairsOfPredicateObject = ' + pairsOfPredicateObject)
 
-    pairsOfPredicateObject["identifier"] = subjectMapRef
-    console.log('pairsOfPredicateObject = ' + pairsOfPredicateObject)
+        objectMap = this.getObjectMap(j, predicateObjectMap);
+        console.log(`objectMap.referenceValue = ${objectMap.referenceValue}`)
+        console.log(`objectMap.template = ${objectMap.template}`)
+        pairsOfPredicateObjectMap[predicate] = objectMap
+    }
+    //console.log('pairsOfPredicateObject = ' + pairsOfPredicateObject)
+
+    
+    //console.log('pairsOfPredicateObject = ' + pairsOfPredicateObject)
 
     res_data["predicate_object"] = pairsOfPredicateObject
+    res_data["predicate_objectmap"] = pairsOfPredicateObjectMap
+
     //console.log('pairsOfPredicateObject = ' + JSON.stringify(pairsOfPredicateObject))
     //console.log('res_data: '+JSON.stringify(res_data))
     return res_data

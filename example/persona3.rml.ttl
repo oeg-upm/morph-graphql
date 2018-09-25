@@ -32,11 +32,11 @@
 	  rr:objectMap    [ rr:template  "{nombre} {apellido}" ]
 	];
 
-#	rr:predicateObjectMap [
-#		  rr:predicate schema:email;
-#		  rr:objectMap [
+	rr:predicateObjectMap [
+		  rr:predicate schema:email;
+		  rr:objectMap [
 #		  	rmlc:columns  ["nombre","apellido"];
-#		  	rmlc:functions "substr(nombre,0,1) || apellido || '@fi.upm.es')"
-#		  ]
-#	];
+		  	rmlc:functions "substr(nombre,0,1) || apellido || '@fi.upm.es')"
+		  ]
+	];
 .

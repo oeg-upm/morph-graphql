@@ -60,13 +60,13 @@ exports.getSubjectMap = function(json, subjectMapId){
 
         if(item["@id"]==subjectMapId){
             subjectMap.referenceValue = item['rml:reference'];
-            subjectMap.templateValue = item['rr:template'];
+            subjectMap.template = item['rr:template'];
             break;
         }
     }
 
     console.log("subjectMap.referenceValue: " + subjectMap.referenceValue)
-    console.log("subjectMap.templateValue: " + subjectMap.templateValue)
+    console.log("subjectMap.template: " + subjectMap.template)
     return subjectMap
 }
 
@@ -140,7 +140,7 @@ exports.get_object = function(json, predicate_object_map_id){
         if(item["@id"]==objectMapId){
             omReference = item['rml:reference']
             objectMap.referenceValue = item['rml:reference'];
-            objectMap.templateValue = item['rr:template'];
+            objectMap.template = item['rr:template'];
         }
     }
 
@@ -165,7 +165,7 @@ exports.getObjectMap = function(json, predicate_object_map_id){
         if(item["@id"]==objectMapId){
             omReference = item['rml:reference']
             objectMap.referenceValue = item['rml:reference'];
-            objectMap.templateValue = item['rr:template'];
+            objectMap.template = item['rr:template'];
         }
     }
 
@@ -223,7 +223,7 @@ exports.get_jsonld_from_mapping = function(mapping_url) {
 
         objectMap = this.getObjectMap(j, predicateObjectMap);
         console.log(`objectMap.referenceValue = ${objectMap.referenceValue}`)
-        console.log(`objectMap.templateValue = ${objectMap.templateValue}`)
+        console.log(`objectMap.template = ${objectMap.template}`)
         pairsOfPredicateObjectMap[predicate] = objectMap
     }
     //console.log('pairsOfPredicateObject = ' + pairsOfPredicateObject)

@@ -60,9 +60,9 @@ exports.generateModel = function(class_name, logical_source,
   */
   model += predicates.reduce(function(filtered, predicate) {
     let objectMap = listOfPredicateObjectMap[predicate];
-    if(objectMap.referenceValue) {
+    //if(objectMap.referenceValue) {
       filtered.push("\t" + predicate + "() { return this." + predicate + " }")
-    }
+    //}
     return filtered
   }, []).join("\n") + " \n";
   model += `}`
@@ -139,6 +139,11 @@ exports.generateQueryResolvers = function(class_name, logical_source,
     let objectMap = listOfPredicateObjectMap[predicate];
     if(objectMap.referenceValue) {
       filtered.push(`\t\t\t\t\instance.${predicate} = row["${objectMap.referenceValue}"];`)
+    }  else if(objectMap.template) {
+      //let templateString = objectMap.template.replaceAll("{", '${row["').replace("}", '"]}')
+      let templateString = objectMap.template.split("{").join('${row["').split("}").join('"]}')
+      templateString = "`" + templateString + "`" 
+      filtered.push(`\t\t\t\t\instance.${predicate} = ${templateString}`)
     }
     return filtered
   }, []).join("\n") + "\n";

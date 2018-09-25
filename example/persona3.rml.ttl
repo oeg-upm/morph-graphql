@@ -1,0 +1,42 @@
+@prefix rr: <http://www.w3.org/ns/r2rml#>.
+@prefix rml: <http://semweb.mmlab.be/ns/rml#> .
+@prefix rmlc: <http://www.oeg-upm.net/ns/rmlc#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+@prefix ex: <http://www.example.com/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix schema: <http://schema.org/>.
+
+<TMPersona>
+	rml:logicalSource [
+		rml:source  "personas";
+	];
+
+	rr:subjectMap [
+		rml:reference "id";
+		rr:class schema:Person
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate schema:givenName;
+	  rr:objectMap    [ rml:reference "nombre" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate schema:familyName;
+	  rr:objectMap    [ rml:reference "apellido" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate schema:name;
+	  rr:objectMap    [ rr:template  "{nombre} {apellido}" ]
+	];
+
+	rr:predicateObjectMap [
+		  rr:predicate schema:email;
+		  rr:objectMap [
+		  	rmlc:columns  ["nombre","apellido"];
+		  	rmlc:functions "substr(nombre,0,1) || apellido || '@fi.upm.es')"
+		  ]
+	];
+.

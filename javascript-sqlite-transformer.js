@@ -10,7 +10,7 @@ exports.generateSchema = function(class_name, logical_source,
   schema += `\t\t${class_name}(`
   schema += predicates.reduce(function(filtered, predicate) {
     let objectMap = listOfPredicateObjectMap[predicate];
-    if(objectMap.referenceValue) {
+    if(objectMap.referenceValue || objectMap.functionString) {
       filtered.push(predicate + ":String")
     }
     return filtered
@@ -105,7 +105,7 @@ exports.generateQueryResolvers = function(class_name, logical_source,
   resolvers += `\t${class_name}: function({`
   resolvers += predicates.reduce(function(filtered, predicate) {
     let objectMap = listOfPredicateObjectMap[predicate];
-    if(objectMap.referenceValue) {
+    if(objectMap.referenceValue || objectMap.functionString) {
       filtered.push(predicate)
     }
     return filtered
@@ -129,6 +129,9 @@ exports.generateQueryResolvers = function(class_name, logical_source,
     let objectMap = listOfPredicateObjectMap[predicate];
     if(objectMap.referenceValue) {
       filtered.push(`\t\tif(${predicate} != null) { sqlWhere.push("${objectMap.referenceValue} = '"+ ${predicate} +"'") }`)
+    } else if(objectMap.functionString) {
+      let omHash = objectMap.getHashCode();
+      filtered.push(`\t\tif(${predicate} != null) { sqlWhere.push("${omHash} = '"+ ${predicate} +"'") }`)
     }
     return filtered
   }, []).join("\n")

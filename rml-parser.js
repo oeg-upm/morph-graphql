@@ -1,8 +1,19 @@
+const uuid = require('uuid');
+
 class TermMap {
+    //hashCode = "";
+
     getConstantValue() { return this.constantValue }
     getColumnName() { return this.columnName }
     getTemplate() { return this.template }
     getReferenceValue() { return this.referenceValue }
+    getFunctionString() { return this.functionString }
+    getHashCode() {
+        if(this.hashCode == undefined) { 
+            this.hashCode = "tm" + uuid.v4().substring(0,8);
+        }
+        return this.hashCode 
+    }
 }
 
 //input: original json and modified json
@@ -53,7 +64,7 @@ exports.getSubjectMapRef = function(json, subjectMapId){
 }
 
 exports.getSubjectMap = function(json, subjectMapId){
-    var subjectMap = new TermMap();
+    var subjectMap = this.getTermMap(json, subjectMapId)
     
     for(i=0;i<json["@graph"].length;i++) {
         item = json["@graph"][i]
@@ -65,11 +76,31 @@ exports.getSubjectMap = function(json, subjectMapId){
         }
     }
 
-    console.log("subjectMap.referenceValue: " + subjectMap.referenceValue)
-    console.log("subjectMap.template: " + subjectMap.template)
+    //console.log("subjectMap.referenceValue: " + subjectMap.referenceValue)
+    //console.log("subjectMap.template: " + subjectMap.template)
+    //console.log("subjectMap.functionString: " + subjectMap.functionString)
     return subjectMap
 }
 
+exports.getTermMap = function(json, termMapId){
+    var termMap = new TermMap();
+    
+    for(i=0;i<json["@graph"].length;i++) {
+        item = json["@graph"][i]
+        if(item["@id"]==termMapId){
+            termMap.referenceValue = item['rml:reference'];
+            termMap.template = item['rr:template'];
+            termMap.functionString = item['rmlc:functions'];
+
+            break;
+        }
+    }
+
+    //console.log("termMap.referenceValue: " + termMap.referenceValue)
+    //console.log("termMap.template: " + termMap.template)
+    //console.log("termMap.functionString: " + termMap.functionString)
+    return termMap    
+}
 
 //input: original json and modified json
 //output: tablename:String ie personas
@@ -158,18 +189,11 @@ exports.getObjectMap = function(json, predicate_object_map_id){
         }
     }
     
-    let objectMap = new TermMap();
+    let objectMap = this.getTermMap(json, objectMapId)
 
-    for(i=0;i<json["@graph"].length;i++) {
-        item = json["@graph"][i]
-        if(item["@id"]==objectMapId){
-            omReference = item['rml:reference']
-            objectMap.referenceValue = item['rml:reference'];
-            objectMap.template = item['rr:template'];
-        }
-    }
-
-
+    //console.log("objectMap.referenceValue: " + objectMap.referenceValue)
+    //console.log("objectMap.template: " + objectMap.template)
+    //console.log("objectMap.functionString: " + objectMap.functionString)
     return objectMap
 }
 

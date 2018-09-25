@@ -88,6 +88,18 @@ exports.generateQueryResolvers = function(class_name, logical_source,
   predicate_object_maps, listOfPredicateObjectMap) {
   //console.log("listOfPredicateObjectMap = " + listOfPredicateObjectMap)
   var predicates = Object.keys(listOfPredicateObjectMap)
+  let objectMaps = Object.values(listOfPredicateObjectMap)
+  let projections = objectMaps.reduce(function(filtered, objectMap) {
+    if(objectMap.referenceValue) {
+      filtered.push(objectMap.referenceValue)
+    } else if(objectMap.functionString) {
+      //filtered.push(`${objectMap.functionString}`)
+
+      let omHash = objectMap.getHashCode();
+      filtered.push(`${objectMap.functionString} AS ${omHash}`)
+    }
+    return filtered
+  }, []).join(",");
 
   var resolvers = "";
   resolvers += `\t${class_name}: function({`
@@ -99,7 +111,7 @@ exports.generateQueryResolvers = function(class_name, logical_source,
     return filtered
   }, []).join(",")
   resolvers += `}) {\n`
-  resolvers += `\t\tlet sqlSelectFrom = 'SELECT * FROM ${logical_source}'\n`
+  resolvers += `\t\tlet sqlSelectFrom = 'SELECT ${projections} FROM ${logical_source}'\n`
   resolvers += `\t\tlet sqlWhere = []\n`
 
   /*

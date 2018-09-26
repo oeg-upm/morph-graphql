@@ -283,9 +283,9 @@ async function create_resolver(prog_lang, map_lang, dataset_type, mapping_url,
         //zipDirectory2("tmp/" + random_text, "tmp/" + random_text + ".zip")
     } else if(prog_lang == 'javascript' && dataset_type == 'sqlite') {
 
-        let appString = javascriptsqlitetransformer.generateApp(class_name, 
-            logical_source, predicate_object, listOfPredicateObjectMap, 
-            predicateObjectMaps, 
+        let appString = javascriptsqlitetransformer.generateApp(
+            class_name, logical_source, 
+            predicate_object, listOfPredicateObjectMap, predicateObjectMaps, 
             db_name, port_no)
         fs.writeFileSync(project_dir+"app.js", appString, function (err){
             if(err){

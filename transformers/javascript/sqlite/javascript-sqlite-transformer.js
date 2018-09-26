@@ -68,11 +68,11 @@ exports.generateModel = function(class_name, logical_source,
 }
 
 exports.generateResolvers = function(class_name, logical_source,
-  predicate_object_maps, listOfPredicateObjectMap, predicateObjectMaps) {
-  let queryResolversString = this.generateQueryResolvers(class_name, logical_source,
-    predicateObjectMaps);
-  let mutationResolversString = this.generateMutationResolvers(class_name, logical_source,
-    listOfPredicateObjectMap, predicateObjectMaps);
+  predicateObjectMaps) {
+  let queryResolversString = this.generateQueryResolvers(
+    class_name, logical_source, predicateObjectMaps);
+  let mutationResolversString = this.generateMutationResolvers(
+    class_name, logical_source, predicateObjectMaps);
   let resolversString = queryResolversString + "\t,\n" + mutationResolversString;
 
   //console.log("resolversString = \n" + resolversString)
@@ -84,6 +84,8 @@ exports.generateResolvers = function(class_name, logical_source,
 
 exports.generateQueryResolvers = function(class_name, logical_source,
   predicateObjectMaps) {
+    console.log("predicateObjectMaps = " + predicateObjectMaps)
+
     let alpha = logical_source;
 
   //console.log("listOfPredicateObjectMap = " + listOfPredicateObjectMap)
@@ -215,9 +217,17 @@ exports.generateQueryResolvers = function(class_name, logical_source,
 }
 
 exports.generateMutationResolvers = function(class_name, logical_source,
-  listOfPredicateObjectMap, predicateObjectMaps) {
-  let predicates = Object.keys(listOfPredicateObjectMap)
-  let objectMaps = Object.values(listOfPredicateObjectMap)
+  predicateObjectMaps) {
+    //let predicates = Object.keys(listOfPredicateObjectMap)
+    let predicates = predicateObjectMaps.map(function(predicateObjectMap) {
+      return predicateObjectMap.predicate;
+    });
+    
+    //let objectMaps = Object.values(listOfPredicateObjectMap)
+    let objectMaps = predicateObjectMaps.map(function(predicateObjectMap) {
+      return predicateObjectMap.objectMap;
+    });
+
   let columnNames = objectMaps.reduce(function(filtered, objectMap) {
     if(objectMap.referenceValue) {
       filtered.push(objectMap.referenceValue)
@@ -228,8 +238,9 @@ exports.generateMutationResolvers = function(class_name, logical_source,
   mutationResolverString = ""
   //mutationResolverString += `\tcreate${class_name}: function({${predicates.join(",")}}) {\n`
   mutationResolverString += `\tcreate${class_name}: function({`
-  mutationResolverString += predicates.reduce(function(filtered, predicate) {
-    let objectMap = listOfPredicateObjectMap[predicate];
+  mutationResolverString += predicateObjectMaps.reduce(function(filtered, predicateObjectMap) {
+    let predicate = predicateObjectMap.predicate;
+    let objectMap = predicateObjectMap.objectMap;
     if(objectMap.referenceValue) {
       filtered.push(predicate)
     }
@@ -238,8 +249,9 @@ exports.generateMutationResolvers = function(class_name, logical_source,
   mutationResolverString += `}) {\n`
 
   mutationResolverString += `\t\tif(identifier == undefined) { identifier = uuid.v4().substring(0,8) }\n`
-  let valuesString = predicates.reduce(function(filtered, predicate) {
-    let objectMap = listOfPredicateObjectMap[predicate];
+  let valuesString = predicateObjectMaps.reduce(function(filtered, predicateObjectMap) {
+    let predicate = predicateObjectMap.predicate;
+    let objectMap = predicateObjectMap.objectMap;
     if(objectMap.referenceValue) {
       filtered.push("'${" + predicate + "}'")
     }
@@ -254,8 +266,9 @@ exports.generateMutationResolvers = function(class_name, logical_source,
   mutationResolverString += `\t\tlet status = db.run(sqlInsert).then(dbStatus => { return dbStatus });\n`
 
 
-  let newInstanceString = predicates.reduce(function(filtered, predicate) {
-    let objectMap = listOfPredicateObjectMap[predicate];
+  let newInstanceString = predicateObjectMaps.reduce(function(filtered, predicateObjectMap) {
+    let predicate = predicateObjectMap.predicate;
+    let objectMap = predicateObjectMap.objectMap;
     if(objectMap.referenceValue) {
       filtered.push(`\t\tnewInstance.${predicate} = ${predicate}`)
     } 
@@ -292,8 +305,10 @@ exports.toLowerCaseFirstChar = function(str) {
     return str.substr( 0, 1 ).toLowerCase() + str.substr( 1 );
 }
 
-exports.generateApp = function(class_name, logical_source, predicate_object, 
-  listOfPredicateObjectMap, predicateObjectMaps, db_name, port_no) {
+exports.generateApp = function(
+  class_name, logical_source, 
+  predicate_object, listOfPredicateObjectMap, predicateObjectMaps, 
+  db_name, port_no) {
   
   //console.log("predicateObjectMaps = " + predicateObjectMaps)
 
@@ -302,8 +317,8 @@ exports.generateApp = function(class_name, logical_source, predicate_object,
     predicate_object, listOfPredicateObjectMap)
   var modelString = this.generateModel(class_name, logical_source,
     predicate_object, listOfPredicateObjectMap)
-  var resolversString = this.generateResolvers(class_name, logical_source,
-    predicate_object, listOfPredicateObjectMap, predicateObjectMaps)
+  var resolversString = this.generateResolvers(
+    class_name, logical_source, predicateObjectMaps)
 
   appString += "const db = require('sqlite');\n"
   appString += "const express = require('express');\n"

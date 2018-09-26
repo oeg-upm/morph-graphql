@@ -14,6 +14,34 @@ class TermMap {
         }
         return this.hashCode 
     }
+
+    beta() {
+        let betaValue = "";
+        if(this.referenceValue) {
+            betaValue = this.referenceValue
+        } else if(this.functionString) {
+            betaValue = this.functionString; 
+        } else {
+            betaValue = null
+        }
+
+        return betaValue;
+    }
+
+    genPRSQL() {
+        let prSQL = null;
+        let betaValue = this.beta();
+        let hashCode = this.getHashCode();
+
+        if(betaValue != null ) {
+            if(this.referenceValue) {
+                prSQL = `${betaValue} AS ${betaValue}`
+            } else {
+                prSQL = `${betaValue} AS ${hashCode}`
+            }
+        }
+        return prSQL;
+    }
 }
 
 //input: original json and modified json

@@ -80,20 +80,28 @@ exports.generateResolvers = function(class_name, logical_source,
   return resolversString;
 }
 
+
+
 exports.generateQueryResolvers = function(class_name, logical_source,
   predicate_object_maps, listOfPredicateObjectMap) {
   //console.log("listOfPredicateObjectMap = " + listOfPredicateObjectMap)
   var predicates = Object.keys(listOfPredicateObjectMap)
   let objectMaps = Object.values(listOfPredicateObjectMap)
   let projections = objectMaps.reduce(function(filtered, objectMap) {
+    let prSQL = objectMap.genPRSQL();
+    console.log("prSQL = " + prSQL)
+    if(prSQL != null) {
+      filtered.push(prSQL)
+    }
+
+    /*
     if(objectMap.referenceValue) {
       filtered.push(objectMap.referenceValue)
     } else if(objectMap.functionString) {
-      //filtered.push(`${objectMap.functionString}`)
-
       let omHash = objectMap.getHashCode();
       filtered.push(`${objectMap.functionString} AS ${omHash}`)
     }
+    */
     return filtered
   }, []).join(",");
 
@@ -170,8 +178,8 @@ exports.generateQueryResolvers = function(class_name, logical_source,
   resolvers += '\t\t});\n'
   resolvers += `\t}\n`
 
-  //console.log("queryResolvers = \n" + resolvers)
-  //console.log("\n\n\n")
+  console.log("queryResolvers = \n" + resolvers)
+  console.log("\n\n\n")
 
   return resolvers;
 }
@@ -229,8 +237,8 @@ exports.generateMutationResolvers = function(class_name, logical_source,
   
   mutationResolverString += `\t}\n`
 
-  console.log(`mutationResolverString = \n${mutationResolverString}`)
-  console.log("\n\n\n")
+  //console.log(`mutationResolverString = \n${mutationResolverString}`)
+  //console.log("\n\n\n")
 
   return mutationResolverString;
 }

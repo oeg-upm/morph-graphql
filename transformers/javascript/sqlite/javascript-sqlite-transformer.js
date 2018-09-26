@@ -68,11 +68,11 @@ exports.generateModel = function(class_name, logical_source,
 }
 
 exports.generateResolvers = function(class_name, logical_source,
-  predicate_object_maps, listOfPredicateObjectMap) {
+  predicate_object_maps, listOfPredicateObjectMap, predicateObjectMaps) {
   let queryResolversString = this.generateQueryResolvers(class_name, logical_source,
-    predicate_object_maps, listOfPredicateObjectMap);
+    predicate_object_maps, listOfPredicateObjectMap, predicateObjectMaps);
   let mutationResolversString = this.generateMutationResolvers(class_name, logical_source,
-    predicate_object_maps, listOfPredicateObjectMap);
+    predicate_object_maps, listOfPredicateObjectMap, predicateObjectMaps);
   let resolversString = queryResolversString + "\t,\n" + mutationResolversString;
 
   //console.log("resolversString = \n" + resolversString)
@@ -83,13 +83,15 @@ exports.generateResolvers = function(class_name, logical_source,
 
 
 exports.generateQueryResolvers = function(class_name, logical_source,
-  predicate_object_maps, listOfPredicateObjectMap) {
+  predicate_object_maps, listOfPredicateObjectMap, predicateObjectMaps) {
+    let alpha = logical_source;
+
   //console.log("listOfPredicateObjectMap = " + listOfPredicateObjectMap)
   var predicates = Object.keys(listOfPredicateObjectMap)
   let objectMaps = Object.values(listOfPredicateObjectMap)
   let projections = objectMaps.reduce(function(filtered, objectMap) {
     let prSQL = objectMap.genPRSQL();
-    console.log("prSQL = " + prSQL)
+    //console.log("prSQL = " + prSQL)
     if(prSQL != null) {
       filtered.push(prSQL)
     }
@@ -115,7 +117,7 @@ exports.generateQueryResolvers = function(class_name, logical_source,
     return filtered
   }, []).join(",")
   resolvers += `}) {\n`
-  let sqlSelectFrom = `SELECT ${projections} FROM ${logical_source}`
+  let sqlSelectFrom = `SELECT ${projections} FROM ${alpha}`
   resolvers += "\t\tlet sqlSelectFrom = `" + sqlSelectFrom + "`\n"
   resolvers += `\t\tlet sqlWhere = []\n`
 
@@ -129,6 +131,15 @@ exports.generateQueryResolvers = function(class_name, logical_source,
   resolvers += "\t\t}\n"
   */
 
+  //console.log("predicateObjectMaps = " + predicateObjectMaps)
+  predicateObjectMaps.map(function(predicateObjectMap) {
+    //console.log("predicateObjectMap = " + predicateObjectMap)
+    return predicateObjectMap;
+
+  })
+
+
+/*
   let equalityString = predicates.reduce(function(filtered, predicate) {
     let objectMap = listOfPredicateObjectMap[predicate];
     if(objectMap.referenceValue) {
@@ -139,8 +150,19 @@ exports.generateQueryResolvers = function(class_name, logical_source,
     }
     return filtered
   }, []).join("\n")
-  //console.log("equalityString = " + equalityString)
   resolvers += equalityString + "\n"
+*/
+
+  let condSQLString = predicateObjectMaps.reduce(function(filtered, predicateObjectMap) {
+    let predicate = predicateObjectMap.predicate;
+    let condSQL = predicateObjectMap.genCondSQL();
+    if(condSQL != null) {
+      filtered.push(`\t\tif(${predicate} != null) { sqlWhere.push(${condSQL}) }`)
+    }
+    return filtered;
+  }, []).join("\n");
+  resolvers += condSQLString + "\n"
+
 
   resolvers += '\t\tlet sql = "";\n'
   resolvers += '\t\tif(sqlWhere.length == 0) { sql = sqlSelectFrom} else { sql = sqlSelectFrom + " WHERE " + sqlWhere.join("AND") }\n';
@@ -185,7 +207,7 @@ exports.generateQueryResolvers = function(class_name, logical_source,
 }
 
 exports.generateMutationResolvers = function(class_name, logical_source,
-  predicate_object_maps, listOfPredicateObjectMap) {
+  predicate_object_maps, listOfPredicateObjectMap, predicateObjectMaps) {
   let predicates = Object.keys(listOfPredicateObjectMap)
   let objectMaps = Object.values(listOfPredicateObjectMap)
   let columnNames = objectMaps.reduce(function(filtered, objectMap) {
@@ -262,9 +284,10 @@ exports.toLowerCaseFirstChar = function(str) {
     return str.substr( 0, 1 ).toLowerCase() + str.substr( 1 );
 }
 
-exports.generateApp = function(class_name, logical_source,
-  predicate_object, listOfPredicateObjectMap, db_name, port_no) {
-    //console.log("listOfPredicateObjectMap = " + listOfPredicateObjectMap)
+exports.generateApp = function(class_name, logical_source, predicate_object, 
+  listOfPredicateObjectMap, predicateObjectMaps, db_name, port_no) {
+  
+  //console.log("predicateObjectMaps = " + predicateObjectMaps)
 
   var appString = "";
   var schemaString = this.generateSchema(class_name, logical_source,
@@ -272,7 +295,7 @@ exports.generateApp = function(class_name, logical_source,
   var modelString = this.generateModel(class_name, logical_source,
     predicate_object, listOfPredicateObjectMap)
   var resolversString = this.generateResolvers(class_name, logical_source,
-    predicate_object, listOfPredicateObjectMap)
+    predicate_object, listOfPredicateObjectMap, predicateObjectMaps)
 
   appString += "const db = require('sqlite');\n"
   appString += "const express = require('express');\n"

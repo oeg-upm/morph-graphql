@@ -9,10 +9,10 @@ class TermMap {
     getReferenceValue() { return this.referenceValue }
     getFunctionString() { return this.functionString }
     getHashCode() {
-        if(this.hashCode == undefined) { 
+        if(this.hashCode == undefined) {
             this.hashCode = "tm" + uuid.v4().substring(0,8);
         }
-        return this.hashCode 
+        return this.hashCode
     }
 
     beta() {
@@ -20,7 +20,7 @@ class TermMap {
         if(this.referenceValue) {
             betaValue = this.referenceValue
         } else if(this.functionString) {
-            betaValue = this.functionString; 
+            betaValue = this.functionString;
         } else {
             betaValue = null
         }
@@ -42,6 +42,27 @@ class TermMap {
         }
         return prSQL;
     }
+
+
+}
+
+class PredicateObjectMap {
+  genCondSQL() {
+    let predicate = this.predicate
+    let objectMap = this.objectMap;
+    let condSQL = null;
+    if(objectMap.referenceValue) {
+      condSQL = `"${objectMap.referenceValue} = '"+ ${predicate} +"'"`
+    } else if(objectMap.functionString) {
+      let omHash = objectMap.getHashCode();
+      condSQL = `"${omHash} = '"+ ${predicate} +"'"`
+    } else {
+        condSQL = null
+    }
+
+    console.log("condSQL = " + condSQL)
+    return condSQL
+  }
 }
 
 //input: original json and modified json
@@ -78,7 +99,7 @@ exports.getSubjectMapRef = function(json, subjectMapId){
     //console.log("subjectMapId = "+subjectMapId)
 
     var subjectMapRef = null;
-    
+
     for(i=0;i<json["@graph"].length;i++) {
         item = json["@graph"][i]
 
@@ -93,7 +114,7 @@ exports.getSubjectMapRef = function(json, subjectMapId){
 
 exports.getSubjectMap = function(json, subjectMapId){
     var subjectMap = this.getTermMap(json, subjectMapId)
-    
+
     for(i=0;i<json["@graph"].length;i++) {
         item = json["@graph"][i]
 
@@ -112,7 +133,7 @@ exports.getSubjectMap = function(json, subjectMapId){
 
 exports.getTermMap = function(json, termMapId){
     var termMap = new TermMap();
-    
+
     for(i=0;i<json["@graph"].length;i++) {
         item = json["@graph"][i]
         if(item["@id"]==termMapId){
@@ -127,7 +148,7 @@ exports.getTermMap = function(json, termMapId){
     //console.log("termMap.referenceValue: " + termMap.referenceValue)
     //console.log("termMap.template: " + termMap.template)
     //console.log("termMap.functionString: " + termMap.functionString)
-    return termMap    
+    return termMap
 }
 
 //input: original json and modified json
@@ -156,13 +177,13 @@ exports.get_predicate_object_map_list = function(j){
             //console.log(`predicateObjectMaps = ${predicateObjectMaps}`)
             if(Array.isArray(predicateObjectMaps)) {
                 predicateObjectMaps.forEach(function(predicateObjectMap) {
-                    pred_obj_map_ids.push(predicateObjectMap["@id"])    
+                    pred_obj_map_ids.push(predicateObjectMap["@id"])
                 })
             } else {
                 pred_obj_map_ids.push(predicateObjectMaps["@id"])
             }
 
-            
+
         }
     }
     return pred_obj_map_ids
@@ -191,7 +212,7 @@ exports.get_object = function(json, predicate_object_map_id){
             objectMapId = item['rr:objectMap']['@id']
         }
     }
-    
+
     let objectMap = new TermMap();
 
     for(i=0;i<json["@graph"].length;i++) {
@@ -216,7 +237,7 @@ exports.getObjectMap = function(json, predicate_object_map_id){
             objectMapId = item['rr:objectMap']['@id']
         }
     }
-    
+
     let objectMap = this.getTermMap(json, objectMapId)
 
     //console.log("objectMap.referenceValue: " + objectMap.referenceValue)
@@ -249,7 +270,7 @@ exports.get_jsonld_from_mapping = function(mapping_url) {
     let subjectMapRef = this.getSubjectMapRef(j, smId)
     let subjectMap = this.getSubjectMap(j, smId)
 
-    
+
     var listOfPredicateObject =  this.get_predicate_object_map_list(j)
     //console.log('listOfPredicateObject = ' + listOfPredicateObject)
 
@@ -262,29 +283,39 @@ exports.get_jsonld_from_mapping = function(mapping_url) {
     var pairsOfPredicateObjectMap = {}
     pairsOfPredicateObjectMap["identifier"] = subjectMap
 
+    predicateObjectMaps = [];
+    let subjectMapAsPredicateObjectMapIdentifier = new PredicateObjectMap();
+    subjectMapAsPredicateObjectMapIdentifier.predicate = "identifier";
+    subjectMapAsPredicateObjectMapIdentifier.objectMap = subjectMap;
+    predicateObjectMaps.push(subjectMapAsPredicateObjectMapIdentifier)
+
     for(i=0;i<listOfPredicateObject.length;i++){
-        predicateObjectMap = listOfPredicateObject[i];
+        predicateObjectMapId = listOfPredicateObject[i];
         //console.log('\tpredicateObjectMap = ' + predicateObjectMap)
 
-        predicate = this.get_predicate(j, predicateObjectMap)
+        predicate = this.get_predicate(j, predicateObjectMapId)
         //console.log('predicate = ' + predicate)
 
-        object = this.get_object(j, predicateObjectMap)
+        object = this.get_object(j, predicateObjectMapId)
         //console.log('object = ' + object)
         pairsOfPredicateObject[predicate] = object
 
-        objectMap = this.getObjectMap(j, predicateObjectMap);
-        //console.log(`objectMap.referenceValue = ${objectMap.referenceValue}`)
-        //console.log(`objectMap.template = ${objectMap.template}`)
+        objectMap = this.getObjectMap(j, predicateObjectMapId);
         pairsOfPredicateObjectMap[predicate] = objectMap
+
+        let predicateObjectMap = new PredicateObjectMap();
+        predicateObjectMap.predicate = predicate;
+        predicateObjectMap.objectMap = objectMap;
+        predicateObjectMaps.push(predicateObjectMap);
     }
     //console.log('pairsOfPredicateObject = ' + pairsOfPredicateObject)
 
-    
+
     //console.log('pairsOfPredicateObject = ' + pairsOfPredicateObject)
 
     res_data["predicate_object"] = pairsOfPredicateObject
     res_data["predicate_objectmap"] = pairsOfPredicateObjectMap
+    res_data["predicateObjectMaps"] = predicateObjectMaps
 
     //console.log('pairsOfPredicateObject = ' + JSON.stringify(pairsOfPredicateObject))
     //console.log('res_data: '+JSON.stringify(res_data))
@@ -309,11 +340,9 @@ exports.getClassNameFromMapping = function(mappingURL){
             //console.log("model name: "+model_name)
         }
         else{
-            
+
         }
     }
-  
+
     return model_name
   }
-
-  

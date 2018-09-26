@@ -17,16 +17,19 @@ Translate OBDA mappings (R2RML/RML) into GraphQL Resolvers
 ## Example 2: Translating mappings online for Javascript and SQLite (assuming that you have npm and node installed)
 1. ```mkdir output```
 2. ```cd output```
-3. Download the example database ```curl https://github.com/oeg-upm/mapping-translator/raw/master/examples/example1/personas.sqlite > personas.sqlite```
-4. Translate the corresponding RML: ```curl -X POST ```
-```  http://mappingtranslator.mappingpedia.linkeddata.es/transform ```
-```  -H 'Content-Type: application/json' ```
-```  -d '{ "prog_lang": "javascript", ```
-```"dataset_type":"sqlite", ```
-```"mapping_url":"https://raw.githubusercontent.com/oeg-upm/mapping-translator/master/examples/example1/personas.rml.ttl",```
-```"db_name":"personas.sqlite",```
-```"mapping_language":"rml"```
-```}' > output.zip```
+3. Download the example database 
+   - Linux: ```curl https://github.com/oeg-upm/mapping-translator/raw/master/examples/example1/personas.sqlite > personas.sqlite```
+   - Windows ```curl https://github.com/oeg-upm/mapping-translator/raw/master/examples/example3/personas3windows.sqlite > personas3.sqlite```
+4. Translate the corresponding RML: 
+   ```curl -X POST ```
+   ```  http://mappingtranslator.mappingpedia.linkeddata.es/transform ```
+   ```  -H 'Content-Type: application/json' ```
+   ```  -d '{ "prog_lang": "javascript", ```
+   ```"dataset_type":"sqlite", ```
+   ```"mapping_url":"https://raw.githubusercontent.com/oeg-upm/mapping-translator/master/examples/example1/personas.rml.ttl",```
+   ```"db_name":"personas.sqlite",```
+   ```"mapping_language":"rml"```
+   ```}' > output.zip```
 5. ```unzip output.zip```
 6. ```npm install```
 7. ```node app.js```

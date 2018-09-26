@@ -53,18 +53,14 @@ exports.generateModel = function(class_name, logical_source,
 
   var model = "";
   model += `class ${class_name} {\n`
+
   /*
-  for(i=0;i<predicates.length;i++){
-    model += `\t${predicates[i]}() { return this.${predicates[i]} }\n`
-  }
-  */
   model += predicates.reduce(function(filtered, predicate) {
     let objectMap = listOfPredicateObjectMap[predicate];
-    //if(objectMap.referenceValue) {
-      filtered.push("\t" + predicate + "() { return this." + predicate + " }")
-    //}
+    filtered.push("\t" + predicate + "() { return this." + predicate + " }")
     return filtered
   }, []).join("\n") + " \n";
+  */
   model += `}`
   //console.log("model = \n" + model)
   //console.log("\n\n\n")
@@ -174,8 +170,8 @@ exports.generateQueryResolvers = function(class_name, logical_source,
   resolvers += '\t\t});\n'
   resolvers += `\t}\n`
 
-  console.log("queryResolvers = \n" + resolvers)
-  console.log("\n\n\n")
+  //console.log("queryResolvers = \n" + resolvers)
+  //console.log("\n\n\n")
 
   return resolvers;
 }
@@ -224,16 +220,17 @@ exports.generateMutationResolvers = function(class_name, logical_source,
     let objectMap = listOfPredicateObjectMap[predicate];
     if(objectMap.referenceValue) {
       filtered.push(`\t\tnewInstance.${predicate} = ${predicate}`)
-    }
+    } 
     return filtered
   }, []).join("\n")
   mutationResolverString += `\t\tlet newInstance = new ${class_name}()\n`;
   mutationResolverString += newInstanceString + "\n";
   mutationResolverString += `\t\treturn newInstance\n`;
+  
   mutationResolverString += `\t}\n`
 
-  //console.log(`mutationResolverString = \n${mutationResolverString}`)
-  //console.log("\n\n\n")
+  console.log(`mutationResolverString = \n${mutationResolverString}`)
+  console.log("\n\n\n")
 
   return mutationResolverString;
 }

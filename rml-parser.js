@@ -60,7 +60,7 @@ class PredicateObjectMap {
         condSQL = null
     }
 
-    console.log("condSQL = " + condSQL)
+    //console.log("condSQL = " + condSQL)
     return condSQL
   }
 }

@@ -64,15 +64,23 @@ mutation {
 
 ## To query all persons 
 ```
-query { Person { identifier name email } }
+query {
+  Person {
+    identifier
+    name
+    givenName
+    familyName
+    email
+  } 
+}
 ```
 ## To add a person
 ```
 mutation {
-  createPerson(name: "Oscar" email:"ocorcho@fi.upm.es") {
+  createPerson(givenName: "David", familyName: "Chaves") {
     identifier
-    name
-    email
+    givenName
+    familyName
   }
 }
 ```

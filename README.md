@@ -51,6 +51,6 @@ mutation {
 ```
 
 # Screenshot
-![screenshot](https://github.com/oeg-upm/mapping-translator/raw/master/example/screenshot.png)
+![screenshot](https://github.com/oeg-upm/mapping-translator/raw/master/examples/screenshot.png)
 
-![screenshot-graphql](https://github.com/oeg-upm/mapping-translator/raw/master/example/screenshot-graphql.png)
+![screenshot-graphql](https://github.com/oeg-upm/mapping-translator/raw/master/examples/screenshot-graphql.png)

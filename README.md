@@ -1,13 +1,13 @@
 # mapping-translator
 Translate OBDA mappings (R2RML/RML) into GraphQL Resolvers
 
-## Installing and Running the mapping translator
+## EXAMPL 1: Installing and Running the mapping translator
 1. ```git clone https://github.com/oeg-upm/mapping-translator```
 2. ```cd mapping-translator```
 3. ```npm install```
 4. ```node app.js```
 
-## EXAMPLE 1: Translating mappings locallly for MongoDB and Python (Assuming that you have MongoDB, python and pip installed on your computer)
+## Translating mappings locallly for MongoDB and Python (Assuming that you have MongoDB, python and pip installed on your computer)
 1. go to http://localhost:8082/transform
 2. specify your rml mappings
 3. click the "submit" button, hopefully a zip file containing all the necessary files will be generated
@@ -60,7 +60,7 @@ mutation {
 8. Go to http://localhost:4321 from your browser, use some of the queries below
 
 ## The mappings used in the examples (Person is mapped to Personas, name is mapped to nombre, email is mapped to correo)
-- url: https://github.com/oeg-upm/mapping-translator/blob/master/examples/example1/personas.rml.ttl
+- url: https://github.com/oeg-upm/mapping-translator/blob/master/examples/example3/personas3.rml.ttl
 
 ## To query all persons 
 ```

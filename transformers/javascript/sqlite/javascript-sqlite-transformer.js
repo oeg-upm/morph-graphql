@@ -92,7 +92,7 @@ exports.generateResolvers = function(class_name, logical_source,
 
 exports.generateQueryResolvers = function(class_name, logical_source,
   predicateObjectMaps) {
-    console.log("predicateObjectMaps = " + predicateObjectMaps)
+    //console.log("predicateObjectMaps = " + predicateObjectMaps)
 
     let alpha = logical_source;
 
@@ -101,13 +101,13 @@ exports.generateQueryResolvers = function(class_name, logical_source,
   var predicates = predicateObjectMaps.map(function(predicateObjectMap) {
     return predicateObjectMap.predicate;
   });
-  console.log("predicates = " + predicates.join(","))
+  //console.log("predicates = " + predicates.join(","))
 
   //let objectMaps = Object.values(listOfPredicateObjectMap)
   let objectMaps = predicateObjectMaps.map(function(predicateObjectMap) {
     return predicateObjectMap.objectMap;
   });
-  console.log("objectMaps = " + objectMaps.join(","))
+  //console.log("objectMaps = " + objectMaps.join(","))
 
   let projections = objectMaps.reduce(function(filtered, objectMap) {
     let prSQL = objectMap.genPRSQL();
@@ -218,8 +218,8 @@ exports.generateQueryResolvers = function(class_name, logical_source,
   resolvers += '\t\t});\n'
   resolvers += `\t}\n`
 
-  console.log("queryResolvers = \n" + resolvers)
-  console.log("\n\n\n")
+  //console.log("queryResolvers = \n" + resolvers)
+  //console.log("\n\n\n")
 
   return resolvers;
 }

@@ -6,9 +6,10 @@ const url = require('url');
 const fs = require('fs');
 const uuid = require('uuid');
 const rmlparser = require('./rml-parser');
-//var mongodbpythontransformer = require('./transformers/mongodb/python/mongodb-python-transformer');
+const javascriptsqlitetransformer = require('./transformers/javascript/sqlite/javascript-sqlite-transformer');
+
+//const mongodbpythontransformer = require('./transformers/mongodb/python/mongodb-python-transformer');
 const mongodbpythontransformer = require('./mongodb-python-transformer');
-const javascriptsqlitetransformer = require('./javascript-sqlite-transformer');
 var JSZip = require("jszip");
 var zipper = require('zip-local');
 const archiver = require('archiver');

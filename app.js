@@ -173,7 +173,7 @@ app.post('/transform', function (req, res) {
   console.log(`req.body.mapping_url = ${req.body.mapping_url}`)
   console.log(`req.body.db_name = ${req.body.db_name}`)
   console.log(`req.body.port_no = ${req.body.port_no}`)
-
+  
   
     if(req.body.prog_lang && req.body.dataset_type && 
         req.body.mapping_url && req.body.db_name){
@@ -227,12 +227,15 @@ async function create_resolver(prog_lang, map_lang, dataset_type, mapping_url,
     var logical_source = data["logical_source"]
     var predicate_object = data["predicate_object"]
     var listOfPredicateObjectMap = data["predicate_objectmap"]
-    
+    var predicateObjectMaps = data["predicateObjectMaps"];
+    //console.log(`predicateObjectMaps = ${predicateObjectMaps}`)
+
 
     if(prog_lang == 'python' && dataset_type == 'mongodb') {
 
 
-        var schema = mongodbpythontransformer.generateSchema(class_name, logical_source, predicate_object)
+        var schema = mongodbpythontransformer.generateSchema(class_name, 
+            logical_source, predicate_object)
         //console.log("generated schema = \n" + schema )
         
         fs.writeFileSync(project_dir+"schema.py", schema, function (err){
@@ -241,7 +244,8 @@ async function create_resolver(prog_lang, map_lang, dataset_type, mapping_url,
             }
             });
 
-        var model = mongodbpythontransformer.generateModel(class_name, logical_source, predicate_object)
+        var model = mongodbpythontransformer.generateModel(class_name, logical_source, 
+            predicate_object)
         //console.log("generated model = \n" + model )
         
         fs.writeFileSync(project_dir+"models.py", model, function (err){
@@ -281,6 +285,7 @@ async function create_resolver(prog_lang, map_lang, dataset_type, mapping_url,
 
         let appString = javascriptsqlitetransformer.generateApp(class_name, 
             logical_source, predicate_object, listOfPredicateObjectMap, 
+            predicateObjectMaps, 
             db_name, port_no)
         fs.writeFileSync(project_dir+"app.js", appString, function (err){
             if(err){

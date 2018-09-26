@@ -17,13 +17,13 @@ Translate OBDA mappings (R2RML/RML) into GraphQL Resolvers
 ## Example 2: Translating mappings online for Javascript and SQLite (assuming that you have npm and node installed)
 1. ```mkdir output```
 2. ```cd output```
-3. Download the example database ```wget https://github.com/oeg-upm/mapping-translator/raw/master/example/sqlite/personas.sqlite```
+3. Download the example database ```wget https://github.com/oeg-upm/mapping-translator/raw/master/examples/example1/personas.sqlite```
 4. Translate the corresponding RML: ```curl -X POST ```
 ```  http://mappingtranslator.mappingpedia.linkeddata.es/transform ```
 ```  -H 'Content-Type: application/json' ```
 ```  -d '{ "prog_lang": "javascript", ```
 ```"dataset_type":"sqlite", ```
-```"mapping_url":"https://raw.githubusercontent.com/oeg-upm/mapping-translator/master/example/persona.rml.ttl",```
+```"mapping_url":"https://raw.githubusercontent.com/oeg-upm/mapping-translator/master/examples/example1/personas.rml.ttl",```
 ```"db_name":"personas.sqlite",```
 ```"mapping_language":"rml"```
 ```}' > output.zip```
@@ -33,7 +33,7 @@ Translate OBDA mappings (R2RML/RML) into GraphQL Resolvers
 8. Go to http://localhost:4321 from your browser, use some of the queries below
 
 ## The mappings used in the examples (Person is mapped to Personas, name is mapped to nombre, email is mapped to correo)
-- url: https://raw.githubusercontent.com/oeg-upm/mapping-translator/master/example/persona.rml.ttl
+- url: https://github.com/oeg-upm/mapping-translator/blob/master/examples/example1/personas.rml.ttl
 
 ## To query all persons 
 ```

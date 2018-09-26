@@ -1,14 +1,18 @@
 var fs = require('fs');
 
-exports.generateSchema = function(class_name, listOfPredicateObjectMap) {
+exports.generateSchema = function(class_name, predicateObjectMaps) {
   //var predicates = Object.keys(predicate_object)
-  var predicates = Object.keys(listOfPredicateObjectMap)
+  //var predicates = Object.keys(listOfPredicateObjectMap)
+  var predicates = predicateObjectMaps.map(function(predicateObjectMap) {
+    return predicateObjectMap.predicate;
+  });
 
   var schema  ="";
   schema += "\ttype Query {" + "\n"
   schema += `\t\t${class_name}(`
-  schema += predicates.reduce(function(filtered, predicate) {
-    let objectMap = listOfPredicateObjectMap[predicate];
+  schema += predicateObjectMaps.reduce(function(filtered, predicateObjectMap) {
+    let predicate = predicateObjectMap.predicate;
+    let objectMap = predicateObjectMap.objectMap;
     if(objectMap.referenceValue || objectMap.functionString) {
       filtered.push(predicate + ":String")
     }
@@ -19,8 +23,9 @@ exports.generateSchema = function(class_name, listOfPredicateObjectMap) {
 
   schema += "\ttype Mutation {" + "\n"
   schema += `\t\tcreate${class_name}(`
-  schema += predicates.reduce(function(filtered, predicate) {
-    let objectMap = listOfPredicateObjectMap[predicate];
+  schema += predicateObjectMaps.reduce(function(filtered, predicateObjectMap) {
+    let predicate = predicateObjectMap.predicate;
+    let objectMap = predicateObjectMap.objectMap;
     if(objectMap.referenceValue) {
       filtered.push(predicate + ":String")
     }
@@ -46,9 +51,13 @@ exports.generateSchema = function(class_name, listOfPredicateObjectMap) {
   return schema;
 }
 
-exports.generateModel = function(class_name, logical_source,
-  predicate_object, listOfPredicateObjectMap) {
-  var predicates = Object.keys(predicate_object)
+exports.generateModel = function(class_name, 
+  predicateObjectMaps) {
+  //var predicates = Object.keys(predicate_object)
+  //let predicates = Object.keys(listOfPredicateObjectMap)
+  let predicates = predicateObjectMaps.map(function(predicateObjectMap) {
+    return predicateObjectMap.predicate;
+  });
 
   var model = "";
   model += `class ${class_name} {\n`
@@ -306,17 +315,16 @@ exports.toLowerCaseFirstChar = function(str) {
 
 exports.generateApp = function(
   class_name, logical_source, 
-  predicate_object, listOfPredicateObjectMap, predicateObjectMaps, 
+  predicateObjectMaps, 
   db_name, port_no) {
   
   //console.log("predicateObjectMaps = " + predicateObjectMaps)
 
   var appString = "";
-  var schemaString = this.generateSchema(class_name, listOfPredicateObjectMap)
-  var modelString = this.generateModel(class_name, logical_source,
-    predicate_object, listOfPredicateObjectMap)
-  var resolversString = this.generateResolvers(
-    class_name, logical_source, predicateObjectMaps)
+  var schemaString = this.generateSchema(class_name, predicateObjectMaps)
+  var modelString = this.generateModel(class_name, predicateObjectMaps)
+  var resolversString = this.generateResolvers(class_name, logical_source, 
+    predicateObjectMaps)
 
   appString += "const db = require('sqlite');\n"
   appString += "const express = require('express');\n"

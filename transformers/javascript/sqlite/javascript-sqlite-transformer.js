@@ -1,7 +1,6 @@
 var fs = require('fs');
 
-exports.generateSchema = function(class_name, logical_source,
-  predicate_object, listOfPredicateObjectMap) {
+exports.generateSchema = function(class_name, listOfPredicateObjectMap) {
   //var predicates = Object.keys(predicate_object)
   var predicates = Object.keys(listOfPredicateObjectMap)
 
@@ -313,8 +312,7 @@ exports.generateApp = function(
   //console.log("predicateObjectMaps = " + predicateObjectMaps)
 
   var appString = "";
-  var schemaString = this.generateSchema(class_name, logical_source,
-    predicate_object, listOfPredicateObjectMap)
+  var schemaString = this.generateSchema(class_name, listOfPredicateObjectMap)
   var modelString = this.generateModel(class_name, logical_source,
     predicate_object, listOfPredicateObjectMap)
   var resolversString = this.generateResolvers(

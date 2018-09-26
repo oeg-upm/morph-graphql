@@ -70,9 +70,9 @@ exports.generateModel = function(class_name, logical_source,
 exports.generateResolvers = function(class_name, logical_source,
   predicate_object_maps, listOfPredicateObjectMap, predicateObjectMaps) {
   let queryResolversString = this.generateQueryResolvers(class_name, logical_source,
-    predicate_object_maps, listOfPredicateObjectMap, predicateObjectMaps);
+    predicateObjectMaps);
   let mutationResolversString = this.generateMutationResolvers(class_name, logical_source,
-    predicate_object_maps, listOfPredicateObjectMap, predicateObjectMaps);
+    listOfPredicateObjectMap, predicateObjectMaps);
   let resolversString = queryResolversString + "\t,\n" + mutationResolversString;
 
   //console.log("resolversString = \n" + resolversString)
@@ -83,12 +83,22 @@ exports.generateResolvers = function(class_name, logical_source,
 
 
 exports.generateQueryResolvers = function(class_name, logical_source,
-  predicate_object_maps, listOfPredicateObjectMap, predicateObjectMaps) {
+  predicateObjectMaps) {
     let alpha = logical_source;
 
   //console.log("listOfPredicateObjectMap = " + listOfPredicateObjectMap)
-  var predicates = Object.keys(listOfPredicateObjectMap)
-  let objectMaps = Object.values(listOfPredicateObjectMap)
+  //var predicates = Object.keys(listOfPredicateObjectMap)
+  var predicates = predicateObjectMaps.map(function(predicateObjectMap) {
+    return predicateObjectMap.predicate;
+  });
+  console.log("predicates = " + predicates.join(","))
+
+  //let objectMaps = Object.values(listOfPredicateObjectMap)
+  let objectMaps = predicateObjectMaps.map(function(predicateObjectMap) {
+    return predicateObjectMap.objectMap;
+  });
+  console.log("objectMaps = " + objectMaps.join(","))
+
   let projections = objectMaps.reduce(function(filtered, objectMap) {
     let prSQL = objectMap.genPRSQL();
     //console.log("prSQL = " + prSQL)
@@ -109,8 +119,10 @@ exports.generateQueryResolvers = function(class_name, logical_source,
 
   var resolvers = "";
   resolvers += `\t${class_name}: function({`
-  resolvers += predicates.reduce(function(filtered, predicate) {
-    let objectMap = listOfPredicateObjectMap[predicate];
+  resolvers += predicateObjectMaps.reduce(function(filtered, predicateObjectMap) {
+    let predicate = predicateObjectMap.predicate;
+    let objectMap = predicateObjectMap.objectMap;
+
     if(objectMap.referenceValue || objectMap.functionString) {
       filtered.push(predicate)
     }
@@ -131,12 +143,6 @@ exports.generateQueryResolvers = function(class_name, logical_source,
   resolvers += "\t\t}\n"
   */
 
-  //console.log("predicateObjectMaps = " + predicateObjectMaps)
-  predicateObjectMaps.map(function(predicateObjectMap) {
-    //console.log("predicateObjectMap = " + predicateObjectMap)
-    return predicateObjectMap;
-
-  })
 
 
 /*
@@ -178,8 +184,10 @@ exports.generateQueryResolvers = function(class_name, logical_source,
     resolvers += `\t\t\t\t\instance.${predicates[i]} = row["${objects[i]}"];\n`
   }
   */
-  resolvers += predicates.reduce(function(filtered, predicate) {
-    let objectMap = listOfPredicateObjectMap[predicate];
+  resolvers += predicateObjectMaps.reduce(function(filtered, predicateObjectMap) {
+    let predicate = predicateObjectMap.predicate;
+    let objectMap = predicateObjectMap.objectMap;
+
     if(objectMap.referenceValue) {
       filtered.push(`\t\t\t\t\instance.${predicate} = row["${objectMap.referenceValue}"];`)
     } else if(objectMap.template) {
@@ -207,7 +215,7 @@ exports.generateQueryResolvers = function(class_name, logical_source,
 }
 
 exports.generateMutationResolvers = function(class_name, logical_source,
-  predicate_object_maps, listOfPredicateObjectMap, predicateObjectMaps) {
+  listOfPredicateObjectMap, predicateObjectMaps) {
   let predicates = Object.keys(listOfPredicateObjectMap)
   let objectMaps = Object.values(listOfPredicateObjectMap)
   let columnNames = objectMaps.reduce(function(filtered, objectMap) {

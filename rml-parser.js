@@ -96,6 +96,26 @@ class TriplesMap {
     getLogicalSource() { return this.logicalSource; }
     getSubjectMap() { return this.subjectMap; }
     getPredicateObjectMaps() { return this.predicateObjectMaps; }
+
+    genPRSQL() {
+        let objectMaps = this.predicateObjectMaps.map(function(predicateObjectMap) {
+            return predicateObjectMap.objectMap;
+        });
+
+        let prSQLTriplesMap = objectMaps.reduce(function(filtered, objectMap) {
+            let prSQLObjectMap = objectMap.genPRSQL();
+            console.log("prSQLObjectMap = " + prSQLObjectMap)
+            if(prSQLObjectMap != null) {
+              filtered.push(prSQLObjectMap)
+            }
+        
+
+            return filtered
+          }, []).join(",");
+
+          console.log("prSQLTriplesMap = " + prSQLTriplesMap)
+          return prSQLTriplesMap;
+    }
 }
 
 //input: original json and modified json

@@ -115,23 +115,8 @@ exports.generateQueryResolvers = function(triplesMap) {
   });
   //console.log("objectMaps = " + objectMaps.join(","))
 
-  let projections = objectMaps.reduce(function(filtered, objectMap) {
-    let prSQL = objectMap.genPRSQL();
-    //console.log("prSQL = " + prSQL)
-    if(prSQL != null) {
-      filtered.push(prSQL)
-    }
-
-    /*
-    if(objectMap.referenceValue) {
-      filtered.push(objectMap.referenceValue)
-    } else if(objectMap.functionString) {
-      let omHash = objectMap.getHashCode();
-      filtered.push(`${objectMap.functionString} AS ${omHash}`)
-    }
-    */
-    return filtered
-  }, []).join(",");
+  let prSQLTriplesMap = triplesMap.genPRSQL();
+  //console.log("prSQLTriplesMap = " + prSQLTriplesMap)
 
   var resolvers = "";
   resolvers += `\t${class_name}: function({`
@@ -145,7 +130,7 @@ exports.generateQueryResolvers = function(triplesMap) {
     return filtered
   }, []).join(",")
   resolvers += `}) {\n`
-  let sqlSelectFrom = `SELECT ${projections} FROM ${alpha}`
+  let sqlSelectFrom = `SELECT ${prSQLTriplesMap} FROM ${alpha}`
   resolvers += "\t\tlet sqlSelectFrom = `" + sqlSelectFrom + "`\n"
   resolvers += `\t\tlet sqlWhere = []\n`
 

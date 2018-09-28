@@ -104,7 +104,6 @@ class TriplesMap {
 
         let prSQLTriplesMap = objectMaps.reduce(function(filtered, objectMap) {
             let prSQLObjectMap = objectMap.genPRSQL();
-            console.log("prSQLObjectMap = " + prSQLObjectMap)
             if(prSQLObjectMap != null) {
               filtered.push(prSQLObjectMap)
             }
@@ -113,9 +112,21 @@ class TriplesMap {
             return filtered
           }, []).join(",");
 
-          console.log("prSQLTriplesMap = " + prSQLTriplesMap)
           return prSQLTriplesMap;
     }
+
+    genCondSQL() {
+        let condSQLTriplesMap = this.predicateObjectMaps.reduce(function(filtered, predicateObjectMap) {
+            let predicate = predicateObjectMap.predicate;
+            let condSQL = predicateObjectMap.genCondSQL();
+            if(condSQL != null) {
+              filtered.push(`\t\tif(${predicate} != null) { sqlWhere.push(${condSQL}) }`)
+            }
+            return filtered;
+        }, []).join("\n");
+        return condSQLTriplesMap;
+    }
+
 }
 
 //input: original json and modified json

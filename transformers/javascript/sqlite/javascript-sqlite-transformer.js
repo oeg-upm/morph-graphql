@@ -1,8 +1,11 @@
 var fs = require('fs');
 
-exports.generateSchema = function(class_name, predicateObjectMaps) {
+exports.generateSchema = function(triplesMap) {
   //var predicates = Object.keys(predicate_object)
   //var predicates = Object.keys(listOfPredicateObjectMap)
+  let class_name = triplesMap.subjectMap.className;
+  let predicateObjectMaps = triplesMap.predicateObjectMaps;
+
   var predicates = predicateObjectMaps.map(function(predicateObjectMap) {
     return predicateObjectMap.predicate;
   });
@@ -51,8 +54,10 @@ exports.generateSchema = function(class_name, predicateObjectMaps) {
   return schema;
 }
 
-exports.generateModel = function(class_name, 
-  predicateObjectMaps) {
+exports.generateModel = function(triplesMap) {
+    let class_name = triplesMap.subjectMap.className;
+    let predicateObjectMaps = triplesMap.predicateObjectMaps;
+
   //var predicates = Object.keys(predicate_object)
   //let predicates = Object.keys(listOfPredicateObjectMap)
   let predicates = predicateObjectMaps.map(function(predicateObjectMap) {
@@ -75,12 +80,9 @@ exports.generateModel = function(class_name,
   return model;
 }
 
-exports.generateResolvers = function(class_name, logical_source,
-  predicateObjectMaps) {
-  let queryResolversString = this.generateQueryResolvers(
-    class_name, logical_source, predicateObjectMaps);
-  let mutationResolversString = this.generateMutationResolvers(
-    class_name, logical_source, predicateObjectMaps);
+exports.generateResolvers = function(triplesMap) {
+  let queryResolversString = this.generateQueryResolvers(triplesMap);
+  let mutationResolversString = this.generateMutationResolvers(triplesMap);
   let resolversString = queryResolversString + "\t,\n" + mutationResolversString;
 
   //console.log("resolversString = \n" + resolversString)
@@ -90,8 +92,12 @@ exports.generateResolvers = function(class_name, logical_source,
 
 
 
-exports.generateQueryResolvers = function(class_name, logical_source,
-  predicateObjectMaps) {
+exports.generateQueryResolvers = function(triplesMap) {
+    let logical_source = triplesMap.logicalSource;
+    let class_name = triplesMap.subjectMap.className;
+    let predicateObjectMaps = triplesMap.predicateObjectMaps;
+
+
     //console.log("predicateObjectMaps = " + predicateObjectMaps)
 
     let alpha = logical_source;
@@ -203,7 +209,7 @@ exports.generateQueryResolvers = function(class_name, logical_source,
     } else if(objectMap.template) {
       //let templateString = objectMap.template.replaceAll("{", '${row["').replace("}", '"]}')
       let templateString = objectMap.template.split("{").join('${row["').split("}").join('"]}')
-      templateString = "`" + templateString + "`" 
+      templateString = "`" + templateString + "`"
       filtered.push(`\t\t\t\t\instance.${predicate} = ${templateString}`)
     } else if(objectMap.functionString) {
       let alias = '`${row["' + objectMap.getHashCode() + '"]}`';
@@ -224,13 +230,16 @@ exports.generateQueryResolvers = function(class_name, logical_source,
   return resolvers;
 }
 
-exports.generateMutationResolvers = function(class_name, logical_source,
-  predicateObjectMaps) {
+exports.generateMutationResolvers = function(triplesMap) {
+    let logical_source = triplesMap.logicalSource;
+    let class_name = triplesMap.subjectMap.className;
+    let predicateObjectMaps = triplesMap.predicateObjectMaps;
+
     //let predicates = Object.keys(listOfPredicateObjectMap)
     let predicates = predicateObjectMaps.map(function(predicateObjectMap) {
       return predicateObjectMap.predicate;
     });
-    
+
     //let objectMaps = Object.values(listOfPredicateObjectMap)
     let objectMaps = predicateObjectMaps.map(function(predicateObjectMap) {
       return predicateObjectMap.objectMap;
@@ -279,13 +288,13 @@ exports.generateMutationResolvers = function(class_name, logical_source,
     let objectMap = predicateObjectMap.objectMap;
     if(objectMap.referenceValue) {
       filtered.push(`\t\tnewInstance.${predicate} = ${predicate}`)
-    } 
+    }
     return filtered
   }, []).join("\n")
   mutationResolverString += `\t\tlet newInstance = new ${class_name}()\n`;
   mutationResolverString += newInstanceString + "\n";
   mutationResolverString += `\t\treturn newInstance\n`;
-  
+
   mutationResolverString += `\t}\n`
 
   //console.log(`mutationResolverString = \n${mutationResolverString}`)
@@ -295,17 +304,14 @@ exports.generateMutationResolvers = function(class_name, logical_source,
 }
 
 
-exports.transform = function(class_name, logical_source, predicate_object) {
-  var predicates = Object.keys(predicate_object)
-  var objects = Object.values(predicate_object)
-
-  var schema = this.generateSchema(class_name, logical_source, predicate_object);
+exports.transform = function(triplesMap) {
+  var schema = this.generateSchema(triplesMap);
   //console.log("schema = \n" + schema)
 
-  var model = this.generateModel(class_name, logical_source, predicate_object);
+  var model = this.generateModel(triplesMap);
   //console.log("model = \n" + model)
 
-  var resolvers = this.generateResolvers(class_name, logical_source, predicate_object);
+  var resolvers = this.generateResolvers(triplesMap);
   //console.log("resolvers = \n" + resolvers)
 }
 
@@ -314,17 +320,23 @@ exports.toLowerCaseFirstChar = function(str) {
 }
 
 exports.generateApp = function(
-  class_name, logical_source, 
-  predicateObjectMaps, 
+  triplesMap,
+  //class_name,
+  //logical_source,
+  //predicateObjectMaps,
   db_name, port_no) {
-  
-  //console.log("predicateObjectMaps = " + predicateObjectMaps)
+
+  let logical_source = triplesMap.logicalSource;
+  let class_name = triplesMap.subjectMap.className;
+  let predicateObjectMaps = triplesMap.predicateObjectMaps;
 
   var appString = "";
-  var schemaString = this.generateSchema(class_name, predicateObjectMaps)
-  var modelString = this.generateModel(class_name, predicateObjectMaps)
-  var resolversString = this.generateResolvers(class_name, logical_source, 
-    predicateObjectMaps)
+  console.log("Generating Schema ...");
+  var schemaString = this.generateSchema(triplesMap)
+  console.log("Generating Model ...");
+  var modelString = this.generateModel(triplesMap)
+  console.log("Generating Resolvers ...");
+  var resolversString = this.generateResolvers(triplesMap)
 
   appString += "const db = require('sqlite');\n"
   appString += "const express = require('express');\n"

@@ -97,40 +97,16 @@ exports.generateQueryResolvers = function(triplesMap) {
   let logical_source = triplesMap.logicalSource;
   let class_name = triplesMap.subjectMap.className;
   let predicateObjectMaps = triplesMap.predicateObjectMaps;
-
-
-  //console.log("predicateObjectMaps = " + predicateObjectMaps)
-
   let alpha = logical_source;
-
-  //console.log("listOfPredicateObjectMap = " + listOfPredicateObjectMap)
-  //var predicates = Object.keys(listOfPredicateObjectMap)
-  var predicates = predicateObjectMaps.map(function(predicateObjectMap) {
-    return predicateObjectMap.predicate;
-  });
-  //console.log("predicates = " + predicates.join(","))
-
-  //let objectMaps = Object.values(listOfPredicateObjectMap)
-  let objectMaps = predicateObjectMaps.map(function(predicateObjectMap) {
-    return predicateObjectMap.objectMap;
-  });
-  //console.log("objectMaps = " + objectMaps.join(","))
 
   let prSQLTriplesMap = triplesMap.genPRSQL();
   //console.log("prSQLTriplesMap = " + prSQLTriplesMap)
 
   var resolvers = "";
-  resolvers += `\t${class_name}: function({`
-  resolvers += predicateObjectMaps.reduce(function(filtered, predicateObjectMap) {
-    let predicate = predicateObjectMap.predicate;
-    let objectMap = predicateObjectMap.objectMap;
+  let queryArguments = triplesMap.genQueryArguments();
 
-    if(objectMap.referenceValue || objectMap.functionString) {
-      filtered.push(predicate)
-    }
-    return filtered
-  }, []).join(",")
-  resolvers += `}) {\n`
+  resolvers += `\t${class_name}: function({${queryArguments.join(",")}}) {\n`
+
   let sqlSelectFrom = `SELECT ${prSQLTriplesMap} FROM ${alpha}`
   resolvers += "\t\tlet sqlSelectFrom = `" + sqlSelectFrom + "`\n"
   resolvers += `\t\tlet sqlWhere = []\n`
@@ -216,7 +192,7 @@ exports.generateQueryResolvers = function(triplesMap) {
   resolvers += '\t\t});\n'
   resolvers += `\t}\n`
 
-  //console.log("queryResolvers = \n" + resolvers)
+  console.log("queryResolvers = \n" + resolvers)
   //console.log("\n\n\n")
 
   return resolvers;

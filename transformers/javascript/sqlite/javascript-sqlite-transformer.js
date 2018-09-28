@@ -93,14 +93,15 @@ exports.generateResolvers = function(triplesMap) {
 
 
 exports.generateQueryResolvers = function(triplesMap) {
-    let logical_source = triplesMap.logicalSource;
-    let class_name = triplesMap.subjectMap.className;
-    let predicateObjectMaps = triplesMap.predicateObjectMaps;
+
+  let logical_source = triplesMap.logicalSource;
+  let class_name = triplesMap.subjectMap.className;
+  let predicateObjectMaps = triplesMap.predicateObjectMaps;
 
 
-    //console.log("predicateObjectMaps = " + predicateObjectMaps)
+  //console.log("predicateObjectMaps = " + predicateObjectMaps)
 
-    let alpha = logical_source;
+  let alpha = logical_source;
 
   //console.log("listOfPredicateObjectMap = " + listOfPredicateObjectMap)
   //var predicates = Object.keys(listOfPredicateObjectMap)
@@ -160,7 +161,9 @@ exports.generateQueryResolvers = function(triplesMap) {
   resolvers += equalityString + "\n"
 */
 
-  let condSQLString = predicateObjectMaps.reduce(function(filtered, predicateObjectMap) {
+
+
+/*   let condSQLString = predicateObjectMaps.reduce(function(filtered, predicateObjectMap) {
     let predicate = predicateObjectMap.predicate;
     let condSQL = predicateObjectMap.genCondSQL();
     if(condSQL != null) {
@@ -168,8 +171,12 @@ exports.generateQueryResolvers = function(triplesMap) {
     }
     return filtered;
   }, []).join("\n");
-  resolvers += condSQLString + "\n"
+  console.log(`condSQLString = \n${condSQLString}`)
+  resolvers += condSQLString + "\n" */
 
+  let condSQLTriplesMap = triplesMap.genCondSQL();
+  //console.log(`condSQLTriplesMap = \n${condSQLTriplesMap}`)
+  resolvers += condSQLTriplesMap + "\n"
 
   resolvers += '\t\tlet sql = "";\n'
   resolvers += '\t\tif(sqlWhere.length == 0) { sql = sqlSelectFrom} else { sql = sqlSelectFrom + " WHERE " + sqlWhere.join("AND") }\n';

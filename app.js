@@ -218,6 +218,7 @@ async function create_resolver(prog_lang, map_lang, dataset_type, mapping_url,
     
     var data;
     if(map_lang == 'rml') {
+        console.log(`Parsing mapping document from ${mapping_url} ...`)
         data = rmlparser.get_jsonld_from_mapping(mapping_url)
     } else {
         console.log(map_lang + " is not supported yet!")
@@ -231,6 +232,8 @@ async function create_resolver(prog_lang, map_lang, dataset_type, mapping_url,
     //console.log(`predicateObjectMaps = ${predicateObjectMaps}`)
 
 
+    let triplesMap = data["triplesMap"];
+   
     if(prog_lang == 'python' && dataset_type == 'mongodb') {
 
 
@@ -284,8 +287,7 @@ async function create_resolver(prog_lang, map_lang, dataset_type, mapping_url,
     } else if(prog_lang == 'javascript' && dataset_type == 'sqlite') {
 
         let appString = javascriptsqlitetransformer.generateApp(
-            class_name, logical_source, 
-            predicateObjectMaps, 
+            triplesMap,
             db_name, port_no)
         fs.writeFileSync(project_dir+"app.js", appString, function (err){
             if(err){

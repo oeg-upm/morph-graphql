@@ -43,6 +43,27 @@ class TermMap {
         return prSQL;
     }
 
+    parseFromJson(json, termMapId) {
+
+        for(i=0;i<json["@graph"].length;i++) {
+            item = json["@graph"][i]
+            if(item["@id"]==termMapId){
+                this.referenceValue = item['rml:reference'];
+                this.template = item['rr:template'];
+                this.functionString = item['rmlc:functions'];
+
+                break;
+            }
+        }
+
+        //console.log("termMap.referenceValue: " + termMap.referenceValue)
+        //console.log("termMap.template: " + termMap.template)
+        //console.log("termMap.functionString: " + termMap.functionString)
+    }
+
+}
+
+class SubjectMap extends TermMap {
 
 }
 
@@ -63,6 +84,18 @@ class PredicateObjectMap {
     //console.log("condSQL = " + condSQL)
     return condSQL
   }
+}
+
+class TriplesMap {
+    constructor(logicalSource, subjectMap, predicateObjectMaps) {
+        this.logicalSource = logicalSource;
+        this.subjectMap = subjectMap;
+        this.predicateObjectMaps = predicateObjectMaps;
+    }
+
+    getLogicalSource() { return this.logicalSource; }
+    getSubjectMap() { return this.subjectMap; }
+    getPredicateObjectMaps() { return this.predicateObjectMaps; }
 }
 
 //input: original json and modified json
@@ -113,21 +146,22 @@ exports.getSubjectMapRef = function(json, subjectMapId){
 }
 
 exports.getSubjectMap = function(json, subjectMapId){
-    var subjectMap = this.getTermMap(json, subjectMapId)
 
-    for(i=0;i<json["@graph"].length;i++) {
-        item = json["@graph"][i]
+    // var subjectMap = this.getTermMap(json, subjectMapId)
+    // for(i=0;i<json["@graph"].length;i++) {
+    //     item = json["@graph"][i]
+    //
+    //     if(item["@id"]==subjectMapId){
+    //         subjectMap.referenceValue = item['rml:reference'];
+    //         subjectMap.template = item['rr:template'];
+    //         break;
+    //     }
+    // }
 
-        if(item["@id"]==subjectMapId){
-            subjectMap.referenceValue = item['rml:reference'];
-            subjectMap.template = item['rr:template'];
-            break;
-        }
-    }
+    var subjectMap = new SubjectMap();
+    subjectMap.parseFromJson(json, subjectMapId)
+    subjectMap.className = this.get_class_name(json)
 
-    //console.log("subjectMap.referenceValue: " + subjectMap.referenceValue)
-    //console.log("subjectMap.template: " + subjectMap.template)
-    //console.log("subjectMap.functionString: " + subjectMap.functionString)
     return subjectMap
 }
 
@@ -319,6 +353,10 @@ exports.get_jsonld_from_mapping = function(mapping_url) {
 
     //console.log('pairsOfPredicateObject = ' + JSON.stringify(pairsOfPredicateObject))
     //console.log('res_data: '+JSON.stringify(res_data))
+
+    let triplesMap = new TriplesMap(logicalSource, subjectMap, predicateObjectMaps);
+    res_data["triplesMap"] = triplesMap
+
     return res_data
 }
 

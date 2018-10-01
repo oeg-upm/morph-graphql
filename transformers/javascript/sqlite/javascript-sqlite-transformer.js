@@ -14,7 +14,7 @@ exports.generateSchema = function(triplesMap) {
   schema += predicateObjectMaps.reduce(function(filtered, predicateObjectMap) {
     let predicate = predicateObjectMap.predicate;
     let objectMap = predicateObjectMap.objectMap;
-    if(objectMap.referenceValue || objectMap.functionString) {
+    if(objectMap.referenceValue || objectMap.functionString || objectMap.template) {
       filtered.push(predicate + ":String")
     }
     return filtered
@@ -42,8 +42,8 @@ exports.generateSchema = function(triplesMap) {
   }).join("\n") + "\n"
 
   schema += "\t}"  + "\n"
-  //console.log("schema = \n" + schema)
-  //console.log("\n\n\n")
+  console.log("schema = \n" + schema)
+  console.log("\n\n\n")
   return schema;
 }
 
@@ -90,28 +90,28 @@ exports.generateQueryResolvers = function(triplesMap) {
 
   let prSQLTriplesMap = triplesMap.genPRSQL().join(",");
 
-  var resolvers = "";
+  var queryResolvers = "";
   let queryArguments = triplesMap.genQueryArguments();
 
-  resolvers += `\t${class_name}: function({${queryArguments.join(",")}}) {\n`
+  queryResolvers += `\t${class_name}: function({${queryArguments.join(",")}}) {\n`
 
   let sqlSelectFrom = `SELECT ${prSQLTriplesMap} FROM ${alpha}`
-  resolvers += "\t\tlet sqlSelectFrom = `" + sqlSelectFrom + "`\n"
-  resolvers += `\t\tlet sqlWhere = []\n`
+  queryResolvers += "\t\tlet sqlSelectFrom = `" + sqlSelectFrom + "`\n"
+  queryResolvers += `\t\tlet sqlWhere = []\n`
 
   let condSQLTriplesMap = triplesMap.genCondSQL();
-  resolvers += condSQLTriplesMap.join("\n") + "\n"
+  queryResolvers += condSQLTriplesMap.join("\n") + "\n"
 
-  resolvers += '\t\tlet sql = "";\n'
-  resolvers += '\t\tif(sqlWhere.length == 0) { sql = sqlSelectFrom} else { sql = sqlSelectFrom + " WHERE " + sqlWhere.join("AND") }\n';
-  resolvers += '\t\tlet data = db.all(sql);\n'
-  resolvers += "\t\tconsole.log(`sql = ${sql}`)\n"
-  resolvers += '\t\tlet allInstances = [];\n'
-  resolvers += '\t\treturn data.then(rows => {\n';
-  resolvers += '\t\t\trows.forEach((row) => {\n';
+  queryResolvers += '\t\tlet sql = "";\n'
+  queryResolvers += '\t\tif(sqlWhere.length == 0) { sql = sqlSelectFrom} else { sql = sqlSelectFrom + " WHERE " + sqlWhere.join("AND") }\n';
+  queryResolvers += '\t\tlet data = db.all(sql);\n'
+  queryResolvers += "\t\tconsole.log(`sql = ${sql}`)\n"
+  queryResolvers += '\t\tlet allInstances = [];\n'
+  queryResolvers += '\t\treturn data.then(rows => {\n';
+  queryResolvers += '\t\t\trows.forEach((row) => {\n';
 
-  resolvers += "\t\t\t\t" + `let instance = new ${class_name}();\n`
-  resolvers += predicateObjectMaps.reduce(function(filtered, predicateObjectMap) {
+  queryResolvers += "\t\t\t\t" + `let instance = new ${class_name}();\n`
+  queryResolvers += predicateObjectMaps.reduce(function(filtered, predicateObjectMap) {
     let predicate = predicateObjectMap.predicate;
     let objectMap = predicateObjectMap.objectMap;
 
@@ -128,16 +128,16 @@ exports.generateQueryResolvers = function(triplesMap) {
     return filtered
   }, []).join("\n") + "\n";
 
-  resolvers += '\t\t\t\tallInstances.push(instance);\n'
-  resolvers += '\t\t\t})\n'
-  resolvers += '\t\t\treturn allInstances;\n'
-  resolvers += '\t\t});\n'
-  resolvers += `\t}\n`
+  queryResolvers += '\t\t\t\tallInstances.push(instance);\n'
+  queryResolvers += '\t\t\t})\n'
+  queryResolvers += '\t\t\treturn allInstances;\n'
+  queryResolvers += '\t\t});\n'
+  queryResolvers += `\t}\n`
 
-  //console.log("queryResolvers = \n" + resolvers)
+  //console.log("queryResolvers = \n" + queryResolvers)
   //console.log("\n\n\n")
 
-  return resolvers;
+  return queryResolvers;
 }
 
 exports.generateMutationResolvers = function(triplesMap) {

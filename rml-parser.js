@@ -21,6 +21,8 @@ class TermMap {
             betaValue = this.referenceValue
         } else if(this.functionString) {
             betaValue = this.functionString;
+        } else if(this.template) {
+            betaValue = this.templateToSQL();
         } else {
             betaValue = null
         }
@@ -61,6 +63,15 @@ class TermMap {
         //console.log("termMap.functionString: " + termMap.functionString)
     }
 
+    templateToSQL() {
+        let templateInSQL = this.template;
+        templateInSQL = `'${templateInSQL}'`
+        templateInSQL = templateInSQL.split("{").join("' || ");
+        templateInSQL = templateInSQL.split("}").join(" || '");
+        console.log("templateInSQL =  " + templateInSQL)
+        return templateInSQL;
+    }
+
 }
 
 class SubjectMap extends TermMap {
@@ -74,7 +85,7 @@ class PredicateObjectMap {
     let condSQL = null;
     if(objectMap.referenceValue) {
       condSQL = `"${objectMap.referenceValue} = '"+ ${predicate} +"'"`
-    } else if(objectMap.functionString) {
+    } else if(objectMap.functionString || objectMap.template) {
       let omHash = objectMap.getHashCode();
       condSQL = `"${omHash} = '"+ ${predicate} +"'"`
     } else {
@@ -98,7 +109,7 @@ class TriplesMap {
     getPredicateObjectMaps() { return this.predicateObjectMaps; }
 
     getAlpha() { return this.logicalSource; }
-    
+
     genPRSQL() {
         let objectMaps = this.predicateObjectMaps.map(function(predicateObjectMap) {
             return predicateObjectMap.objectMap;
@@ -136,7 +147,7 @@ class TriplesMap {
             let predicate = predicateObjectMap.predicate;
             let objectMap = predicateObjectMap.objectMap;
         
-            if(objectMap.referenceValue || objectMap.functionString) {
+            if(objectMap.referenceValue || objectMap.functionString || objectMap.template) {
               filtered.push(predicate)
             }
             return filtered

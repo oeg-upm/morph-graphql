@@ -1,8 +1,6 @@
 var fs = require('fs');
 
 exports.generateSchema = function(triplesMap) {
-  //var predicates = Object.keys(predicate_object)
-  //var predicates = Object.keys(listOfPredicateObjectMap)
   let class_name = triplesMap.subjectMap.className;
   let predicateObjectMaps = triplesMap.predicateObjectMaps;
 
@@ -39,11 +37,6 @@ exports.generateSchema = function(triplesMap) {
 
   schema +=  "\n"
   schema += `\ttype ${class_name} {` +  "\n"
-  /*
-  for(i=0;i<predicates.length;i++){
-    schema += `\t\t${predicates[i]}: String` + "\n"
-  }
-  */
   schema += predicates.map(function(predicate) {
     return "\t\t" + predicate + ":String"
   }).join("\n") + "\n"
@@ -55,19 +48,16 @@ exports.generateSchema = function(triplesMap) {
 }
 
 exports.generateModel = function(triplesMap) {
-    let class_name = triplesMap.subjectMap.className;
-    let predicateObjectMaps = triplesMap.predicateObjectMaps;
-
-  //var predicates = Object.keys(predicate_object)
-  //let predicates = Object.keys(listOfPredicateObjectMap)
-  let predicates = predicateObjectMaps.map(function(predicateObjectMap) {
-    return predicateObjectMap.predicate;
-  });
+  let class_name = triplesMap.subjectMap.className;
 
   var model = "";
   model += `class ${class_name} {\n`
 
   /*
+  let predicateObjectMaps = triplesMap.predicateObjectMaps;
+  let predicates = predicateObjectMaps.map(function(predicateObjectMap) {
+    return predicateObjectMap.predicate;
+  });
   model += predicates.reduce(function(filtered, predicate) {
     let objectMap = listOfPredicateObjectMap[predicate];
     filtered.push("\t" + predicate + "() { return this." + predicate + " }")
@@ -91,16 +81,14 @@ exports.generateResolvers = function(triplesMap) {
 }
 
 
-
 exports.generateQueryResolvers = function(triplesMap) {
-
   let logical_source = triplesMap.logicalSource;
   let class_name = triplesMap.subjectMap.className;
   let predicateObjectMaps = triplesMap.predicateObjectMaps;
   let alpha = logical_source;
+  console.log(`alpha = ${alpha}`)
 
-  let prSQLTriplesMap = triplesMap.genPRSQL();
-  //console.log("prSQLTriplesMap = " + prSQLTriplesMap)
+  let prSQLTriplesMap = triplesMap.genPRSQL().join(",");
 
   var resolvers = "";
   let queryArguments = triplesMap.genQueryArguments();
@@ -111,48 +99,8 @@ exports.generateQueryResolvers = function(triplesMap) {
   resolvers += "\t\tlet sqlSelectFrom = `" + sqlSelectFrom + "`\n"
   resolvers += `\t\tlet sqlWhere = []\n`
 
-  /*
-  for(i=0;i<predicates.length;i++){
-    resolvers += "\t\tif(" + predicates.map(function(predicate) {
-      return predicate + " != null"}
-      ).join(" && ") + ") {\n"
-    resolvers += `\t\t\tsqlWhere = sqlWhere + " ${objects[i]} = '"+ ${predicates[i]} +"'"\n`
-  }
-  resolvers += "\t\t}\n"
-  */
-
-
-
-/*
-  let equalityString = predicates.reduce(function(filtered, predicate) {
-    let objectMap = listOfPredicateObjectMap[predicate];
-    if(objectMap.referenceValue) {
-      filtered.push(`\t\tif(${predicate} != null) { sqlWhere.push("${objectMap.referenceValue} = '"+ ${predicate} +"'") }`)
-    } else if(objectMap.functionString) {
-      let omHash = objectMap.getHashCode();
-      filtered.push(`\t\tif(${predicate} != null) { sqlWhere.push("${omHash} = '"+ ${predicate} +"'") }`)
-    }
-    return filtered
-  }, []).join("\n")
-  resolvers += equalityString + "\n"
-*/
-
-
-
-/*   let condSQLString = predicateObjectMaps.reduce(function(filtered, predicateObjectMap) {
-    let predicate = predicateObjectMap.predicate;
-    let condSQL = predicateObjectMap.genCondSQL();
-    if(condSQL != null) {
-      filtered.push(`\t\tif(${predicate} != null) { sqlWhere.push(${condSQL}) }`)
-    }
-    return filtered;
-  }, []).join("\n");
-  console.log(`condSQLString = \n${condSQLString}`)
-  resolvers += condSQLString + "\n" */
-
   let condSQLTriplesMap = triplesMap.genCondSQL();
-  //console.log(`condSQLTriplesMap = \n${condSQLTriplesMap}`)
-  resolvers += condSQLTriplesMap + "\n"
+  resolvers += condSQLTriplesMap.join("\n") + "\n"
 
   resolvers += '\t\tlet sql = "";\n'
   resolvers += '\t\tif(sqlWhere.length == 0) { sql = sqlSelectFrom} else { sql = sqlSelectFrom + " WHERE " + sqlWhere.join("AND") }\n';
@@ -163,11 +111,6 @@ exports.generateQueryResolvers = function(triplesMap) {
   resolvers += '\t\t\trows.forEach((row) => {\n';
 
   resolvers += "\t\t\t\t" + `let instance = new ${class_name}();\n`
-  /*
-  for(i=0;i<predicates.length;i++){
-    resolvers += `\t\t\t\t\instance.${predicates[i]} = row["${objects[i]}"];\n`
-  }
-  */
   resolvers += predicateObjectMaps.reduce(function(filtered, predicateObjectMap) {
     let predicate = predicateObjectMap.predicate;
     let objectMap = predicateObjectMap.objectMap;
@@ -175,7 +118,6 @@ exports.generateQueryResolvers = function(triplesMap) {
     if(objectMap.referenceValue) {
       filtered.push(`\t\t\t\t\instance.${predicate} = row["${objectMap.referenceValue}"];`)
     } else if(objectMap.template) {
-      //let templateString = objectMap.template.replaceAll("{", '${row["').replace("}", '"]}')
       let templateString = objectMap.template.split("{").join('${row["').split("}").join('"]}')
       templateString = "`" + templateString + "`"
       filtered.push(`\t\t\t\t\instance.${predicate} = ${templateString}`)
@@ -192,7 +134,7 @@ exports.generateQueryResolvers = function(triplesMap) {
   resolvers += '\t\t});\n'
   resolvers += `\t}\n`
 
-  console.log("queryResolvers = \n" + resolvers)
+  //console.log("queryResolvers = \n" + resolvers)
   //console.log("\n\n\n")
 
   return resolvers;
@@ -200,6 +142,8 @@ exports.generateQueryResolvers = function(triplesMap) {
 
 exports.generateMutationResolvers = function(triplesMap) {
     let logical_source = triplesMap.logicalSource;
+    let alphaTriplesMap = triplesMap.getAlpha();
+
     let class_name = triplesMap.subjectMap.className;
     let predicateObjectMaps = triplesMap.predicateObjectMaps;
 
@@ -244,7 +188,7 @@ exports.generateMutationResolvers = function(triplesMap) {
   }, []).join(",")
   //console.log("valuesString = " + valuesString)
 
-  let sqlString = "`INSERT INTO " + logical_source + "(" + columnNames +") VALUES(" + valuesString +")`"
+  let sqlString = "`INSERT INTO " + alphaTriplesMap + "(" + columnNames +") VALUES(" + valuesString +")`"
   //console.log("sqlString = " + sqlString)
 
   mutationResolverString += `\t\tlet sqlInsert = ${sqlString}\n`;

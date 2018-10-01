@@ -2,84 +2,42 @@ var fs = require('fs');
 
 exports.generateSchema = function(triplesMap) {
   let class_name = triplesMap.subjectMap.className;
-  let predicateObjectMaps = triplesMap.predicateObjectMaps;
 
-  var predicates = predicateObjectMaps.map(function(predicateObjectMap) {
-    return predicateObjectMap.predicate;
-  });
-
+  //Type Query Generation
   let queryArguments = triplesMap.genQueryArguments().map(function(queryArgument) {
     return `${queryArgument}:String`
   });
   var schema  ="";
   schema += "\ttype Query {" + "\n"
-  /*
-  schema += `\t\t${class_name}(`
-  schema += predicateObjectMaps.reduce(function(filtered, predicateObjectMap) {
-    let predicate = predicateObjectMap.predicate;
-    let objectMap = predicateObjectMap.objectMap;
-    if(objectMap.referenceValue || objectMap.functionString || objectMap.template) {
-      filtered.push(predicate + ":String")
-    }
-    return filtered
-  }, []).join(",")
-  schema += `): [${class_name}]`  + "\n"
-  schema += "\t}"  + "\n"
-  */
-
   schema += `\t\t${class_name}(${queryArguments.join(",")}): [${class_name}]\n`
   schema += "\t}"  + "\n"
 
+  //Type Mutation Generation
   let mutationArguments = triplesMap.genMutationArguments().map(function(mutationArgument) {
     return `${mutationArgument}:String`
   });
-
   schema += "\ttype Mutation {" + "\n"
-  /*
-  schema += `\t\tcreate${class_name}(`
-  schema += predicateObjectMaps.reduce(function(filtered, predicateObjectMap) {
-    let predicate = predicateObjectMap.predicate;
-    let objectMap = predicateObjectMap.objectMap;
-    if(objectMap.referenceValue) {
-      filtered.push(predicate + ":String")
-    }
-    return filtered
-  }, []).join(",")
-  schema += `): ${class_name}`  + "\n"
-  */
- schema += `\t\tcreate${class_name}(${mutationArguments.join(",")}): ${class_name}\n`
-
+  schema += `\t\tcreate${class_name}(${mutationArguments.join(",")}): ${class_name}\n`
   schema += "\t}"  + "\n"
-
   schema +=  "\n"
+
+  //User Defined Types generation
   schema += `\ttype ${class_name} {` +  "\n"
-  schema += predicates.map(function(predicate) {
+  schema += triplesMap.predicateObjectMaps.map(function(predicateObjectMap) {
+    let predicate = predicateObjectMap.predicate;
     return "\t\t" + predicate + ":String"
   }).join("\n") + "\n"
-
   schema += "\t}"  + "\n"
-  console.log("schema = \n" + schema)
-  console.log("\n\n\n")
+
+  //console.log("schema = \n" + schema)
+  //console.log("\n\n\n")
   return schema;
 }
 
 exports.generateModel = function(triplesMap) {
   let class_name = triplesMap.subjectMap.className;
-
   var model = "";
   model += `class ${class_name} {\n`
-
-  /*
-  let predicateObjectMaps = triplesMap.predicateObjectMaps;
-  let predicates = predicateObjectMaps.map(function(predicateObjectMap) {
-    return predicateObjectMap.predicate;
-  });
-  model += predicates.reduce(function(filtered, predicate) {
-    let objectMap = listOfPredicateObjectMap[predicate];
-    filtered.push("\t" + predicate + "() { return this." + predicate + " }")
-    return filtered
-  }, []).join("\n") + " \n";
-  */
   model += `}`
   //console.log("model = \n" + model)
   //console.log("\n\n\n")

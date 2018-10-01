@@ -8,8 +8,8 @@ const uuid = require('uuid');
 const rmlparser = require('./rml-parser');
 const javascriptsqlitetransformer = require('./transformers/javascript/sqlite/javascript-sqlite-transformer');
 
-//const mongodbpythontransformer = require('./transformers/mongodb/python/mongodb-python-transformer');
-const mongodbpythontransformer = require('./mongodb-python-transformer');
+const pythonmongodbtransformer = require('./transformers/python/mongodb/python-mongodb-transformer');
+//const mongodbpythontransformer = require('./mongodb-python-transformer');
 var JSZip = require("jszip");
 var zipper = require('zip-local');
 const archiver = require('archiver');
@@ -237,7 +237,7 @@ async function create_resolver(prog_lang, map_lang, dataset_type, mapping_url,
     if(prog_lang == 'python' && dataset_type == 'mongodb') {
 
 
-        var schema = mongodbpythontransformer.generateSchema(class_name, 
+        var schema = pythonmongodbtransformer.generateSchema(class_name, 
             logical_source, predicate_object)
         //console.log("generated schema = \n" + schema )
         
@@ -247,7 +247,7 @@ async function create_resolver(prog_lang, map_lang, dataset_type, mapping_url,
             }
             });
 
-        var model = mongodbpythontransformer.generateModel(class_name, logical_source, 
+        var model = pythonmongodbtransformer.generateModel(class_name, logical_source, 
             predicate_object)
         //console.log("generated model = \n" + model )
         
@@ -256,11 +256,11 @@ async function create_resolver(prog_lang, map_lang, dataset_type, mapping_url,
                         console.log('ERROR saving model: '+err);
                      }
                      });
-        var pyapp_content = mongodbpythontransformer.generate_app(db_name);
+        var pyapp_content = pythonmongodbtransformer.generate_app(db_name);
         //console.log("pyapp_content: "+pyapp_content)
         fs.writeFileSync(project_dir+"app.py", pyapp_content);
-        fs.writeFileSync(project_dir+"requirements.txt", mongodbpythontransformer.generate_requirements());
-        fs.writeFileSync(project_dir+"startup.sh", mongodbpythontransformer.generate_statup_script());
+        fs.writeFileSync(project_dir+"requirements.txt", pythonmongodbtransformer.generate_requirements());
+        fs.writeFileSync(project_dir+"startup.sh", pythonmongodbtransformer.generate_statup_script());
 
         /*
         const { execSync } = require('child_process');

@@ -155,6 +155,20 @@ class TriplesMap {
         return queryArguments;
     }
 
+    genMutationArguments() {
+        let mutationArguments = predicateObjectMaps.reduce(function(filtered, predicateObjectMap) {
+            let predicate = predicateObjectMap.predicate;
+            let objectMap = predicateObjectMap.objectMap;
+            if(objectMap.referenceValue) {
+              filtered.push(predicate)
+            }
+            return filtered
+          }, []);
+
+        console.log(`mutationArguments = ${mutationArguments}`)
+        return mutationArguments;        
+    }
+
 }
 
 //input: original json and modified json

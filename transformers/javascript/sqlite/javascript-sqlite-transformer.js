@@ -8,8 +8,12 @@ exports.generateSchema = function(triplesMap) {
     return predicateObjectMap.predicate;
   });
 
+  let queryArguments = triplesMap.genQueryArguments().map(function(queryArgument) {
+    return `${queryArgument}:String`
+  });
   var schema  ="";
   schema += "\ttype Query {" + "\n"
+  /*
   schema += `\t\t${class_name}(`
   schema += predicateObjectMaps.reduce(function(filtered, predicateObjectMap) {
     let predicate = predicateObjectMap.predicate;
@@ -21,8 +25,17 @@ exports.generateSchema = function(triplesMap) {
   }, []).join(",")
   schema += `): [${class_name}]`  + "\n"
   schema += "\t}"  + "\n"
+  */
+
+  schema += `\t\t${class_name}(${queryArguments.join(",")}): [${class_name}]\n`
+  schema += "\t}"  + "\n"
+
+  let mutationArguments = triplesMap.genMutationArguments().map(function(mutationArgument) {
+    return `${mutationArgument}:String`
+  });
 
   schema += "\ttype Mutation {" + "\n"
+  /*
   schema += `\t\tcreate${class_name}(`
   schema += predicateObjectMaps.reduce(function(filtered, predicateObjectMap) {
     let predicate = predicateObjectMap.predicate;
@@ -33,6 +46,9 @@ exports.generateSchema = function(triplesMap) {
     return filtered
   }, []).join(",")
   schema += `): ${class_name}`  + "\n"
+  */
+ schema += `\t\tcreate${class_name}(${mutationArguments.join(",")}): ${class_name}\n`
+
   schema += "\t}"  + "\n"
 
   schema +=  "\n"
@@ -164,8 +180,8 @@ exports.generateMutationResolvers = function(triplesMap) {
     return filtered
   }, []).join(",");
 
-  mutationResolverString = ""
-  //mutationResolverString += `\tcreate${class_name}: function({${predicates.join(",")}}) {\n`
+  let mutationResolverString = ""
+  /*
   mutationResolverString += `\tcreate${class_name}: function({`
   mutationResolverString += predicateObjectMaps.reduce(function(filtered, predicateObjectMap) {
     let predicate = predicateObjectMap.predicate;
@@ -176,6 +192,10 @@ exports.generateMutationResolvers = function(triplesMap) {
     return filtered
   }, []).join(",")
   mutationResolverString += `}) {\n`
+  */
+
+  let mutationArguments = triplesMap.genMutationArguments();
+  mutationResolverString += `\tcreate${class_name}: function({${mutationArguments.join(",")}}) {\n`
 
   mutationResolverString += `\t\tif(identifier == undefined) { identifier = uuid.v4().substring(0,8) }\n`
   let valuesString = predicateObjectMaps.reduce(function(filtered, predicateObjectMap) {

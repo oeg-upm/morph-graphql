@@ -97,6 +97,8 @@ class TriplesMap {
     getSubjectMap() { return this.subjectMap; }
     getPredicateObjectMaps() { return this.predicateObjectMaps; }
 
+    getAlpha() { return this.logicalSource; }
+    
     genPRSQL() {
         let objectMaps = this.predicateObjectMaps.map(function(predicateObjectMap) {
             return predicateObjectMap.objectMap;
@@ -110,8 +112,9 @@ class TriplesMap {
         
 
             return filtered
-          }, []).join(",");
+          }, []);
 
+          console.log(`prSQLTriplesMap = ${prSQLTriplesMap}`);
           return prSQLTriplesMap;
     }
 
@@ -123,7 +126,8 @@ class TriplesMap {
               filtered.push(`\t\tif(${predicate} != null) { sqlWhere.push(${condSQL}) }`)
             }
             return filtered;
-        }, []).join("\n");
+        }, []);
+        console.log(`condSQLTriplesMap = ${condSQLTriplesMap}`);
         return condSQLTriplesMap;
     }
 

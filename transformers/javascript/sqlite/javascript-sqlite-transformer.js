@@ -168,6 +168,7 @@ exports.generateMutationResolvers = function(triplesMap) {
 
   mutationResolverString += `\t\tlet sqlInsert = ${sqlString}\n`;
   mutationResolverString += `\t\tlet status = db.run(sqlInsert).then(dbStatus => { return dbStatus });\n`
+  mutationResolverString += "\t\tconsole.log(`sql = ${sqlInsert}`)\n"
 
 
   let newInstanceString = predicateObjectMaps.reduce(function(filtered, predicateObjectMap) {

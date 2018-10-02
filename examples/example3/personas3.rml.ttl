@@ -35,7 +35,7 @@
 	rr:predicateObjectMap [
     	  rr:predicate schema:telephone;
     	  rr:objectMap    [
-    	    rr:reference  "telephone";
+    	    rml:reference  "telephone";
     	    rr:datatype xsd:integer;
     	  ]
     	];

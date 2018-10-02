@@ -33,6 +33,14 @@
 	];
 
 	rr:predicateObjectMap [
+    	  rr:predicate schema:telephone;
+    	  rr:objectMap    [
+    	    rr:reference  "telephone";
+    	    rr:datatype xsd:integer;
+    	  ]
+    	];
+
+	rr:predicateObjectMap [
 		  rr:predicate schema:email;
 		  rr:objectMap [
 		  	rmlc:functions "lower(substr(nombre,1,1) || apellido || '@fi.upm.es')"

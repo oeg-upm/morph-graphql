@@ -8,6 +8,8 @@ class TermMap {
     getTemplate() { return this.template }
     getReferenceValue() { return this.referenceValue }
     getFunctionString() { return this.functionString }
+    getDatatype () { return this.datatype}
+
     getHashCode() {
         if(this.hashCode == undefined) {
             this.hashCode = "tm" + uuid.v4().substring(0,8);
@@ -53,6 +55,7 @@ class TermMap {
                 this.referenceValue = item['rml:reference'];
                 this.template = item['rr:template'];
                 this.functionString = item['rmlc:functions'];
+                this.datatype = 'String';
 
                 break;
             }
@@ -84,7 +87,13 @@ class PredicateObjectMap {
     let objectMap = this.objectMap;
     let condSQL = null;
     if(objectMap.referenceValue) {
-      condSQL = `"${objectMap.referenceValue} = '"+ ${predicate} +"'"`
+      if(objectMap.datatype !== 'String'){
+          condSQL = `"${objectMap.referenceValue} = "+ ${predicate}`
+      }
+      else {
+          condSQL = `"${objectMap.referenceValue} = '"+ ${predicate} +"'"`
+      }
+
     } else if(objectMap.functionString || objectMap.template) {
       let omHash = objectMap.getHashCode();
       condSQL = `"${omHash} = '"+ ${predicate} +"'"`
@@ -142,25 +151,32 @@ class TriplesMap {
         return condSQLTriplesMap;
     }
 
-    genQueryArguments() {
+    genQueryArguments(flag) {
         let queryArguments = predicateObjectMaps.reduce(function(filtered, predicateObjectMap) {
             let predicate = predicateObjectMap.predicate;
             let objectMap = predicateObjectMap.objectMap;
         
             if(objectMap.referenceValue || objectMap.functionString || objectMap.template) {
-              filtered.push(predicate)
+                if(flag)
+                    filtered.push(predicate+':'+objectMap.datatype);
+                else
+                    filtered.push(predicate);
             }
+
             return filtered
-          }, [])
+          }, []);
         return queryArguments;
     }
 
-    genMutationArguments() {
+    genMutationArguments(flag) {
         let mutationArguments = predicateObjectMaps.reduce(function(filtered, predicateObjectMap) {
             let predicate = predicateObjectMap.predicate;
             let objectMap = predicateObjectMap.objectMap;
             if(objectMap.referenceValue) {
-              filtered.push(predicate)
+                if(flag)
+                    filtered.push(predicate+':'+objectMap.datatype);
+                else
+                    filtered.push(predicate);
             }
             return filtered
           }, []);
@@ -247,6 +263,29 @@ exports.getTermMap = function(json, termMapId){
             termMap.referenceValue = item['rml:reference'];
             termMap.template = item['rr:template'];
             termMap.functionString = item['rmlc:functions'];
+            if(item['rr:datatype']){
+               var xsdType = item['rr:datatype']['@id'].split(':')[1];
+                switch (xsdType) { //ToDo how to include all possible datatypes? xsd:decimal, etc.
+                    case 'integer':
+                        termMap.datatype = 'Int';
+                        break;
+                    case 'decimal':
+                        termMap.datatype = 'Float';
+                        break;
+                    case 'float':
+                        termMap.datatype = 'Float';
+                        break;
+                    case 'double':
+                        termMap.datatype = 'Float';
+                        break;
+                    case 'boolean':
+                        termMap.datatype = 'Boolean';
+                        break;
+                }
+            }
+            else {
+                termMap.datatype = 'String';
+            }
 
             break;
         }

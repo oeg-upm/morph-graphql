@@ -4,29 +4,22 @@ exports.generateSchema = function(triplesMap) {
   let class_name = triplesMap.subjectMap.className;
 
   //Type Query Generation
-  let queryArguments = triplesMap.genQueryArguments().map(function(queryArgument) {
-    return `${queryArgument}:String`
-  });
+  let queryArguments = triplesMap.genQueryArguments(true);
   var schema  ="";
   schema += "\ttype Query {" + "\n"
   schema += `\t\t${class_name}(${queryArguments.join(",")}): [${class_name}]\n`
   schema += "\t}"  + "\n"
 
   //Type Mutation Generation
-  let mutationArguments = triplesMap.genMutationArguments().map(function(mutationArgument) {
-    return `${mutationArgument}:String`
-  });
+  let mutationArguments = triplesMap.genMutationArguments(true);
   schema += "\ttype Mutation {" + "\n"
   schema += `\t\tcreate${class_name}(${mutationArguments.join(",")}): ${class_name}\n`
   schema += "\t}"  + "\n"
   schema +=  "\n"
 
   //User Defined Types generation
-  schema += `\ttype ${class_name} {` +  "\n"
-  schema += triplesMap.predicateObjectMaps.map(function(predicateObjectMap) {
-    let predicate = predicateObjectMap.predicate;
-    return "\t\t" + predicate + ":String"
-  }).join("\n") + "\n"
+  schema += `\ttype ${class_name} {` +  "\n\t\t"
+  schema += queryArguments.join("\n\t\t") + "\n"
   schema += "\t}"  + "\n"
 
   //console.log("schema = \n" + schema)
@@ -37,8 +30,7 @@ exports.generateSchema = function(triplesMap) {
 exports.generateModel = function(triplesMap) {
   let class_name = triplesMap.subjectMap.className;
   var model = "";
-  model += `class ${class_name} {\n`
-  model += `}`
+  model += `class ${class_name} {\n}`
   //console.log("model = \n" + model)
   //console.log("\n\n\n")
   return model;
@@ -65,7 +57,7 @@ exports.generateQueryResolvers = function(triplesMap) {
   let prSQLTriplesMap = triplesMap.genPRSQL().join(",");
 
   var queryResolvers = "";
-  let queryArguments = triplesMap.genQueryArguments();
+  let queryArguments = triplesMap.genQueryArguments(false);
 
   queryResolvers += `\t${class_name}: function({${queryArguments.join(",")}}) {\n`
 
@@ -152,25 +144,31 @@ exports.generateMutationResolvers = function(triplesMap) {
   mutationResolverString += `}) {\n`
   */
 
-  let mutationArguments = triplesMap.genMutationArguments();
+  let mutationArguments = triplesMap.genMutationArguments(false);
   mutationResolverString += `\tcreate${class_name}: function({${mutationArguments.join(",")}}) {\n`
 
-  mutationResolverString += `\t\tif(identifier == undefined) { identifier = uuid.v4().substring(0,8) }\n`
+  mutationResolverString += `\t\tif(identifier == undefined) { identifier = uuid.v4().substring(0,8) }\n`;
   let valuesString = predicateObjectMaps.reduce(function(filtered, predicateObjectMap) {
     let predicate = predicateObjectMap.predicate;
     let objectMap = predicateObjectMap.objectMap;
     if(objectMap.referenceValue) {
-      filtered.push("'${" + predicate + "}'")
+      if(objectMap.datatype === 'String'){
+        filtered.push("'${" + predicate + "}'")
+      }
+       else{
+        filtered.push("${" + predicate + "}")
+      }
     }
     return filtered
   }, []).join(",")
   //console.log("valuesString = " + valuesString)
 
-  let sqlString = "`INSERT INTO " + alphaTriplesMap + "(" + columnNames +") VALUES(" + valuesString +")`"
+  let sqlString = "`INSERT INTO " + alphaTriplesMap + "(" + columnNames +") VALUES(" + valuesString +")`";
   //console.log("sqlString = " + sqlString)
 
   mutationResolverString += `\t\tlet sqlInsert = ${sqlString}\n`;
-  mutationResolverString += `\t\tlet status = db.run(sqlInsert).then(dbStatus => { return dbStatus });\n`
+  mutationResolverString += `\t\tlet status = db.run(sqlInsert).then(dbStatus => { return dbStatus });\n`;
+  mutationResolverString += "\t\tconsole.log(`sql = ${sqlInsert}`)\n";
 
 
   let newInstanceString = predicateObjectMaps.reduce(function(filtered, predicateObjectMap) {

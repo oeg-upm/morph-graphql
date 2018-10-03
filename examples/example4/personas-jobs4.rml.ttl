@@ -47,3 +47,24 @@
 		  ]
 	];
 .
+
+<TMJob>
+	rml:logicalSource [
+		rml:source  "jobs";
+	];
+
+	rr:subjectMap [
+		rml:reference "id";
+		rr:class schema:Organization
+	];
+
+	rr:predicateObjectMap [
+    	  rr:predicate schema:name;
+    	  rr:objectMap    [ rml:reference "name" ]
+    ];
+
+    rr:predicateObjectMap [
+    	  rr:predicate schema:address;
+    	  rr:objectMap    [ rml:reference "address" ]
+    ];
+.

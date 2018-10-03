@@ -1,44 +1,74 @@
 var fs = require('fs');
 
-exports.generateSchema = function(triplesMap) {
-  let class_name = triplesMap.subjectMap.className;
+exports.generateSchema = function(mappingDocument) {
+  
 
   //Type Query Generation
-  let queryArguments = triplesMap.genQueryArguments(true);
+  
   var schema  ="";
   schema += "\ttype Query {" + "\n"
-  schema += `\t\t${class_name}(${queryArguments.join(",")}): [${class_name}]\n`
-  schema += "\t}"  + "\n"
+  mappingDocument.triplesMaps.map(function(triplesMap) {
+    let class_name = triplesMap.subjectMap.className;
+    let noOfPredicateObjectMaps = triplesMap.getNumberOfPredicateObjectMaps();
+    //console.log(`noOfPredicateObjectMaps = ${noOfPredicateObjectMaps} ...`) 
+
+    console.log(`Building query arguments for triplesMap ${class_name} ...`)
+    let queryArguments = triplesMap.genQueryArguments(true);
+    
+    schema += `\t\t${class_name}(${queryArguments.join(",")}): [${class_name}]\n`
+  })
+  
+  schema += "\t}"  + "\n\n"
 
   //Type Mutation Generation
-  let mutationArguments = triplesMap.genMutationArguments(true);
+  
   schema += "\ttype Mutation {" + "\n"
-  schema += `\t\tcreate${class_name}(${mutationArguments.join(",")}): ${class_name}\n`
+  mappingDocument.triplesMaps.map(function(triplesMap) {
+    let class_name = triplesMap.subjectMap.className;
+    let noOfPredicateObjectMaps = triplesMap.getNumberOfPredicateObjectMaps();
+    //console.log(`noOfPredicateObjectMaps = ${noOfPredicateObjectMaps} ...`) 
+
+    console.log(`Building mutation arguments for triplesMap ${class_name} ...`)
+    let mutationArguments = triplesMap.genMutationArguments(true);
+    
+    schema += `\t\tcreate${class_name}(${mutationArguments.join(",")}): ${class_name}\n`
+  })
+  
   schema += "\t}"  + "\n"
   schema +=  "\n"
 
   //User Defined Types generation
-  schema += `\ttype ${class_name} {` +  "\n\t\t"
-  schema += queryArguments.join("\n\t\t") + "\n"
-  schema += "\t}"  + "\n"
+  mappingDocument.triplesMaps.map(function(triplesMap) {
+    let queryArguments = triplesMap.genQueryArguments(true);
+    let class_name = triplesMap.subjectMap.className;
+    schema += `\ttype ${class_name} {` +  "\n\t\t"
+    schema += queryArguments.join("\n\t\t") + "\n"
+    schema += "\t}"  + "\n\n"
+  })
+
+
 
   //console.log("schema = \n" + schema)
   //console.log("\n\n\n")
   return schema;
 }
 
-exports.generateModel = function(triplesMap) {
-  let class_name = triplesMap.subjectMap.className;
-  var model = "";
-  model += `class ${class_name} {\n}`
+exports.generateModel = function(mappingDocument) {
+  let model = mappingDocument.triplesMaps.map(function(triplesMap) {
+    let class_name = triplesMap.subjectMap.className;
+    return `class ${class_name} {\n}`
+  }).join("\n");
   //console.log("model = \n" + model)
   //console.log("\n\n\n")
-  return model;
+  return model;    
+
 }
 
-exports.generateResolvers = function(triplesMap) {
-  let queryResolversString = this.generateQueryResolvers(triplesMap);
-  let mutationResolversString = this.generateMutationResolvers(triplesMap);
+exports.generateResolvers = function(mappingDocument) {
+  let queryResolversString = this.generateQueryResolvers(mappingDocument);
+  //console.log("queryResolversString = \n" + queryResolversString)
+
+  let mutationResolversString = this.generateMutationResolvers(mappingDocument);
   let resolversString = queryResolversString + "\t,\n" + mutationResolversString;
 
   //console.log("resolversString = \n" + resolversString)
@@ -47,66 +77,71 @@ exports.generateResolvers = function(triplesMap) {
 }
 
 
-exports.generateQueryResolvers = function(triplesMap) {
-  let logical_source = triplesMap.logicalSource;
-  let class_name = triplesMap.subjectMap.className;
-  let predicateObjectMaps = triplesMap.predicateObjectMaps;
-  let alpha = logical_source;
-  console.log(`alpha = ${alpha}`)
+exports.generateQueryResolvers = function(mappingDocument) {
+  let result = mappingDocument.triplesMaps.map(function(triplesMap) {
+    let logical_source = triplesMap.logicalSource;
+    let class_name = triplesMap.subjectMap.className;
+    let predicateObjectMaps = triplesMap.predicateObjectMaps;
+    let alpha = logical_source;
+    console.log(`alpha = ${alpha}`)
+  
+    let prSQLTriplesMap = triplesMap.genPRSQL().join(",");
+  
+    var queryResolvers = "";
+    let queryArguments = triplesMap.genQueryArguments(false);
+  
+    queryResolvers += `\t${class_name}: function({${queryArguments.join(",")}}) {\n`
+  
+    let sqlSelectFrom = `SELECT ${prSQLTriplesMap} FROM ${alpha}`
+    queryResolvers += "\t\tlet sqlSelectFrom = `" + sqlSelectFrom + "`\n"
+    queryResolvers += `\t\tlet sqlWhere = []\n`
+  
+    let condSQLTriplesMap = triplesMap.genCondSQL();
+    queryResolvers += condSQLTriplesMap.join("\n") + "\n"
+  
+    queryResolvers += '\t\tlet sql = "";\n'
+    queryResolvers += '\t\tif(sqlWhere.length == 0) { sql = sqlSelectFrom} else { sql = sqlSelectFrom + " WHERE " + sqlWhere.join("AND") }\n';
+    queryResolvers += '\t\tlet data = db.all(sql);\n'
+    queryResolvers += "\t\tconsole.log(`sql = ${sql}`)\n"
+    queryResolvers += '\t\tlet allInstances = [];\n'
+    queryResolvers += '\t\treturn data.then(rows => {\n';
+    queryResolvers += '\t\t\trows.forEach((row) => {\n';
+  
+    queryResolvers += "\t\t\t\t" + `let instance = new ${class_name}();\n`
+    queryResolvers += predicateObjectMaps.reduce(function(filtered, predicateObjectMap) {
+      let predicate = predicateObjectMap.predicate;
+      let objectMap = predicateObjectMap.objectMap;
+  
+      if(objectMap.referenceValue) {
+        filtered.push(`\t\t\t\t\instance.${predicate} = row["${objectMap.referenceValue}"];`)
+      } else if(objectMap.template) {
+        let templateString = objectMap.template.split("{").join('${row["').split("}").join('"]}')
+        templateString = "`" + templateString + "`"
+        filtered.push(`\t\t\t\t\instance.${predicate} = ${templateString}`)
+      } else if(objectMap.functionString) {
+        let alias = '`${row["' + objectMap.getHashCode() + '"]}`';
+        filtered.push(`\t\t\t\t\instance.${predicate} = ${alias}`)
+      }
+      return filtered
+    }, []).join("\n") + "\n";
+  
+    queryResolvers += '\t\t\t\tallInstances.push(instance);\n'
+    queryResolvers += '\t\t\t})\n'
+    queryResolvers += '\t\t\treturn allInstances;\n'
+    queryResolvers += '\t\t});\n'
+    queryResolvers += `\t}\n`
+  
+    //console.log("queryResolvers = \n" + queryResolvers)
+    //console.log("\n\n\n")
+  
+    return queryResolvers;
+  }).join(",\n");
 
-  let prSQLTriplesMap = triplesMap.genPRSQL().join(",");
-
-  var queryResolvers = "";
-  let queryArguments = triplesMap.genQueryArguments(false);
-
-  queryResolvers += `\t${class_name}: function({${queryArguments.join(",")}}) {\n`
-
-  let sqlSelectFrom = `SELECT ${prSQLTriplesMap} FROM ${alpha}`
-  queryResolvers += "\t\tlet sqlSelectFrom = `" + sqlSelectFrom + "`\n"
-  queryResolvers += `\t\tlet sqlWhere = []\n`
-
-  let condSQLTriplesMap = triplesMap.genCondSQL();
-  queryResolvers += condSQLTriplesMap.join("\n") + "\n"
-
-  queryResolvers += '\t\tlet sql = "";\n'
-  queryResolvers += '\t\tif(sqlWhere.length == 0) { sql = sqlSelectFrom} else { sql = sqlSelectFrom + " WHERE " + sqlWhere.join("AND") }\n';
-  queryResolvers += '\t\tlet data = db.all(sql);\n'
-  queryResolvers += "\t\tconsole.log(`sql = ${sql}`)\n"
-  queryResolvers += '\t\tlet allInstances = [];\n'
-  queryResolvers += '\t\treturn data.then(rows => {\n';
-  queryResolvers += '\t\t\trows.forEach((row) => {\n';
-
-  queryResolvers += "\t\t\t\t" + `let instance = new ${class_name}();\n`
-  queryResolvers += predicateObjectMaps.reduce(function(filtered, predicateObjectMap) {
-    let predicate = predicateObjectMap.predicate;
-    let objectMap = predicateObjectMap.objectMap;
-
-    if(objectMap.referenceValue) {
-      filtered.push(`\t\t\t\t\instance.${predicate} = row["${objectMap.referenceValue}"];`)
-    } else if(objectMap.template) {
-      let templateString = objectMap.template.split("{").join('${row["').split("}").join('"]}')
-      templateString = "`" + templateString + "`"
-      filtered.push(`\t\t\t\t\instance.${predicate} = ${templateString}`)
-    } else if(objectMap.functionString) {
-      let alias = '`${row["' + objectMap.getHashCode() + '"]}`';
-      filtered.push(`\t\t\t\t\instance.${predicate} = ${alias}`)
-    }
-    return filtered
-  }, []).join("\n") + "\n";
-
-  queryResolvers += '\t\t\t\tallInstances.push(instance);\n'
-  queryResolvers += '\t\t\t})\n'
-  queryResolvers += '\t\t\treturn allInstances;\n'
-  queryResolvers += '\t\t});\n'
-  queryResolvers += `\t}\n`
-
-  //console.log("queryResolvers = \n" + queryResolvers)
-  //console.log("\n\n\n")
-
-  return queryResolvers;
+  return result;
 }
 
-exports.generateMutationResolvers = function(triplesMap) {
+exports.generateMutationResolvers = function(mappingDocument) {
+  let result = mappingDocument.triplesMaps.map(function(triplesMap) {
     let logical_source = triplesMap.logicalSource;
     let alphaTriplesMap = triplesMap.getAlpha();
 
@@ -188,7 +223,10 @@ exports.generateMutationResolvers = function(triplesMap) {
   //console.log(`mutationResolverString = \n${mutationResolverString}`)
   //console.log("\n\n\n")
 
-  return mutationResolverString;
+  return mutationResolverString;    
+  }).join(",\n");
+  return result;
+
 }
 
 
@@ -209,22 +247,21 @@ exports.toLowerCaseFirstChar = function(str) {
 
 exports.generateApp = function(
   triplesMap,
+  mappingDocument,
   //class_name,
   //logical_source,
   //predicateObjectMaps,
   db_name, port_no) {
+    //console.log(`mappingDocument = ${mappingDocument}`);
 
-  let logical_source = triplesMap.logicalSource;
-  let class_name = triplesMap.subjectMap.className;
-  let predicateObjectMaps = triplesMap.predicateObjectMaps;
 
   var appString = "";
-  console.log("Generating Schema ...");
-  var schemaString = this.generateSchema(triplesMap)
-  console.log("Generating Model ...");
-  var modelString = this.generateModel(triplesMap)
-  console.log("Generating Resolvers ...");
-  var resolversString = this.generateResolvers(triplesMap)
+  console.log("GENERATING SCHEMA ...");
+  var schemaString = this.generateSchema(mappingDocument)
+  console.log("GENERATING MODEL ...");
+  var modelString = this.generateModel(mappingDocument)
+  console.log("GENERATING RESOLVERS ...");
+  var resolversString = this.generateResolvers(mappingDocument)
 
   appString += "const db = require('sqlite');\n"
   appString += "const express = require('express');\n"

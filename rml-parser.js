@@ -1,5 +1,206 @@
 const uuid = require('uuid');
 
+class RMLParser {
+    constructor(json) {
+        this.json = json;
+    }
+
+    getTriplesMapsIds() {
+        let triplesMapsIds = [];
+
+        for(var i=0;i<this.json["@graph"].length;i++){
+            let item = this.json["@graph"][i];
+            if("rml:logicalSource" in item){
+                let triplesMapId = item["@id"];
+                triplesMapsIds.push(triplesMapId);
+            }
+        }
+        //console.log(`triplesMapsIds = ${triplesMapsIds}`);
+        return triplesMapsIds;
+    }
+
+    getLogicalSourceId(triplesMapId) {
+        var logicalSourceId = null;
+        for(var i=0;i<this.json["@graph"].length;i++) {
+            let item = this.json["@graph"][i]
+            if(item["@id"]==triplesMapId){
+                logicalSourceId = item['rml:logicalSource']['@id']
+                break
+            }
+        }
+
+        //console.log(`logicalSourceId = ${logicalSourceId}`);
+        return logicalSourceId
+    }
+
+    buildLogicalSource(logicalSourceId) {
+        let logicalSource = null;
+        for(var i=0;i<this.json["@graph"].length;i++) {
+            let item = this.json["@graph"][i]
+            if(item["@id"]==logicalSourceId){
+                logicalSource = item['rml:source']
+                break
+            }
+        }
+
+        //console.log(`logicalSource = ${logicalSource}`);
+        return logicalSource        
+    }
+
+    getSubjectMapId(triplesMapId) {
+        let subjectMapId = null;
+
+        for(var i=0;i<this.json["@graph"].length;i++){
+            let item = this.json["@graph"][i];
+            if(item["@id"]==triplesMapId){
+                subjectMapId = item["rr:subjectMap"]["@id"];
+                break
+            }
+        }
+        //console.log(`subjectMapId = ${subjectMapId}`);
+        return subjectMapId;
+    }
+
+    buildSubjectMap(subjectMapId) {
+        var subjectMap = new SubjectMap();
+        subjectMap.parseFromJson(this.json, subjectMapId)
+        for(var i=0;i<this.json["@graph"].length;i++) {
+            let item = this.json["@graph"][i]
+            if(item["@id"]==subjectMapId){
+                let classNameWithNamespace = item["rr:class"]["@id"];
+                let classNameWithoutNamespace = classNameWithNamespace.split(":")[1];
+                subjectMap.className = classNameWithoutNamespace;
+                break;
+            }
+        }
+    
+        return subjectMap        
+    }
+
+    getPredicateObjectMapsIds(triplesMapId) {
+        let predicateObjectMapsIds = [];
+        for(let i=0;i<this.json["@graph"].length;i++){
+            let item = this.json["@graph"][i];
+            if(item["@id"] == triplesMapId && "rr:predicateObjectMap" in item){
+                let predicateObjectMaps = item["rr:predicateObjectMap"];
+                if(Array.isArray(predicateObjectMaps)) {
+                    predicateObjectMaps.forEach(function(predicateObjectMap) {
+                        predicateObjectMapsIds.push(predicateObjectMap["@id"])
+                    })
+                } else {
+                    predicateObjectMapsIds.push(predicateObjectMaps["@id"])
+                }
+    
+    
+            }
+        }
+        return predicateObjectMapsIds
+    }
+
+    buildTriplesMap(triplesMapId) {
+        console.log(`triplesMapId = ${triplesMapId}`);
+        
+        let logicalSourceId = this.getLogicalSourceId(triplesMapId);
+
+        let logicalSource = this.buildLogicalSource(logicalSourceId);
+        console.log(`\tlogicalSource = ${logicalSource}`);
+
+        let subjectMapId = this.getSubjectMapId(triplesMapId);
+
+        let subjectMap = this.buildSubjectMap(subjectMapId);
+        console.log(`\tsubjectMap.className = ${subjectMap.className}`);
+
+        let predicateObjectMapsIds = this.getPredicateObjectMapsIds(triplesMapId)
+
+        let predicateObjectMaps = []
+        let subjectMapAsPredicateObjectMapIdentifier = new PredicateObjectMap();
+        subjectMapAsPredicateObjectMapIdentifier.predicate = "identifier";
+        subjectMapAsPredicateObjectMapIdentifier.objectMap = subjectMap;
+        predicateObjectMaps.push(subjectMapAsPredicateObjectMapIdentifier)
+
+        for (var i=0; i < predicateObjectMapsIds.length; i++) {
+            var predicateObjectMapId = predicateObjectMapsIds[i];
+            console.log(`\tpredicateObjectMapId = ${predicateObjectMapId}`)
+
+            let predicateObjectMap = this.buildPredicateObjectMap(predicateObjectMapId);
+            console.log(`\t\tpredicateObjectMap.predicate = ${predicateObjectMap.predicate}`)
+            console.log(`\t\tpredicateObjectMap.objectMap = ${predicateObjectMap.objectMap}`)
+
+            predicateObjectMaps.push(predicateObjectMap)
+        }
+
+        let triplesMap = new TriplesMap(logicalSource, subjectMap, predicateObjectMaps);
+        return triplesMap;
+
+    }
+
+
+
+    buildPredicateObjectMap(predicateObjectMapId) {
+        let predicate = this.buildPredicate(predicateObjectMapId);
+        let objectId = this.getObjectMapId(predicateObjectMapId);
+        let objectMap = this.buildObjectMap(objectId);
+        let predicateObjectMap = new PredicateObjectMap(predicate, objectMap);
+        return predicateObjectMap;
+    }
+
+    buildPredicate(predicateObjectMapId) {
+        let predicate = null;
+
+        for(var i=0;i<this.json["@graph"].length;i++){
+            let item = this.json["@graph"][i];
+            if(item["@id"]==predicateObjectMapId){
+                let predicateWithNamespace = item["rr:predicate"]["@id"];;
+                predicate = predicateWithNamespace.split(":")[1];
+                break
+            }
+        }
+        //console.log(`subjectMapId = ${subjectMapId}`);
+        return predicate;
+    }
+
+    getObjectMapId(predicateObjectMapId) {
+        let objectMapId = null;
+        for(var i=0;i<this.json["@graph"].length;i++) {
+            let item = this.json["@graph"][i]
+            if(item["@id"]==predicateObjectMapId){
+                objectMapId = item['rr:objectMap']['@id']
+                break
+            }
+        }
+
+        //console.log(`objectMapId = ${objectMapId}`);
+        return objectMapId
+    }
+
+    buildObjectMap(objectMapId) {
+        let objectMap = new ObjectMap();
+        objectMap.parseFromJson(this.json, objectMapId);
+        return objectMap;
+    }
+
+    buildMappingDocument() {
+        let triplesMapsIds = this.getTriplesMapsIds();
+        let triplesMaps = [];
+
+        for(var i=0; i<triplesMapsIds.length; i++) {
+            let triplesMapId = triplesMapsIds[i];
+            let triplesMap = this.buildTriplesMap(triplesMapId);
+            triplesMaps.push(triplesMap)
+        }
+
+        let mappingDocument = new MappingDocument(triplesMaps);
+        return mappingDocument;
+    }
+}
+
+class MappingDocument {
+    constructor(triplesMaps) {
+        this.triplesMaps = triplesMaps;
+
+    }
+}
+
 class TermMap {
     //hashCode = "";
 
@@ -49,8 +250,8 @@ class TermMap {
 
     parseFromJson(json, termMapId) {
 
-        for(i=0;i<json["@graph"].length;i++) {
-            item = json["@graph"][i]
+        for(let i=0;i<json["@graph"].length;i++) {
+            let item = json["@graph"][i]
             if(item["@id"]==termMapId){
                 this.referenceValue = item['rml:reference'];
                 this.template = item['rr:template'];
@@ -78,10 +279,20 @@ class TermMap {
 }
 
 class SubjectMap extends TermMap {
+    getClassName() { return this.className; }
+
+}
+
+class ObjectMap extends TermMap {
 
 }
 
 class PredicateObjectMap {
+    constructor(predicate, objectMap) {
+        this.predicate = predicate;
+        this.objectMap = objectMap;
+    }
+
   genCondSQL() {
     let predicate = this.predicate
     let objectMap = this.objectMap;
@@ -400,6 +611,10 @@ exports.get_jsonld_from_mapping = function(mapping_url) {
     xhttp.send();
     //console.log('reply: ');
     var j = JSON.parse(xhttp.responseText);
+    let rmlParser = new RMLParser(j);
+    let mappingDocument = rmlParser.buildMappingDocument();
+    console.log(`mappingDocument = ${mappingDocument}`);
+
     var i;
     var item, new_item
     var k, keys
@@ -468,6 +683,7 @@ exports.get_jsonld_from_mapping = function(mapping_url) {
 
     let triplesMap = new TriplesMap(logicalSource, subjectMap, predicateObjectMaps);
     res_data["triplesMap"] = triplesMap
+
 
     return res_data
 }

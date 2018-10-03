@@ -257,6 +257,29 @@ class TermMap {
                 this.template = item['rr:template'];
                 this.functionString = item['rmlc:functions'];
                 this.datatype = 'String';
+                if(item['rr:datatype']){
+                    var xsdType = item['rr:datatype']['@id'].split(':')[1];
+                     switch (xsdType) { //ToDo how to include all possible datatypes? xsd:decimal, etc.
+                         case 'integer':
+                         this.datatype = 'Int';
+                             break;
+                         case 'decimal':
+                         this.datatype = 'Float';
+                             break;
+                         case 'float':
+                         this.datatype = 'Float';
+                             break;
+                         case 'double':
+                         this.datatype = 'Float';
+                             break;
+                         case 'boolean':
+                         this.datatype = 'Boolean';
+                             break;
+                     }
+                 }
+                 else {
+                    this.datatype = 'String';
+                 }
 
                 break;
             }
@@ -272,7 +295,7 @@ class TermMap {
         templateInSQL = `'${templateInSQL}'`
         templateInSQL = templateInSQL.split("{").join("' || ");
         templateInSQL = templateInSQL.split("}").join(" || '");
-        console.log("templateInSQL =  " + templateInSQL)
+        //console.log("templateInSQL =  " + templateInSQL)
         return templateInSQL;
     }
 
@@ -324,6 +347,10 @@ class TriplesMap {
         this.predicateObjectMaps = predicateObjectMaps;
     }
 
+    getNumberOfPredicateObjectMaps() {
+        return this.predicateObjectMaps.length;
+    }
+
     getLogicalSource() { return this.logicalSource; }
     getSubjectMap() { return this.subjectMap; }
     getPredicateObjectMaps() { return this.predicateObjectMaps; }
@@ -363,7 +390,7 @@ class TriplesMap {
     }
 
     genQueryArguments(flag) {
-        let queryArguments = predicateObjectMaps.reduce(function(filtered, predicateObjectMap) {
+        let queryArguments = this.predicateObjectMaps.reduce(function(filtered, predicateObjectMap) {
             let predicate = predicateObjectMap.predicate;
             let objectMap = predicateObjectMap.objectMap;
         
@@ -375,13 +402,18 @@ class TriplesMap {
             }
 
             return filtered
-          }, []);
+        }, []);
+        //console.log(`queryArguments = ${queryArguments}`)
+
         return queryArguments;
     }
 
     genMutationArguments(flag) {
-        let mutationArguments = predicateObjectMaps.reduce(function(filtered, predicateObjectMap) {
+        //console.log(`predicateObjectMaps.length = ${this.predicateObjectMaps.length} ...`) 
+
+        let mutationArguments = this.predicateObjectMaps.reduce(function(filtered, predicateObjectMap) {
             let predicate = predicateObjectMap.predicate;
+            //console.log(`predicate = ${predicate}`)
             let objectMap = predicateObjectMap.objectMap;
             if(objectMap.referenceValue) {
                 if(flag)
@@ -392,7 +424,7 @@ class TriplesMap {
             return filtered
           }, []);
 
-        console.log(`mutationArguments = ${mutationArguments}`)
+        //console.log(`mutationArguments = ${mutationArguments}`)
         return mutationArguments;        
     }
 
@@ -613,7 +645,7 @@ exports.get_jsonld_from_mapping = function(mapping_url) {
     var j = JSON.parse(xhttp.responseText);
     let rmlParser = new RMLParser(j);
     let mappingDocument = rmlParser.buildMappingDocument();
-    console.log(`mappingDocument = ${mappingDocument}`);
+    //console.log(`mappingDocument = ${mappingDocument}`);
 
     var i;
     var item, new_item
@@ -683,6 +715,7 @@ exports.get_jsonld_from_mapping = function(mapping_url) {
 
     let triplesMap = new TriplesMap(logicalSource, subjectMap, predicateObjectMaps);
     res_data["triplesMap"] = triplesMap
+    res_data["mappingDocument"] = mappingDocument
 
 
     return res_data

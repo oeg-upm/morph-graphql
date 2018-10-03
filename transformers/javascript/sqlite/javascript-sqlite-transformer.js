@@ -147,7 +147,7 @@ exports.generateMutationResolvers = function(triplesMap) {
   let mutationArguments = triplesMap.genMutationArguments(false);
   mutationResolverString += `\tcreate${class_name}: function({${mutationArguments.join(",")}}) {\n`
 
-  mutationResolverString += `\t\tif(identifier == undefined) { identifier = uuid.v4().substring(0,8) }\n`
+  mutationResolverString += `\t\tif(identifier == undefined) { identifier = uuid.v4().substring(0,8) }\n`;
   let valuesString = predicateObjectMaps.reduce(function(filtered, predicateObjectMap) {
     let predicate = predicateObjectMap.predicate;
     let objectMap = predicateObjectMap.objectMap;
@@ -163,12 +163,12 @@ exports.generateMutationResolvers = function(triplesMap) {
   }, []).join(",")
   //console.log("valuesString = " + valuesString)
 
-  let sqlString = "`INSERT INTO " + alphaTriplesMap + "(" + columnNames +") VALUES(" + valuesString +")`"
+  let sqlString = "`INSERT INTO " + alphaTriplesMap + "(" + columnNames +") VALUES(" + valuesString +")`";
   //console.log("sqlString = " + sqlString)
 
   mutationResolverString += `\t\tlet sqlInsert = ${sqlString}\n`;
-  mutationResolverString += `\t\tlet status = db.run(sqlInsert).then(dbStatus => { return dbStatus });\n`
-  mutationResolverString += "\t\tconsole.log(`sql = ${sqlInsert}`)\n"
+  mutationResolverString += `\t\tlet status = db.run(sqlInsert).then(dbStatus => { return dbStatus });\n`;
+  mutationResolverString += "\t\tconsole.log(`sql = ${sqlInsert}`)\n";
 
 
   let newInstanceString = predicateObjectMaps.reduce(function(filtered, predicateObjectMap) {

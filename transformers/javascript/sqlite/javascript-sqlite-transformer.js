@@ -183,6 +183,18 @@ exports.generateMutationResolvers = function(mappingDocument) {
   mutationResolverString += `\tcreate${class_name}: function({${mutationArguments.join(",")}}) {\n`
 
   mutationResolverString += `\t\tif(identifier == undefined) { identifier = uuid.v4().substring(0,8) }\n`;
+  mutationResolverString += predicateObjectMaps.reduce(function(filtered, predicateObjectMap) {
+    let predicate = predicateObjectMap.predicate;
+    let objectMap = predicateObjectMap.objectMap;
+    if(objectMap.referenceValue) {
+      if(predicate != 'identifier') {
+        filtered.push(`\t\tif(${predicate} == undefined) { ${predicate} = 'NULL'}	`)
+      }
+    }
+    return filtered;
+  }, []).join("\n")
+  mutationResolverString += "\n"
+
   let valuesString = predicateObjectMaps.reduce(function(filtered, predicateObjectMap) {
     let predicate = predicateObjectMap.predicate;
     let objectMap = predicateObjectMap.objectMap;

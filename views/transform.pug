@@ -22,13 +22,14 @@ html
             //- </div>
             //- <h3>OR</h3>
 
-            <label for="dataset_type_id">Select your database type </label>
+            <label for="dataset_type_id">Select your Data Source type </label>
             <select class="ui dropdown" id='dataset_type_id' name='dataset_type' type='text'>
             <option value="mongodb">Mongo DB</option>
             <option value="sqlite">SQLite</option>
+            <option value="csv">CSV file </option>
             </select>            
             <div class="field">
-            <label>Database Name</label>
+            <label>Database Name or CSV URL</label>
             <input type="text" name="db_name" placeholder="test_db"/>
             </div>
             <div class="field">

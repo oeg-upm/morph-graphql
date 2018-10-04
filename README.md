@@ -80,7 +80,7 @@ mutation {
 }
 ```
 
-## EXAMPLE 5: Translating mappings online for Javascript and CSV (assuming that you have npm and node installed)
+## EXAMPLE 5: Translating mappings online for Javascript and a set of CSV files (assuming that you have npm and node installed)
 1. ```mkdir output```
 2. ```cd output```
 3. Translate the corresponding RML: 

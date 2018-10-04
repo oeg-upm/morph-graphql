@@ -117,6 +117,18 @@ mutation {
   }
 }
 ```
+
+### To query all posts
+```
+query {
+  SocialMediaPosting {
+    identifier
+    comment
+    author
+  }
+}
+```
+
 ### To add a person
 ```
 mutation {

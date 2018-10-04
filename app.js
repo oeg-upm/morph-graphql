@@ -296,7 +296,7 @@ async function create_resolver(prog_lang, map_lang, dataset_type, mapping_url,
             csvRows = await getCSV(db_name);
             db_name = db_name.split(".csv")[0].split("/")[db_name.split(".csv")[0].split("/").length-1]+'.sqlite';
             var  tempdb = temp.openSync(db_name);
-            await createdb(csvRows,db_name,tempdb);
+            await createdb(csvRows,logical_source,tempdb);
         }
 
         let appString = javascriptsqlitetransformer.generateApp(
@@ -327,13 +327,12 @@ async function create_resolver(prog_lang, map_lang, dataset_type, mapping_url,
 }
 
 
-function createdb(csvRows,db_name,tempdb){
+function createdb(csvRows,source_name,tempdb){
     var db = new sqlite.Database(tempdb.path,sqlite.OPEN_READWRITE);
 
     return new Promise((resolve, reject) => {
 
-        var aux_name = db_name.split(".sqlite")[0];
-        var createTableString = 'CREATE TABLE IF NOT EXISTS '+aux_name+" (";
+        var createTableString = 'CREATE TABLE IF NOT EXISTS '+source_name+" (";
         let headers = Object.keys(csvRows[0]);
         for (let column = 0 ; column < headers.length; column ++){
             createTableString += headers[column] + ' VARCHAR(200), ';
@@ -346,7 +345,7 @@ function createdb(csvRows,db_name,tempdb){
                 console.log(Object.values(csvRows[i]));
                 let values = "\""+Object.values(csvRows[i]).join('","')+"\"";
                 console.log(values);
-                var insert = "INSERT INTO "+aux_name +" VALUES ("+values+");";
+                var insert = "INSERT INTO "+source_name+" VALUES ("+values+");";
                 console.log(insert);
                 db.run(insert);
             }

@@ -308,7 +308,6 @@ async function create_resolver(prog_lang, map_lang, dataset_type, mapping_url,
                 //download the file and create the sqlite, change db_name
 
             } else {
-                //for(triplesMap in mappingDocument.triplesMaps) {
                 tempdb = temp.openSync(db_name);
                 for(var i=0; i<mappingDocument.triplesMaps.length; i++) {                    
                     let triplesMap = mappingDocument.triplesMaps[i];
@@ -321,7 +320,6 @@ async function create_resolver(prog_lang, map_lang, dataset_type, mapping_url,
                         csvRows = await getCSV(logicalSource);
                         //let tableName = logicalSource.split(".csv")[0].split("/")[logicalSource.split(".csv")[0].split("/").length-1];
                         let tableName = triplesMap.getAlpha();
-                        console.log(`tempdb = ${tempdb}`)
                         await createdb(csvRows,tableName,tempdb);
                     }
                 }

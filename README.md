@@ -52,7 +52,7 @@ mutation {
 5. ```unzip output.zip```
 6. ```npm install```
 7. ```node app.js```
-8. Go to http://localhost:4321 from your browser, use some of the queries below
+8. Go to http://localhost:4321/graphql from your browser, use some of the queries below
 
 ### The mappings used in the examples (Person is mapped to Personas, name is mapped to nombre, email is mapped to correo)
 - url: https://github.com/oeg-upm/mapping-translator/blob/master/examples/example3/personas3.rml.ttl
@@ -96,7 +96,7 @@ mutation {
 5. ```unzip output.zip```
 6. ```npm install```
 7. ```node app.js```
-8. Go to http://localhost:4321 from your browser, use some of the queries below
+8. Go to http://localhost:4321/graphql from your browser, use some of the queries below
 
 ### The mappings used in the examples
 - url: https://raw.githubusercontent.com/oeg-upm/mapping-translator/master/examples/example5/personas5b.rml.ttl

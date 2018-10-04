@@ -128,6 +128,33 @@ query {
   }
 }
 ```
+### To query persons by their full names
+```
+{
+  Person(name: "Freddy Priyatna") {
+    identifier
+    familyName
+    telephone
+    email
+    name
+    givenName
+  }
+}
+```
+
+### To query persons by their emails
+```
+{
+  Person(email: "fpriyatna@fi.upm.es") {
+    identifier
+    familyName
+    telephone
+    email
+    name
+    givenName
+  }
+}
+```
 
 ### To add a person
 ```

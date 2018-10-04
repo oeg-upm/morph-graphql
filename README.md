@@ -1,27 +1,27 @@
 # mapping-translator
 Translate OBDA mappings (R2RML/RML) into GraphQL Resolvers
 
-## EXAMPL 1: Installing and Running the mapping translator
+## EXAMPLE 1: Installing and Running the mapping translator
 1. ```git clone https://github.com/oeg-upm/mapping-translator```
 2. ```cd mapping-translator```
 3. ```npm install```
 4. ```node app.js```
 
-## Translating mappings locallly for MongoDB and Python (Assuming that you have MongoDB, python and pip installed on your computer)
+### Translating mappings locallly for MongoDB and Python (Assuming that you have MongoDB, python and pip installed on your computer)
 1. go to http://localhost:8082/transform
 2. specify your rml mappings
 3. click the "submit" button, hopefully a zip file containing all the necessary files will be generated
 4. unzip that zip file and run the "startup.sh" script
 5. Your graphql application is now ready at http://localhost:5000/graphql
 
-## The mappings used in the examples (Person is mapped to Personas, givenName is mapped to nombre, familyname is mapped to apellido, name is mapped to nombre+apellido, email is mapped to correo)
+### The mappings used in the examples (Person is mapped to Personas, givenName is mapped to nombre, familyname is mapped to apellido, name is mapped to nombre+apellido, email is mapped to correo)
 - url: https://github.com/oeg-upm/mapping-translator/blob/master/examples/example1/personas.rml.ttl
 
-## To query all persons 
+### To query all persons 
 ```
 query { Person { identifier name email } }
 ```
-## To add a person
+### To add a person
 ```
 mutation {
   createPerson(name: "Oscar" email:"ocorcho@fi.upm.es") {
@@ -31,11 +31,6 @@ mutation {
   }
 }
 ```
-
-# Screenshot
-![screenshot](https://github.com/oeg-upm/mapping-translator/raw/master/examples/screenshot.png)
-
-![screenshot-graphql](https://github.com/oeg-upm/mapping-translator/raw/master/examples/screenshot-graphql.png)
 
 
 ## EXAMPLE 2: Translating mappings online for Javascript and SQLite (assuming that you have npm and node installed)
@@ -59,10 +54,10 @@ mutation {
 7. ```node app.js```
 8. Go to http://localhost:4321 from your browser, use some of the queries below
 
-## The mappings used in the examples (Person is mapped to Personas, name is mapped to nombre, email is mapped to correo)
+### The mappings used in the examples (Person is mapped to Personas, name is mapped to nombre, email is mapped to correo)
 - url: https://github.com/oeg-upm/mapping-translator/blob/master/examples/example3/personas3.rml.ttl
 
-## To query all persons 
+### To query all persons 
 ```
 query {
   Person {
@@ -74,7 +69,7 @@ query {
   } 
 }
 ```
-## To add a person
+### To add a person
 ```
 mutation {
   createPerson(givenName: "David", familyName: "Chaves") {
@@ -84,4 +79,9 @@ mutation {
   }
 }
 ```
+
+# Screenshot
+![screenshot](https://github.com/oeg-upm/mapping-translator/raw/master/examples/screenshot.png)
+
+![screenshot-graphql](https://github.com/oeg-upm/mapping-translator/raw/master/examples/screenshot-graphql.png)
 

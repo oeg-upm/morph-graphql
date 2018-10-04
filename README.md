@@ -128,10 +128,22 @@ query {
   }
 }
 ```
+
+### To add a person
+```
+mutation {
+  createPerson(givenName: "David", familyName: "Chaves") {
+    identifier
+    givenName
+    familyName
+  }
+}
+```
+
 ### To query persons by their full names
 ```
 {
-  Person(name: "Freddy Priyatna") {
+  Person(name: "David Chaves") {
     identifier
     familyName
     telephone
@@ -156,16 +168,6 @@ query {
 }
 ```
 
-### To add a person
-```
-mutation {
-  createPerson(givenName: "David", familyName: "Chaves") {
-    identifier
-    givenName
-    familyName
-  }
-}
-```
 
 
 # Screenshot

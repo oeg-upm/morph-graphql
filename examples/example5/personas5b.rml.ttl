@@ -50,7 +50,7 @@
 
 <TMPPublicacion>
 	rml:logicalSource [
-		rml:source  "https://raw.githubusercontent.com/fpriyatna/mapping-translator/master/examples/example5/publicaciones.csv";
+		rml:source  "https://raw.githubusercontent.com/fpriyatna/mapping-translator/master/examples/example5/comentarios.csv";
 	];
 
 	rr:subjectMap [

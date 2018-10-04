@@ -82,7 +82,7 @@ exports.generateQueryResolvers = function(mappingDocument) {
         let logical_source = triplesMap.logicalSource;
         let class_name = triplesMap.subjectMap.className;
         let predicateObjectMaps = triplesMap.predicateObjectMaps;
-        let alpha = logical_source;
+        let alpha = triplesMap.getAlpha();
         console.log(`alpha = ${alpha}`)
 
         let prSQLTriplesMap = triplesMap.genPRSQL().join(",");

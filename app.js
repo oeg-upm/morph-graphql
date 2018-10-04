@@ -238,6 +238,7 @@ async function create_resolver(prog_lang, map_lang, dataset_type, mapping_url,
     let triplesMap = data["triplesMap"];
     let mappingDocument = data["mappingDocument"];
     console.log(`mappingDocument = ${mappingDocument}`);
+    console.log(`mappingDocument.triplesMaps = ${mappingDocument.triplesMaps}`)
 
     if(prog_lang == 'python' && dataset_type == 'mongodb') {
 
@@ -290,13 +291,39 @@ async function create_resolver(prog_lang, map_lang, dataset_type, mapping_url,
 
         //zipDirectory2("tmp/" + random_text, "tmp/" + random_text + ".zip")
     } else if(prog_lang == 'javascript' && (dataset_type == 'sqlite' || dataset_type == 'csv')) {
+        let tempdb = null;
         if(dataset_type == 'csv'){
-            //download the file and create the sqlite, change db_name
-            let csvRows;
-            csvRows = await getCSV(db_name);
-            db_name = db_name.split(".csv")[0].split("/")[db_name.split(".csv")[0].split("/").length-1]+'.sqlite';
-            var  tempdb = temp.openSync(db_name);
-            await createdb(csvRows,logical_source,tempdb);
+            if( db_name != 'undefined' && db_name.endsWith(".csv")) {
+                console.log(`Reading CSV File From ${db_name} ...`)
+                let csvRows = await getCSV(db_name);                
+                db_name = db_name.split(".csv")[0].split("/")[db_name.split(".csv")[0].split("/").length-1]+'.sqlite';
+                tempdb = temp.openSync(db_name);
+                console.log(`tempdb = ${tempdb}`)
+                for(var i=0; i<mappingDocument.triplesMaps.length; i++) {                    
+                    let triplesMap = mappingDocument.triplesMaps[i];
+                    let logicalSource = triplesMap.logicalSource;
+                    await createdb(csvRows,logicalSource,tempdb);
+                }
+
+                //download the file and create the sqlite, change db_name
+
+            } else {
+                //for(triplesMap in mappingDocument.triplesMaps) {
+                for(var i=0; i<mappingDocument.triplesMaps.length; i++) {                    
+                    let triplesMap = mappingDocument.triplesMaps[i];
+                    let logicalSource = triplesMap.logicalSource;
+                    if(logicalSource.endsWith(".csv")) {
+                        //download the file and create the sqlite, change db_name
+                        let csvRows;
+                        console.log(`Reading CSV File From ${logicalSource} ...`)
+                        csvRows = await getCSV(logicalSource);
+                        let tableName = logicalSource.split(".csv")[0].split("/")[logicalSource.split(".csv")[0].split("/").length-1];
+                        tempdb = temp.openSync(db_name);
+                        console.log(`tempdb = ${tempdb}`)
+                        await createdb(csvRows,tableName,tempdb);
+                    }
+                }
+            }
         }
 
         let appString = javascriptsqlitetransformer.generateApp(
@@ -312,7 +339,8 @@ async function create_resolver(prog_lang, map_lang, dataset_type, mapping_url,
         fs.writeFileSync(project_dir+"startup.sh", javascriptsqlitetransformer.generate_statup_script_sh());
         fs.writeFileSync(project_dir+"startup.bat", javascriptsqlitetransformer.generate_statup_script_bat());
         if(dataset_type=='csv'){
-              fs.writeFileSync(project_dir+db_name,fs.readFileSync(tempdb.path));
+            console.log(`tempdb = ${tempdb}`)
+            fs.writeFileSync(project_dir+db_name,fs.readFileSync(tempdb.path));
        }
 
         await zipDirectory("tmp/" + random_text, "tmp/" + random_text + ".zip");
@@ -328,6 +356,9 @@ async function create_resolver(prog_lang, map_lang, dataset_type, mapping_url,
 
 
 function createdb(csvRows,source_name,tempdb){
+    console.log(`tempdb = ${tempdb}`)
+    console.log(`source_name = ${source_name}`)
+
     var db = new sqlite.Database(tempdb.path,sqlite.OPEN_READWRITE);
 
     return new Promise((resolve, reject) => {

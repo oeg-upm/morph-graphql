@@ -355,7 +355,14 @@ class TriplesMap {
     getSubjectMap() { return this.subjectMap; }
     getPredicateObjectMaps() { return this.predicateObjectMaps; }
 
-    getAlpha() { return this.logicalSource; }
+    getAlpha() { 
+        if(this.logicalSource.endsWith(".csv")) {
+            return this.logicalSource.split(".csv")[0].split("/")[this.logicalSource.split(".csv")[0].split("/").length-1];
+        } else {
+            return this.logicalSource; 
+        }
+        
+    }
 
     genPRSQL() {
         let objectMaps = this.predicateObjectMaps.map(function(predicateObjectMap) {

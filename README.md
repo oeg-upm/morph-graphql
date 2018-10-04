@@ -140,7 +140,7 @@ mutation {
 }
 ```
 
-### To query persons by their full names
+### To query a person by their name
 ```
 {
   Person(name: "David Chaves") {
@@ -154,7 +154,7 @@ mutation {
 }
 ```
 
-### To query persons by their emails
+### To query a person by their email
 ```
 {
   Person(email: "fpriyatna@fi.upm.es") {

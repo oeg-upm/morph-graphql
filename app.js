@@ -309,11 +309,10 @@ async function create_resolver(prog_lang, map_lang, dataset_type, mapping_url,
 
             } else {
                 tempdb = temp.openSync(db_name);
-                console.log(`tempdb = ${tempdb}`)
-                //for(triplesMap in mappingDocument.triplesMaps) {
                 for(var i=0; i<mappingDocument.triplesMaps.length; i++) {                    
                     let triplesMap = mappingDocument.triplesMaps[i];
                     let logicalSource = triplesMap.logicalSource;
+
                     if(logicalSource.endsWith(".csv")) {
                         //download the file and create the sqlite, change db_name
                         let csvRows;

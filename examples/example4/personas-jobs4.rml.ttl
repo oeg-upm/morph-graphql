@@ -64,7 +64,7 @@
     ];
 
     rr:predicateObjectMap [
-    	  rr:predicate schema:address;
-    	  rr:objectMap    [ rml:reference "address" ]
+          rr:predicate schema:address;
+          rr:objectMap    [ rml:reference "address" ]
     ];
 .

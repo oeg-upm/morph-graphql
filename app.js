@@ -1,7 +1,10 @@
 const bodyParser = require('body-parser')
 const express = require('express')
 const app = express()
-const urlencodedParser = bodyParser.urlencoded({ extended: false })
+const temp = require('temp').track();
+const urlencodedParser = bodyParser.urlencoded({ extended: false });
+const getCSV = require('get-csv');
+const sqlite = require('sqlite3');
 const url = require('url');
 const fs = require('fs');
 const uuid = require('uuid');
@@ -218,7 +221,7 @@ async function create_resolver(prog_lang, map_lang, dataset_type, mapping_url,
     
     var data;
     if(map_lang == 'rml') {
-        console.log(`Parsing mapping document from ${mapping_url} ...`)
+        console.log(`PARSING MAPPING DOCUMENT FROM ${mapping_url} ...`)
         data = rmlparser.get_jsonld_from_mapping(mapping_url)
     } else {
         console.log(map_lang + " is not supported yet!")
@@ -233,7 +236,9 @@ async function create_resolver(prog_lang, map_lang, dataset_type, mapping_url,
 
 
     let triplesMap = data["triplesMap"];
-   
+    let mappingDocument = data["mappingDocument"];
+    console.log(`mappingDocument = ${mappingDocument}`);
+
     if(prog_lang == 'python' && dataset_type == 'mongodb') {
 
 
@@ -284,10 +289,19 @@ async function create_resolver(prog_lang, map_lang, dataset_type, mapping_url,
         //zipper.sync.zip("tmp/" + random_text).compress().save("tmp/" + random_text + ".zip");
 
         //zipDirectory2("tmp/" + random_text, "tmp/" + random_text + ".zip")
-    } else if(prog_lang == 'javascript' && dataset_type == 'sqlite') {
+    } else if(prog_lang == 'javascript' && (dataset_type == 'sqlite' || dataset_type == 'csv')) {
+        if(dataset_type == 'csv'){
+            //download the file and create the sqlite, change db_name
+            let csvRows;
+            csvRows = await getCSV(db_name);
+            db_name = db_name.split(".csv")[0].split("/")[db_name.split(".csv")[0].split("/").length-1]+'.sqlite';
+            var  tempdb = temp.openSync(db_name);
+            await createdb(csvRows,db_name,tempdb);
+        }
 
         let appString = javascriptsqlitetransformer.generateApp(
             triplesMap,
+            mappingDocument,
             db_name, port_no)
         fs.writeFileSync(project_dir+"app.js", appString, function (err){
             if(err){
@@ -297,6 +311,9 @@ async function create_resolver(prog_lang, map_lang, dataset_type, mapping_url,
         fs.writeFileSync(project_dir+"package.json", javascriptsqlitetransformer.generate_requirements());
         fs.writeFileSync(project_dir+"startup.sh", javascriptsqlitetransformer.generate_statup_script_sh());
         fs.writeFileSync(project_dir+"startup.bat", javascriptsqlitetransformer.generate_statup_script_bat());
+        if(dataset_type=='csv'){
+              fs.writeFileSync(project_dir+db_name,fs.readFileSync(tempdb.path));
+       }
 
         await zipDirectory("tmp/" + random_text, "tmp/" + random_text + ".zip");
         return random_text;
@@ -307,6 +324,43 @@ async function create_resolver(prog_lang, map_lang, dataset_type, mapping_url,
 
     return random_text;
     
+}
+
+
+function createdb(csvRows,db_name,tempdb){
+    var db = new sqlite.Database(tempdb.path,sqlite.OPEN_READWRITE);
+
+    return new Promise((resolve, reject) => {
+
+        var aux_name = db_name.split(".sqlite")[0];
+        var createTableString = 'CREATE TABLE IF NOT EXISTS '+aux_name+" (";
+        let headers = Object.keys(csvRows[0]);
+        for (let column = 0 ; column < headers.length; column ++){
+            createTableString += headers[column] + ' VARCHAR(200), ';
+        }
+        createTableString = createTableString.substr(0,createTableString.length-2) + ');';
+        db.serialize(() =>{
+            db.run(createTableString);
+            console.log(createTableString);
+            for(let i=0; i<csvRows.length ; i++){
+                console.log(Object.values(csvRows[i]));
+                let values = "\""+Object.values(csvRows[i]).join('","')+"\"";
+                console.log(values);
+                var insert = "INSERT INTO "+aux_name +" VALUES ("+values+");";
+                console.log(insert);
+                db.run(insert);
+            }
+        });
+
+        db.close((err) => {
+            if (err) {
+                reject(err);
+                return console.error(err.message);
+            }
+            else
+                resolve();
+        });
+    });
 }
 
 var wait = ms => new Promise((r, j)=>setTimeout(r, ms))

@@ -33,7 +33,7 @@ mutation {
 ```
 
 
-## EXAMPLE 2: Translating mappings online for Javascript and SQLite (assuming that you have npm and node installed)
+## EXAMPLE 3: Translating mappings online for Javascript and SQLite (assuming that you have npm and node installed)
 1. ```mkdir output```
 2. ```cd output```
 3. Download the example database 
@@ -79,6 +79,52 @@ mutation {
   }
 }
 ```
+
+## EXAMPLE 5: Translating mappings online for Javascript and CSV (assuming that you have npm and node installed)
+1. ```mkdir output```
+2. ```cd output```
+3. Translate the corresponding RML: 
+   ```curl -X POST ```
+   ```  http://mappingtranslator.mappingpedia.linkeddata.es/transform ```
+   ```  -H 'Content-Type: application/json' ```
+   ```  -d '{ "prog_lang": "javascript", ```
+   ```"dataset_type":"csv", ```
+   ```"mapping_url":"https://raw.githubusercontent.com/oeg-upm/mapping-translator/master/examples/example5/personas5b.rml.ttl",```
+   ```"db_name":"personas.sqlite",```
+   ```"mapping_language":"rml"```
+   ```}' > output.zip```
+5. ```unzip output.zip```
+6. ```npm install```
+7. ```node app.js```
+8. Go to http://localhost:4321 from your browser, use some of the queries below
+
+### The mappings used in the examples (Person is mapped to Personas, name is mapped to nombre, email is mapped to correo)
+- url: https://raw.githubusercontent.com/oeg-upm/mapping-translator/master/examples/example5/personas5b.rml.ttl
+
+### To query all persons 
+```
+{
+  Person {
+    identifier
+    familyName
+    telephone
+    email
+    name
+    givenName
+  }
+}
+```
+### To add a person
+```
+mutation {
+  createPerson(givenName: "David", familyName: "Chaves") {
+    identifier
+    givenName
+    familyName
+  }
+}
+```
+
 
 # Screenshot
 ![screenshot](https://github.com/oeg-upm/mapping-translator/raw/master/examples/screenshot.png)

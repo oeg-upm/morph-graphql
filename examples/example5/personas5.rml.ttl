@@ -47,3 +47,25 @@
 		  ]
 	];
 .
+
+<TMPPublicacion>
+	rml:logicalSource [
+		rml:source  "publicaciones";
+	];
+
+	rr:subjectMap [
+		rml:reference "id";
+		rr:class schema:SocialMediaPosting
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate schema:author;
+	  rr:objectMap    [ rml:reference "usuario" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate schema:comment;
+	  rr:objectMap    [ rml:reference "mensaje" ]
+	];
+
+.

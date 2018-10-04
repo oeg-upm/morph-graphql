@@ -98,7 +98,7 @@ mutation {
 7. ```node app.js```
 8. Go to http://localhost:4321 from your browser, use some of the queries below
 
-### The mappings used in the examples (Person is mapped to Personas, name is mapped to nombre, email is mapped to correo)
+### The mappings used in the examples
 - url: https://raw.githubusercontent.com/oeg-upm/mapping-translator/master/examples/example5/personas5b.rml.ttl
 - Person is mapped to personas.csv, givenName is mapped to nombre, familyName is mapped to apellido, email is mapped to some function of nombre and apellido, name is mapped to the concatenation of nombre and apellido
 - SocialMediaPosting is mapped to comentarios.csv, author is mapped to usuario, comment is mapped to mensaje

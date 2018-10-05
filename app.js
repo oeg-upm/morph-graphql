@@ -295,7 +295,7 @@ async function create_resolver(prog_lang, map_lang, dataset_type, mapping_url,
         if(dataset_type == 'csv'){
             if( db_name != 'undefined' && db_name.endsWith(".csv")) {
                 console.log(`Reading CSV File From ${db_name} ...`)
-                let csvRows = await getCSV(db_name);                
+                let csvRows = await getCSV(db_name);
                 db_name = db_name.split(".csv")[0].split("/")[db_name.split(".csv")[0].split("/").length-1]+'.sqlite';
                 tempdb = temp.openSync(db_name);
                 console.log(`tempdb = ${tempdb}`)
@@ -308,7 +308,6 @@ async function create_resolver(prog_lang, map_lang, dataset_type, mapping_url,
                 //download the file and create the sqlite, change db_name
 
             } else {
-                //for(triplesMap in mappingDocument.triplesMaps) {
                 tempdb = temp.openSync(db_name);
                 for(var i=0; i<mappingDocument.triplesMaps.length; i++) {                    
                     let triplesMap = mappingDocument.triplesMaps[i];
@@ -321,7 +320,6 @@ async function create_resolver(prog_lang, map_lang, dataset_type, mapping_url,
                         csvRows = await getCSV(logicalSource);
                         //let tableName = logicalSource.split(".csv")[0].split("/")[logicalSource.split(".csv")[0].split("/").length-1];
                         let tableName = triplesMap.getAlpha();
-                        console.log(`tempdb = ${tempdb}`)
                         await createdb(csvRows,tableName,tempdb);
                     }
                 }

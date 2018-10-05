@@ -4,7 +4,6 @@ html
 
     script(src="https://code.jquery.com/jquery-3.1.1.min.js",integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=",crossorigin="anonymous")
     script(src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.3/semantic.min.js")
-
     link(href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.3/semantic.min.css", type="text/css", rel="stylesheet")
 
     body
@@ -26,10 +25,10 @@ html
             <select class="ui dropdown" id='dataset_type_id' name='dataset_type' type='text'>
             <option value="mongodb">Mongo DB</option>
             <option value="sqlite">SQLite</option>
-            <option value="csv">CSV file </option>
+            <option value="csv">CSV file(s)</option>
             </select>            
             <div class="field">
-            <label>Database Name or CSV URL</label>
+            <label>Database Name</label>
             <input type="text" name="db_name" placeholder="test_db"/>
             </div>
             <div class="field">

@@ -2,11 +2,14 @@
 Translate OBDA mappings (R2RML/RML) into GraphQL Resolvers
 
 ## EXAMPLE 1: Installing and Running the mapping translator
+With Node:
 1. ```git clone https://github.com/oeg-upm/mapping-translator```
 2. ```cd mapping-translator```
 3. ```npm install```
 4. ```node app.js```
 
+With docker:
+1. ```docker run -d -p 8082:8082 --name mapping-translator oegdataintegration/mapping-translator:1.0```
 ### Translating mappings locallly for MongoDB and Python (Assuming that you have MongoDB, python and pip installed on your computer)
 1. go to http://localhost:8082/transform
 2. specify your rml mappings

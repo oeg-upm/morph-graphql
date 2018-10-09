@@ -9,7 +9,7 @@
 
 <TMPersona>
 	rml:logicalSource [
-		rml:source  "https://raw.githubusercontent.com/fpriyatna/mapping-translator/master/examples/example6/personas.csv";
+		rml:source  "https://raw.githubusercontent.com/dachafra/mapping-translator/master/examples/example6/personas.csv";
 	];
 
 	rr:subjectMap [

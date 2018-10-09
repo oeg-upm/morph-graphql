@@ -13,7 +13,7 @@
 	];
 
 	rr:subjectMap [
-		rml:template "http://ex.org/{id}-{name}";
+		rr:template "http://ex.org/{id}-{name}";
 		rr:class schema:Person
 	];
 

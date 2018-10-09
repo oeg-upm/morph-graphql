@@ -3,13 +3,14 @@ const express = require('express')
 const app = express()
 const temp = require('temp').track();
 const urlencodedParser = bodyParser.urlencoded({ extended: false });
-const getCSV = require('get-csv');
 const sqlite = require('sqlite3');
+
 const url = require('url');
 const fs = require('fs');
 const uuid = require('uuid');
 const rmlparser = require('./rml-parser');
 const javascriptsqlitetransformer = require('./transformers/javascript/sqlite/javascript-sqlite-transformer');
+const sqlitecretator = require('./transformers/javascript/sqlite/sqlitecreator');
 
 const pythonmongodbtransformer = require('./transformers/python/mongodb/python-mongodb-transformer');
 //const mongodbpythontransformer = require('./mongodb-python-transformer');
@@ -87,7 +88,7 @@ app.get('/testzip3', function (req, res){
         // but is piped here in a writable stream which emits a "finish" event.
         console.log("out.zip written.");
     });
-    
+
 
 
     res.render('transform', {message: 'Welcome to Mapping Translator!\nTranslate your OBDA mappings to GraphQL Resolvers'})
@@ -156,8 +157,8 @@ app.get('/testzip2', function (req, res){
 
     // finalize the archive (ie we are done appending files but streams have to finish yet)
     // 'close', 'end' or 'finish' may be fired right after calling this method so register to them beforehand
-    archive.finalize();    
-    
+    archive.finalize();
+
 
     res.render('transform', {message: 'Welcome to Mapping Translator!\nTranslate your OBDA mappings to GraphQL Resolvers'})
 })
@@ -292,38 +293,8 @@ async function create_resolver(prog_lang, map_lang, dataset_type, mapping_url,
         //zipDirectory2("tmp/" + random_text, "tmp/" + random_text + ".zip")
     } else if(prog_lang == 'javascript' && (dataset_type == 'sqlite' || dataset_type == 'csv')) {
         let tempdb = null;
-        if(dataset_type == 'csv'){
-            if( db_name != 'undefined' && db_name.endsWith(".csv")) {
-                console.log(`Reading CSV File From ${db_name} ...`)
-                let csvRows = await getCSV(db_name);
-                db_name = db_name.split(".csv")[0].split("/")[db_name.split(".csv")[0].split("/").length-1]+'.sqlite';
-                tempdb = temp.openSync(db_name);
-                console.log(`tempdb = ${tempdb}`)
-                for(var i=0; i<mappingDocument.triplesMaps.length; i++) {                    
-                    let triplesMap = mappingDocument.triplesMaps[i];
-                    let logicalSource = triplesMap.logicalSource;
-                    await createdb(csvRows,logicalSource,tempdb);
-                }
-
-                //download the file and create the sqlite, change db_name
-
-            } else {
-                tempdb = temp.openSync(db_name);
-                for(var i=0; i<mappingDocument.triplesMaps.length; i++) {                    
-                    let triplesMap = mappingDocument.triplesMaps[i];
-                    let logicalSource = triplesMap.logicalSource;
-
-                    if(logicalSource.endsWith(".csv")) {
-                        //download the file and create the sqlite, change db_name
-                        let csvRows;
-                        console.log(`Reading CSV File From ${logicalSource} ...`)
-                        csvRows = await getCSV(logicalSource);
-                        //let tableName = logicalSource.split(".csv")[0].split("/")[logicalSource.split(".csv")[0].split("/").length-1];
-                        let tableName = triplesMap.getAlpha();
-                        await createdb(csvRows,tableName,tempdb);
-                    }
-                }
-            }
+        if(dataset_type == 'csv') {
+            tempdb = await sqlitecretator.createSQLite(mappingDocument,db_name,sqlite);
         }
 
         let appString = javascriptsqlitetransformer.generateApp(
@@ -335,6 +306,9 @@ async function create_resolver(prog_lang, map_lang, dataset_type, mapping_url,
                console.log('ERROR saving schema: '+err);
             }
         });
+        if(db_name.endsWith(".csv")){
+            db_name = db_name.split(".csv")[0].split("/")[db_name.split(".csv")[0].split("/").length-1]+'.sqlite';
+        }
         fs.writeFileSync(project_dir+"package.json", javascriptsqlitetransformer.generate_requirements());
         fs.writeFileSync(project_dir+"startup.sh", javascriptsqlitetransformer.generate_statup_script_sh());
         fs.writeFileSync(project_dir+"startup.bat", javascriptsqlitetransformer.generate_statup_script_bat());
@@ -355,43 +329,7 @@ async function create_resolver(prog_lang, map_lang, dataset_type, mapping_url,
 }
 
 
-function createdb(csvRows,source_name,tempdb){
-    console.log(`tempdb = ${tempdb}`)
-    console.log(`source_name = ${source_name}`)
 
-    var db = new sqlite.Database(tempdb.path,sqlite.OPEN_READWRITE);
-
-    return new Promise((resolve, reject) => {
-
-        var createTableString = 'CREATE TABLE IF NOT EXISTS '+source_name+" (";
-        let headers = Object.keys(csvRows[0]);
-        for (let column = 0 ; column < headers.length; column ++){
-            createTableString += headers[column] + ' VARCHAR(200), ';
-        }
-        createTableString = createTableString.substr(0,createTableString.length-2) + ');';
-        db.serialize(() =>{
-            db.run(createTableString);
-            console.log(createTableString);
-            for(let i=0; i<csvRows.length ; i++){
-                console.log(Object.values(csvRows[i]));
-                let values = "\""+Object.values(csvRows[i]).join('","')+"\"";
-                console.log(values);
-                var insert = "INSERT INTO "+source_name+" VALUES ("+values+");";
-                console.log(insert);
-                db.run(insert);
-            }
-        });
-
-        db.close((err) => {
-            if (err) {
-                reject(err);
-                return console.error(err.message);
-            }
-            else
-                resolve();
-        });
-    });
-}
 
 var wait = ms => new Promise((r, j)=>setTimeout(r, ms))
 

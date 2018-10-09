@@ -312,6 +312,7 @@ async function create_resolver(prog_lang, map_lang, dataset_type, mapping_url,
         fs.writeFileSync(project_dir+"package.json", javascriptsqlitetransformer.generate_requirements());
         fs.writeFileSync(project_dir+"startup.sh", javascriptsqlitetransformer.generate_statup_script_sh());
         fs.writeFileSync(project_dir+"startup.bat", javascriptsqlitetransformer.generate_statup_script_bat());
+        fs.writeFileSync(project_dir+"Dockerfile",fs.readFileSync('./transformers/Dockerfile'));
         if(dataset_type=='csv'){
             console.log(`tempdb = ${tempdb}`)
             fs.writeFileSync(project_dir+db_name,fs.readFileSync(tempdb.path));

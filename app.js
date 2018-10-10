@@ -295,6 +295,9 @@ async function create_resolver(prog_lang, map_lang, dataset_type, mapping_url,
         let tempdb = null;
         if(dataset_type == 'csv') {
             tempdb = await sqlitecretator.createSQLite(mappingDocument,db_name,sqlite);
+            if(db_name.endsWith(".csv")){
+                db_name = db_name.split(".csv")[0].split("/")[db_name.split(".csv")[0].split("/").length-1];
+            }
         }
 
         let appString = javascriptsqlitetransformer.generateApp(
@@ -306,13 +309,11 @@ async function create_resolver(prog_lang, map_lang, dataset_type, mapping_url,
                console.log('ERROR saving schema: '+err);
             }
         });
-        if(db_name.endsWith(".csv")){
-            db_name = db_name.split(".csv")[0].split("/")[db_name.split(".csv")[0].split("/").length-1]+'.sqlite';
-        }
         fs.writeFileSync(project_dir+"package.json", javascriptsqlitetransformer.generate_requirements());
         fs.writeFileSync(project_dir+"startup.sh", javascriptsqlitetransformer.generate_statup_script_sh());
         fs.writeFileSync(project_dir+"startup.bat", javascriptsqlitetransformer.generate_statup_script_bat());
-        fs.writeFileSync(project_dir+"Dockerfile",fs.readFileSync('./transformers/Dockerfile'));
+        fs.writeFileSync(project_dir+"Dockerfile",javascriptsqlitetransformer.generate_docker_file());
+        fs.writeFileSync(project_dir+"startdocker.sh",javascriptsqlitetransformer.generate_docker_startup_sh());
         if(dataset_type=='csv'){
             console.log(`tempdb = ${tempdb}`)
             fs.writeFileSync(project_dir+db_name,fs.readFileSync(tempdb.path));

@@ -1,0 +1,35 @@
+---
+title: "Reusing RML mappings for providing semantic access to heterogeneous data sources through GraphQL"
+---
+<header markdown="1">
+# <%= @item[:title] %>
+
+{:#authors}
+- <%= person 'David Chaves-Fraga', 'http://dchaves.oeg-upm.net', '' %>
+- <%= person 'Freddy Priyatna', 'http://www.oeg-upm.net/index.php/es/phd/50-fpriyatna/', '' %>
+- <%= person 'Ahmad Alobaid', 'http://www.oeg-upm.net/index.php/en/phdstudents/387-aalobaid/', '' %>
+- <%= person 'Oscar Corcho', 'http://www.oeg-upm.net/index.php/en/teachers/11-ocorcho/', '' %>
+
+{:#affiliations}
+- {:#oeg} Ontology Engineering Group, Universidad Politécnica de Madrid, Spain
+
+
+</header>
+<div id="content">
+<%= section 'abstract' %>
+
+<main>
+  <!-- Add sections by specifying their file name, excluding the '.md' suffix. -->
+  <%= section 'introduction'  %>
+  <%= section 'related-work' %>
+  <%= section 'proposal' %>
+  <%= section 'implementation' %>
+  <%= section 'evaluation' %>
+  <%= section 'conclusions' %>
+</main>
+
+</div>
+
+<footer>
+    <%= section 'acknowledgements' %>
+</footer>

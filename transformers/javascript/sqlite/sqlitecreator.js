@@ -12,7 +12,8 @@ exports.createSQLite = async function (mappingDocument, db_name,sqlite){
             let triplesMap = mappingDocument.triplesMaps[i];
             let logicalSource = triplesMap.logicalSource;
             let primaryKeys = extractPrimaryKeys(triplesMap.subjectMap);
-            await createdb(csvRows,logicalSource,tempdb,primaryKeys,sqlite);
+            var functionColumns=createFunctionColumn(triplesMap.getPredicateObjectMaps());
+            await createdb(csvRows,logicalSource,tempdb,primaryKeys,sqlite,functionColumns);
         }
     } else {
         for(var i=0; i<mappingDocument.triplesMaps.length; i++) {
@@ -21,36 +22,53 @@ exports.createSQLite = async function (mappingDocument, db_name,sqlite){
             let primaryKeys = extractPrimaryKeys(triplesMap.subjectMap);
             if(logicalSource.endsWith(".csv")) {
                 //download the file and create the sqlite, change db_name
-                let csvRows;
                 console.log(`Reading CSV File From ${logicalSource} ...`)
-                csvRows = await getCSV(logicalSource);
+                let csvRows = await getCSV(logicalSource);
                 //let tableName = logicalSource.split(".csv")[0].split("/")[logicalSource.split(".csv")[0].split("/").length-1];
                 let tableName = triplesMap.getAlpha();
-                await createdb(csvRows,tableName,tempdb,primaryKeys,sqlite);
+                var functionColumns=createFunctionColumn(triplesMap.getPredicateObjectMaps());
+                await createdb(csvRows,tableName,tempdb,primaryKeys,sqlite,functionColumns);
             }
         }
     }
     return tempdb;
 }
 
+
+function createFunctionColumn(predicate_objectmaps){
+    let columns = [];
+    for(let i=0; i<predicate_objectmaps.length; i++){
+        let predicate_objectMap = predicate_objectmaps[i];
+        if(predicate_objectMap.objectMap.functionString){
+            let element = {};
+            element.column =  predicate_objectMap.predicate;
+            element.function = predicate_objectMap.objectMap.functionString;
+            columns.push(element);
+        }
+    }
+    return columns;
+}
+
 function extractPrimaryKeys(subjectMap){
-    let primaryKeys="";
+    let primaryKeys=[];
     if(subjectMap.referenceValue){
-        return subjectMap.referenceValue;
+        primaryKeys.push(subjectMap.referenceValue);
     }
     else if (subjectMap.template || subjectMap.functionString){
        let subjectMapColumns = subjectMap.template.split("{");
+       if(subjectMapColumns === 'undefined')
+           subjectMapColumns = subjectMap.functionString.split("{");
        for(let i =1 ; i<subjectMapColumns.length ; i++ ){
             let key = subjectMapColumns[i].split("}")[0];
-            primaryKeys += key + ",";
+            primaryKeys.push(key);
        }
-       return primaryKeys.substr(0,primaryKeys.length-1);
     }
+    return primaryKeys;
 
 }
 
 
-function createdb(csvRows,source_name,tempdb,primaryKeys,sqlite){
+function createdb(csvRows,source_name,tempdb,primaryKeys,sqlite,functionColumns){
     console.log(`tempdb = ${tempdb}`)
     console.log(`source_name = ${source_name}`)
 
@@ -63,17 +81,29 @@ function createdb(csvRows,source_name,tempdb,primaryKeys,sqlite){
         for (let column = 0 ; column < headers.length; column ++){
             createTableString += headers[column] + ' VARCHAR(200), ';
         }
-        createTableString = createTableString.substr(0, createTableString.length-2) + ', PRIMARY KEY ('+primaryKeys+'));';
+        functionColumns.forEach(function(element) {
+            createTableString += element.column + ' VARCHAR(200), ';
+        });
+        createTableString = createTableString.substr(0, createTableString.length-2) + ', PRIMARY KEY ('+primaryKeys.join(',')+'));';
         db.serialize(() =>{
             db.run(createTableString);
             console.log(createTableString);
             for(let i=0; i<csvRows.length ; i++){
                 console.log(Object.values(csvRows[i]));
                 let values = "\""+Object.values(csvRows[i]).join('","')+"\"";
+                functionColumns.forEach(function() {
+                    values += ', NULL';
+                });
                 console.log(values);
                 var insert = "INSERT INTO "+source_name+" VALUES ("+values+");";
                 console.log(insert);
                 db.run(insert);
+                functionColumns.forEach(function (element) {
+                    let update = 'UPDATE '+source_name+ ' SET ' + element.column +' = (SELECT '+ element.function + ' FROM '+source_name+' WHERE '+element.column+ ' is NULL);';
+                    console.log(update);
+                    db.run(update);
+                })
+
             }
         });
 

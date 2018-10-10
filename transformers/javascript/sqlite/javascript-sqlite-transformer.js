@@ -318,3 +318,13 @@ exports.generate_statup_script_bat = function(){
     var content=fs.readFileSync('./transformers/javascript/startup.bat');
     return content;
 }
+
+exports.generate_docker_file = function () {
+    var content = fs.readFileSync('./transformers/javascript/Dockerfile');
+    return content;
+}
+
+exports.generate_docker_startup_sh = function () {
+    var content = fs.readFileSync('./transformers/javascript/startupDocker.sh');
+    return content;
+}

@@ -36,7 +36,7 @@ mutation {
 ```
 
 
-## EXAMPLE 3: Translating mappings online for Javascript and SQLite (assuming that you have npm and node installed)
+## EXAMPLE 3: Translating mappings online for Javascript and SQLite (assuming that you have npm and node or docker installed)
 1. ```mkdir output```
 2. ```cd output```
 3. Download the example database 
@@ -52,10 +52,11 @@ mutation {
    ```"db_name":"personas3.sqlite",```
    ```"mapping_language":"rml"```
    ```}' > output.zip```
-5. ```unzip output.zip```
+5. ```unzip output.zip``` and if you've docker installed go to step 8 directly
 6. ```npm install```
-7. ```node app.js```
-8. Go to http://localhost:4321/graphql from your browser, use some of the queries below
+7. ```node app.js```  and go to step 9
+8. Linux: ```./startupdocker.sh``` or Windows: ```./startupdocker.bat```
+9. Go to http://localhost:4321/graphql from your browser, use some of the queries below
 
 ### The mappings used in the examples (Person is mapped to Personas, name is mapped to nombre, email is mapped to correo)
 - url: https://github.com/oeg-upm/mapping-translator/blob/master/examples/example3/personas3.rml.ttl
@@ -83,7 +84,7 @@ mutation {
 }
 ```
 
-## EXAMPLE 5: Translating mappings online for Javascript and a set of CSV files (assuming that you have npm and node installed)
+## EXAMPLE 5: Translating mappings online for Javascript and a set of CSV files (assuming that you have npm and node or docker installed)
 1. ```mkdir output```
 2. ```cd output```
 3. Translate the corresponding RML: 
@@ -96,10 +97,11 @@ mutation {
    ```"db_name":"personas.sqlite",```
    ```"mapping_language":"rml"```
    ```}' > output.zip```
-5. ```unzip output.zip```
+5. ```unzip output.zip``` and if you've docker installed go to step 8 directly
 6. ```npm install```
-7. ```node app.js```
-8. Go to http://localhost:4321/graphql from your browser, use some of the queries below
+7. ```node app.js```  and go to step 9
+8. Linux: ```./startupdocker.sh``` or Windows: ```./startupdocker.bat```
+9. Go to http://localhost:4321/graphql from your browser, use some of the queries below
 
 ### The mappings used in the examples
 - url: https://raw.githubusercontent.com/oeg-upm/mapping-translator/master/examples/example5/personas5b.rml.ttl

@@ -313,7 +313,8 @@ async function create_resolver(prog_lang, map_lang, dataset_type, mapping_url,
         fs.writeFileSync(project_dir+"startup.sh", javascriptsqlitetransformer.generate_statup_script_sh());
         fs.writeFileSync(project_dir+"startup.bat", javascriptsqlitetransformer.generate_statup_script_bat());
         fs.writeFileSync(project_dir+"Dockerfile",javascriptsqlitetransformer.generate_docker_file());
-        fs.writeFileSync(project_dir+"startdocker.sh",javascriptsqlitetransformer.generate_docker_startup_sh());
+        fs.writeFileSync(project_dir+"startupdocker.sh",javascriptsqlitetransformer.generate_docker_startup_sh());
+        fs.writeFileSync(project_dir+"startupdocker.bat",javascriptsqlitetransformer.generate_docker_startup_bat());
         if(dataset_type=='csv'){
             console.log(`tempdb = ${tempdb}`)
             fs.writeFileSync(project_dir+db_name,fs.readFileSync(tempdb.path));

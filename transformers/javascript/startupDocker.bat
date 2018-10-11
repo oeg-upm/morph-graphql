@@ -1,4 +1,3 @@
-#!/bin/bash
 docker stop graphql-test
 docker rm graphql-test
 docker rmi graphql

@@ -328,3 +328,8 @@ exports.generate_docker_startup_sh = function () {
     var content = fs.readFileSync('./transformers/javascript/startupDocker.sh');
     return content;
 }
+
+exports.generate_docker_startup_bat = function () {
+    var content = fs.readFileSync('./transformers/javascript/startupDocker.bat');
+    return content;
+}

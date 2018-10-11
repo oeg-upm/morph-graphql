@@ -12,8 +12,10 @@ gem 'rubypants'
 gem 'sass'
 
 # references
+
 gem 'i18n'
 gem 'latex-decode'
+gem 'activesupport','~> 4.1.11'
 gem 'unicode_utils'
 gem 'citeproc-ruby', '>= 1.1.6'
 gem 'csl-styles'
@@ -30,6 +32,7 @@ group :development do
   gem 'rb-readline'
   gem 'rb-notifu' if Gem.win_platform?
 end
+
 
 group :test do
   # validation

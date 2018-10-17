@@ -347,4 +347,4 @@ function sleep(ms) {
   }
   
 
-app.listen(8082, () => console.log('Mapping Translator is listening on port 8082!'))
+app.listen(8084, () => console.log('Mapping Translator is listening on port 8084!'))

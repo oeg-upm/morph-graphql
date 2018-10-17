@@ -13,7 +13,7 @@
 	];
 
 	rr:subjectMap [
-		rml:reference "id";
+		rml:template "http://ex.org/{id}";
 		rr:class schema:Person
 	];
 
@@ -46,18 +46,6 @@
 		  	rmlc:functions "lower(substr(nombre,1,1) || apellido || '@fi.upm.es')"
 		  ]
 	];
-
-	rr:predicateObjectMap [
-          rr:predicate schema:username;
-          rr:joinCondition [
-            rmlc:child [
-                rmlc:functions "lower(substr(nombre,1,1) || apellido)";
-            ];
-            rmlc:parent [
-                rml:reference "usuario";
-            ]
-          ];
-    ];
 .
 
 <TMPPublicacion>
@@ -72,7 +60,17 @@
 
 	rr:predicateObjectMap [
 	  rr:predicate schema:author;
-	  rr:objectMap    [ rml:reference "usuario" ]
+	  rr:objectMap    [
+	    rr:parentTriplesMap <TMPersona>;
+	    rr:joinCondition [
+	        rmlc:child [
+	            rml:reference "usuario"
+	        ];
+	        rmlc:parent [
+	            rmlc:functions "lower(substr(nombre,1,1) || apellido)"
+	        ];
+	    ];
+	   ];
 	];
 
 	rr:predicateObjectMap [

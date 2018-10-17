@@ -51,7 +51,7 @@
           rr:predicate schema:username;
           rr:joinCondition [
             rmlc:child [
-                rmlc:functions "lower(substr(nombre,1,1) || apellido";
+                rmlc:functions "lower(substr(nombre,1,1) || apellido)";
             ];
             rmlc:parent [
                 rml:reference "usuario";

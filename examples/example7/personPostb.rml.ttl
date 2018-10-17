@@ -54,7 +54,7 @@
                 rml:reference "email";
             ];
             rmlc:parent [
-                rmlc:functions "username || '@fi.upm.es'";
+                rmlc:functions "usuario || '@fi.upm.es'";
             ]
           ];
     ];

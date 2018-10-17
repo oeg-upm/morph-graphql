@@ -54,7 +54,7 @@
                 rmlc:functions "lower(substr(nombre,1,1) || apellido";
             ];
             rmlc:parent [
-                rml:reference "username";
+                rml:reference "usuario";
             ]
           ];
     ];

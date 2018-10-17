@@ -51,7 +51,7 @@
           rr:predicate schema:username
           rr:joinCondition [
             rmlc:child [
-                rmlc:functions "email";
+                rml:reference "email";
             ];
             rmlc:parent [
                 rmlc:functions "username || '@fi.upm.es'";

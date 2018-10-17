@@ -9,7 +9,7 @@
 
 <TMPersona>
 	rml:logicalSource [
-		rml:source  "https://raw.githubusercontent.com/dachafra/mapping-translator/master/examples/example6/personas.csv";
+		rml:source  "https://raw.githubusercontent.com/dachafra/mapping-translator/master/examples/example7/personas.csv";
 	];
 
 	rr:subjectMap [
@@ -62,7 +62,7 @@
 
 <TMPPublicacion>
 	rml:logicalSource [
-		rml:source  "https://raw.githubusercontent.com/dachafra/mapping-translator/master/examples/example6/comentarios.csv";
+		rml:source  "https://raw.githubusercontent.com/dachafra/mapping-translator/master/examples/example7/comentarios.csv";
 	];
 
 	rr:subjectMap [

@@ -115,9 +115,13 @@ exports.generateQueryResolvers = function(mappingDocument) {
             if(objectMap.referenceValue) {
                 filtered.push(`\t\t\t\t\instance.${predicate} = row["${objectMap.referenceValue}"];`)
             } else if(objectMap.template) {
-                let templateString = objectMap.template.split("{").join('${row["').split("}").join('"]}')
-                templateString = "`" + templateString + "`"
-                filtered.push(`\t\t\t\t\instance.${predicate} = ${templateString}`)
+                //let templateString = objectMap.template.split("{").join('${row["').split("}").join('"]}')
+                //templateString = "`" + templateString + "`"
+                //filtered.push(`\t\t\t\t\instance.${predicate} = ${templateString}`)
+
+                let alias = '`${row["' + objectMap.getHashCode() + '"]}`';
+                filtered.push(`\t\t\t\t\instance.${predicate} = ${alias}`)
+
             } else if(objectMap.functionString) {
                 let alias = '`${row["' + objectMap.getHashCode() + '"]}`';
                 filtered.push(`\t\t\t\t\instance.${predicate} = ${alias}`)

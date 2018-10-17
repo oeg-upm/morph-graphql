@@ -238,8 +238,8 @@ async function create_resolver(prog_lang, map_lang, dataset_type, mapping_url,
 
     let triplesMap = data["triplesMap"];
     let mappingDocument = data["mappingDocument"];
-    console.log(`mappingDocument = ${mappingDocument}`);
-    console.log(`mappingDocument.triplesMaps = ${mappingDocument.triplesMaps}`)
+    //console.log(`mappingDocument = ${mappingDocument}`);
+    //console.log(`mappingDocument.triplesMaps = ${mappingDocument.triplesMaps}`)
 
     if(prog_lang == 'python' && dataset_type == 'mongodb') {
 
@@ -347,4 +347,4 @@ function sleep(ms) {
   }
   
 
-app.listen(8082, () => console.log('Mapping Translator is listening on port 8082!'))
+app.listen(8084, () => console.log('Mapping Translator is listening on port 8084!'))

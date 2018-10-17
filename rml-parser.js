@@ -74,6 +74,8 @@ class RMLParser {
             }
         }
     
+        console.log(`\tsubjectMap.referenceValue = ${subjectMap.referenceValue}`);
+        console.log(`\tsubjectMap.template = ${subjectMap.template}`);
         return subjectMap        
     }
 
@@ -125,6 +127,17 @@ class RMLParser {
             let predicateObjectMap = this.buildPredicateObjectMap(predicateObjectMapId);
             console.log(`\t\tpredicateObjectMap.predicate = ${predicateObjectMap.predicate}`)
             console.log(`\t\tpredicateObjectMap.objectMap = ${predicateObjectMap.objectMap}`)
+            if(predicateObjectMap.objectMap.parentTriplesMap) {
+                console.log(`\t\tpredicateObjectMap.objectMap.parentTriplesMap = ${predicateObjectMap.objectMap.parentTriplesMap}`)
+            }
+            
+            if(predicateObjectMap.objectMap.joinCondition) {
+                console.log(`\t\tpredicateObjectMap.objectMap.joinCondition = ${predicateObjectMap.objectMap.joinCondition}`)
+                console.log(`\t\tpredicateObjectMap.objectMap.joinCondition.child.referenceValue = ${predicateObjectMap.objectMap.joinCondition.child.referenceValue}`)
+                console.log(`\t\tpredicateObjectMap.objectMap.joinCondition.child.functionString = ${predicateObjectMap.objectMap.joinCondition.child.functionString}`)
+                console.log(`\t\tpredicateObjectMap.objectMap.joinCondition.parent.referenceValue = ${predicateObjectMap.objectMap.joinCondition.parent.referenceValue}`)
+                console.log(`\t\tpredicateObjectMap.objectMap.joinCondition.parent.functionString = ${predicateObjectMap.objectMap.joinCondition.parent.functionString}`)
+            }
 
             predicateObjectMaps.push(predicateObjectMap)
         }
@@ -172,6 +185,8 @@ class RMLParser {
         //console.log(`objectMapId = ${objectMapId}`);
         return objectMapId
     }
+
+
 
     buildObjectMap(objectMapId) {
         let objectMap = new ObjectMap();
@@ -275,19 +290,57 @@ class TermMap {
                          case 'boolean':
                          this.datatype = 'Boolean';
                              break;
-                     }
-                 }
-                 else {
+                    }
+                }
+                else {
                     this.datatype = 'String';
-                 }
+                }
+
+                if(item['rr:parentTriplesMap']) {
+                    this.parentTriplesMap = item['rr:parentTriplesMap']["@id"];
+                }
+
+                if(item['rr:joinCondition']) {
+                    let joinConditionId = item['rr:joinCondition']["@id"];
+                    this.joinCondition = this.buildJoinCondition(json, joinConditionId)
+                }
 
                 break;
             }
         }
 
+
         //console.log("termMap.referenceValue: " + termMap.referenceValue)
         //console.log("termMap.template: " + termMap.template)
         //console.log("termMap.functionString: " + termMap.functionString)
+    }
+
+    buildJoinCondition(json, joinConditionId) {
+        let joinCondition = new JoinCondition();;
+
+        for(var i=0;i<json["@graph"].length;i++){
+            let item = json["@graph"][i];
+            let itemId = item["@id"];
+            //console.log(`itemId = ${itemId}`);
+            //console.log(`\tjoinCondition = ${joinCondition}`);
+            if(item["@id"]==joinConditionId){
+                let childId = item["rmlc:child"]["@id"];
+                //console.log(`childId = ${childId}`);
+                let child = new TermMap();
+                child.parseFromJson(json, childId);
+                //console.log(`child = ${child}`);
+                let parentId = item["rmlc:parent"]["@id"];
+                //console.log(`parentId = ${parentId}`);
+                let parent = new TermMap();
+                parent.parseFromJson(json, parentId);
+                //console.log(`parent = ${parent}`);
+                joinCondition.child = child;
+                joinCondition.parent = parent;
+                break
+            }
+        }
+        //console.log(`joinCondition = ${joinCondition}`);
+        return joinCondition;
     }
 
     templateToSQL() {
@@ -307,7 +360,18 @@ class SubjectMap extends TermMap {
 }
 
 class ObjectMap extends TermMap {
+    getTermMap() { return this.termMap; }
+    getRefObjectMap() { return this.refObjectMap; }
+}
 
+class RefObjectMap {
+    getParentTriplesMap() { return this.parentTriplesMap; }
+    getJoinCondition() { return this.joinCondition; }
+}
+
+class JoinCondition {
+    getChild() { return this.child; }
+    getParent() { return this.parent; }
 }
 
 class PredicateObjectMap {

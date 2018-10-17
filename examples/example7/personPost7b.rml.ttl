@@ -48,13 +48,13 @@
 	];
 
 	rr:predicateObjectMap [
-          rr:predicate schema:username
+          rr:predicate schema:username;
           rr:joinCondition [
             rmlc:child [
-                rmlc:functions "lower(substr(nombre,1,1) || apellido";
+                rml:reference "email";
             ];
             rmlc:parent [
-                rml:reference "usuario";
+                rmlc:functions "usuario || '@fi.upm.es'";
             ]
           ];
     ];

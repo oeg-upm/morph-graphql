@@ -222,7 +222,9 @@ async function create_resolver(prog_lang, map_lang, dataset_type, mapping_url,
     if (!fs.existsSync(project_dir)){
         fs.mkdirSync(project_dir);
     }
-    
+
+
+
     var data;
     if(map_lang == 'rml') {
         console.log(`PARSING MAPPING DOCUMENT FROM ${mapping_url} ...`)
@@ -313,6 +315,64 @@ async function create_resolver(prog_lang, map_lang, dataset_type, mapping_url,
             }
         });
 
+        if(queryplanner == "joinmonster") {
+            let dataDir = `${project_dir}/data`;
+            if (!fs.existsSync(dataDir)){
+                fs.mkdirSync(dataDir);
+            }
+
+            let schemaBasicDir = `${project_dir}/schema-basic`;
+            if (!fs.existsSync(schemaBasicDir)){
+                fs.mkdirSync(schemaBasicDir);
+            }
+
+            console.log('GENERATING server.js ...');
+            let serverString = javascriptsqlitetransformer.generateJoinMonsterServer()
+            fs.writeFileSync(project_dir+"server.js", serverString, function (err){
+                if(err){
+                   console.log('ERROR saving server.js: '+err);
+                }
+            });
+
+            console.log('GENERATING data/fetch.js ...');
+            let fetchString = javascriptsqlitetransformer.generateJoinMonsterFetch()
+            fs.writeFileSync(dataDir+"/"+"fetch.js", fetchString, function (err){
+                if(err){
+                   console.log('ERROR saving fetch.js: '+err);
+                }
+            });
+
+            console.log('GENERATING schema-basic/database.js ...');
+            let dbJSString = javascriptsqlitetransformer.generateDatabaseJS(db_name)
+            fs.writeFileSync(schemaBasicDir+"/"+"database.js", dbJSString, function (err){
+                if(err){
+                   console.log('ERROR saving database.js: '+err);
+                }
+            });
+
+            console.log('GENERATING .babelrc ...');
+            let babelRcString = javascriptsqlitetransformer.generateJoinMonsterBabelRc(db_name)
+            fs.writeFileSync(project_dir+"/"+".babelrc", babelRcString, function (err){
+                if(err){
+                   console.log('ERROR saving .babelrc: '+err);
+                }
+            });
+
+            console.log('GENERATING .eslintrc.js ...');
+            let eslintrcString = javascriptsqlitetransformer.generateJoinMonsterEslintrc(db_name)
+            fs.writeFileSync(project_dir+"/"+".eslintrc.js", eslintrcString, function (err){
+                if(err){
+                   console.log('ERROR saving .eslintrc.js: '+err);
+                }
+            });
+
+            if(dataset_type=='csv'){
+                let dbFile = `${dataDir}/${db_name}`;
+                fs.writeFileSync(dbFile,fs.readFileSync(tempdb.path));                
+           }
+        }
+
+        console.log('GENERATING package.json ...');
         fs.writeFileSync(project_dir+"package.json", javascriptsqlitetransformer.generate_requirements(queryplanner));
         fs.writeFileSync(project_dir+"startup.sh", javascriptsqlitetransformer.generate_statup_script_sh());
         fs.writeFileSync(project_dir+"startup.bat", javascriptsqlitetransformer.generate_statup_script_bat());
@@ -322,6 +382,10 @@ async function create_resolver(prog_lang, map_lang, dataset_type, mapping_url,
         if(dataset_type=='csv'){
             console.log(`tempdb = ${tempdb}`)
             fs.writeFileSync(project_dir+db_name,fs.readFileSync(tempdb.path));
+
+
+
+
        }
 
         await zipDirectory("tmp/" + random_text, "tmp/" + random_text + ".zip");

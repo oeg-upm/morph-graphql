@@ -347,3 +347,37 @@ exports.generate_docker_startup_bat = function () {
     var content = fs.readFileSync('./transformers/javascript/startupDocker.bat');
     return content;
 }
+
+exports.generateJoinMonsterServer = function () {
+  let content=fs.readFileSync('./transformers/javascript/sqlite/joinmonster/server.js');
+  return content;
+}
+
+exports.generateJoinMonsterFetch = function () {
+  let content=fs.readFileSync('./transformers/javascript/sqlite/joinmonster/fetch.js');
+  return content;
+}
+
+exports.generateDatabaseJS = function (db_name) {
+    let dbJSString = "";
+    dbJSString += "import path from 'path'\n"
+    dbJSString += `const dataFilePath = path.join(__dirname, '../data/${db_name}')\n`
+    dbJSString += `export default require('knex')({\n`
+    dbJSString += "\tclient: 'sqlite3',\n"
+    dbJSString += "\tconnection: {filename: dataFilePath},\n"
+    dbJSString += "\tuseNullAsDefault: true\n"
+    dbJSString += "})\n"
+
+    return dbJSString;
+  }
+  
+exports.generateJoinMonsterBabelRc = function () {
+  let content=fs.readFileSync('./transformers/javascript/sqlite/joinmonster/.babelrc');
+  return content;
+}
+
+exports.generateJoinMonsterEslintrc = function () {
+  let content=fs.readFileSync('./transformers/javascript/sqlite/joinmonster/.eslintrc.js');
+  return content;
+}
+

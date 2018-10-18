@@ -128,7 +128,8 @@ class RMLParser {
             //console.log(`\t\tpredicateObjectMap.predicate = ${predicateObjectMap.predicate}`)
             //console.log(`\t\tpredicateObjectMap.objectMap = ${predicateObjectMap.objectMap}`)
             if(predicateObjectMap.objectMap.parentTriplesMap) {
-                //console.log(`\t\tpredicateObjectMap.objectMap.parentTriplesMap = ${predicateObjectMap.objectMap.parentTriplesMap}`)
+                console.log(`\t\tpredicateObjectMap.objectMap.parentTriplesMap = ${predicateObjectMap.objectMap.parentTriplesMap}`)
+                console.log(`\t\tpredicateObjectMap.objectMap.parentTriplesMap.subjectMap.className = ${predicateObjectMap.objectMap.parentTriplesMap.subjectMap.className}`)
             }
             
             if(predicateObjectMap.objectMap.joinCondition) {
@@ -298,7 +299,10 @@ class TermMap {
                 }
 
                 if(item['rr:parentTriplesMap']) {
-                    this.parentTriplesMap = item['rr:parentTriplesMap']["@id"];
+                    //this.parentTriplesMap = item['rr:parentTriplesMap']["@id"];
+                    let parentTriplesMapId = item['rr:parentTriplesMap']["@id"]; 
+                    let rmlParser = new RMLParser(json);
+                    this.parentTriplesMap = rmlParser.buildTriplesMap(parentTriplesMapId);
                 }
 
                 if(item['rr:joinCondition']) {

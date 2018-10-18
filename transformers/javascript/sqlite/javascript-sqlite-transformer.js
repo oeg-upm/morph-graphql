@@ -418,6 +418,7 @@ exports.generateJoinMonsterQueryRoot = function (mappingDocument) {
 }
 
 exports.generateJoinMonsterResolvers = function (triplesMap) {
+  let additionalImports = [];
   let className = triplesMap.subjectMap.className;
   let tmAlpha = triplesMap.getAlpha();
   let primaryKeys = sqlitecretator.getPrimaryKeys(triplesMap.subjectMap);
@@ -446,19 +447,28 @@ exports.generateJoinMonsterResolvers = function (triplesMap) {
     let predicate = predicateObjectMap.predicate;
     let objectMap = predicateObjectMap.objectMap;
     let poString = `\t\t${predicate}:{\n`
-    poString += "\t\t\ttype: GraphQLString,\n"
+    
 
     if(objectMap.referenceValue) {
+      poString += "\t\t\ttype: GraphQLString,\n"
       poString += `\t\t\tsqlColumn: '${objectMap.referenceValue}'`
     } else if(objectMap.functionString) {
+      poString += "\t\t\ttype: GraphQLString,\n"
       let functionStringInJoinMaster = objectMap.functionStringAsSQLJoinMonster("table");
       poString += "\t\t\tsqlExpr: table => `" + functionStringInJoinMaster + "`"
     } else if(objectMap.template) {
+      poString += "\t\t\ttype: GraphQLString,\n"
       let templateInJoinMaster = objectMap.templateAsJoinMasterDB("table");
       poString += "\t\t\tsqlExpr: table => `" + templateInJoinMaster + "`"
     } else if(objectMap.parentTriplesMap) {
-
-
+      let parentTriplesMapSubjectMap = objectMap.parentTriplesMap.subjectMap;
+      let parentClassName = parentTriplesMapSubjectMap.className;
+      additionalImports.push(parentClassName);
+      poString += `\t\t\ttype: ${parentClassName},\n`
+      let joinCondition = objectMap.joinCondition;
+      let child = "${child}." + joinCondition.child.referenceValue;
+      let parent = joinCondition.parent.functionStringAsSQLJoinMonster("parent");
+      poString += "\t\t\tsqlJoin: (child, parent) => `" + child + " = " + parent + "`"
     }
 
     poString += "\n\t\t}";
@@ -468,6 +478,9 @@ exports.generateJoinMonsterResolvers = function (triplesMap) {
   content += "})\n"
 
   content += `export default ${className}\n`
+  content += additionalImports.map(function(additionalImport) {
+    return `import ${additionalImport} from './${additionalImport}'`
+  })
 
   console.log(`resolver for ${className} = \n${content}`)
   return content;

@@ -173,6 +173,7 @@ app.post('/transform', function (req, res) {
   console.log("req.body.keys = " + req.body.keys)
   console.log("req.body.length = " + req.body.length)
   console.log(`req.body.prog_lang = ${req.body.prog_lang}`)
+  console.log(`req.body.queryplanner = ${req.body.queryplanner}`)
   console.log(`req.body.dataset_type = ${req.body.dataset_type}`)
   console.log(`req.body.mapping_url = ${req.body.mapping_url}`)
   console.log(`req.body.db_name = ${req.body.db_name}`)
@@ -186,7 +187,8 @@ app.post('/transform', function (req, res) {
 
         var random_text_promise = create_resolver(req.body.prog_lang, 
             req.body.mapping_language, req.body.dataset_type, 
-            req.body.mapping_url, req.body.db_name, req.body.port_no)
+            req.body.mapping_url, req.body.db_name, req.body.port_no, 
+            req.body.queryplanner)
         random_text_promise.then(
             random_text => res.download('./tmp/'+random_text+".zip"),
         )
@@ -199,7 +201,7 @@ app.post('/transform', function (req, res) {
 })
 
 async function create_resolver(prog_lang, map_lang, dataset_type, mapping_url, 
-    db_name, port_no){
+    db_name, port_no, queryplanner){
 
     console.log("prog_lang = "+ prog_lang)
     console.log("map_lang = "+ map_lang)
@@ -207,6 +209,7 @@ async function create_resolver(prog_lang, map_lang, dataset_type, mapping_url,
     console.log("mapping_url = "+ mapping_url)
     console.log("database name = "+db_name)
     console.log("port_no = "+ port_no)
+    console.log("queryplanner = "+ queryplanner)
     if(port_no == null || port_no == undefined ) { port_no = 4321 }
 
 
@@ -309,7 +312,8 @@ async function create_resolver(prog_lang, map_lang, dataset_type, mapping_url,
                console.log('ERROR saving schema: '+err);
             }
         });
-        fs.writeFileSync(project_dir+"package.json", javascriptsqlitetransformer.generate_requirements());
+
+        fs.writeFileSync(project_dir+"package.json", javascriptsqlitetransformer.generate_requirements(queryplanner));
         fs.writeFileSync(project_dir+"startup.sh", javascriptsqlitetransformer.generate_statup_script_sh());
         fs.writeFileSync(project_dir+"startup.bat", javascriptsqlitetransformer.generate_statup_script_bat());
         fs.writeFileSync(project_dir+"Dockerfile",javascriptsqlitetransformer.generate_docker_file());

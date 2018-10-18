@@ -46,6 +46,12 @@ html
             <option value="javascript">JavaScript</option>
             </select>
             <br>
+            <label for="queryplanner_id">Select Query Planner (optional)</label>
+            <select class="ui dropdown" id='queryplanner_id' name='queryplanner' type='text'>
+            <option value="none">None/Naive</option>
+            <option value="joinmonster">Join Monster (For JavaScript)</option>
+            </select>
+            <br>            
             <div class="field">
             <label>Port to be used as Graphiql endpoint</label>
             <input type="text" name="port_no" value="4321"/>

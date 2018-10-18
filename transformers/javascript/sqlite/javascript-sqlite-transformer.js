@@ -405,7 +405,7 @@ exports.generateJoinMonsterQueryRoot = function (mappingDocument) {
   content += "\t\tversion: { type: GraphQLString, resolve: () => joinMonster.version },\n"
   content += mappingDocument.triplesMaps.map(function(triplesMap) {
     let className = triplesMap.subjectMap.className;
-    let listInstancesResolver = `\t\tlist${className}: { type: new GraphQLList(Person), resolve: (parent, args, context, resolveInfo) => {\n`
+    let listInstancesResolver = `\t\tlist${className}: { type: new GraphQLList(${className}), resolve: (parent, args, context, resolveInfo) => {\n`
     listInstancesResolver += "\t\t\treturn joinMonster(resolveInfo, context, sql => dbCall(sql, knex, context))\n"
     listInstancesResolver += "\t\t}}\n"
     return listInstancesResolver
@@ -456,6 +456,9 @@ exports.generateJoinMonsterResolvers = function (triplesMap) {
     } else if(objectMap.template) {
       let templateInJoinMaster = objectMap.templateAsJoinMasterDB("table");
       poString += "\t\t\tsqlExpr: table => `" + templateInJoinMaster + "`"
+    } else if(objectMap.parentTriplesMap) {
+
+
     }
 
     poString += "\n\t\t}";

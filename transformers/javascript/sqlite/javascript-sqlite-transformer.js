@@ -308,9 +308,19 @@ exports.generateApp = function(
     return appString;
 }
 
-exports.generate_requirements = function(){
-    var content=fs.readFileSync('./transformers/javascript/sqlite/package.json');
-    return content;
+exports.generate_requirements = function(queryplanner){
+  var content=null;
+  if(queryplanner) {
+    if(queryplanner == "joinmonster") {
+      content=fs.readFileSync('./transformers/javascript/sqlite/joinmonster/package.json');
+    } else {
+      content=fs.readFileSync('./transformers/javascript/sqlite/package.json');
+    }
+  } else {
+    content=fs.readFileSync('./transformers/javascript/sqlite/package.json');
+  }
+
+  return content;
 }
 
 exports.generate_statup_script_sh = function(){

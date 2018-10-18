@@ -329,7 +329,7 @@ async function create_resolver(prog_lang, map_lang, dataset_type, mapping_url,
 
             console.log('GENERATING data/fetch.js ...');
             let fetchString = javascriptsqlitetransformer.generateJoinMonsterFetch()
-            fs.writeFileSync(dataDir+"fetch.js", fetchString, function (err){
+            fs.writeFileSync(dataDir+"/"+"fetch.js", fetchString, function (err){
                 if(err){
                    console.log('ERROR saving fetch.js: '+err);
                 }

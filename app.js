@@ -170,6 +170,7 @@ app.get('/transform', function (req, res){
 //app.post('/transform', urlencodedParser, function (req, res) {
 app.post('/transform', function (req, res) {
   if (!req.body) { return res.sendStatus(400) }
+  /*
   console.log("req.body.keys = " + req.body.keys)
   console.log("req.body.length = " + req.body.length)
   console.log(`req.body.prog_lang = ${req.body.prog_lang}`)
@@ -178,6 +179,7 @@ app.post('/transform', function (req, res) {
   console.log(`req.body.mapping_url = ${req.body.mapping_url}`)
   console.log(`req.body.db_name = ${req.body.db_name}`)
   console.log(`req.body.port_no = ${req.body.port_no}`)
+  */
   
   
     if(req.body.prog_lang && req.body.dataset_type && 
@@ -202,6 +204,8 @@ app.post('/transform', function (req, res) {
 
 async function create_resolver(prog_lang, map_lang, dataset_type, mapping_url, 
     db_name, port_no, queryplanner){
+        /*
+
 
     console.log("prog_lang = "+ prog_lang)
     console.log("map_lang = "+ map_lang)
@@ -210,6 +214,8 @@ async function create_resolver(prog_lang, map_lang, dataset_type, mapping_url,
     console.log("database name = "+db_name)
     console.log("port_no = "+ port_no)
     console.log("queryplanner = "+ queryplanner)
+    */
+
     if(port_no == null || port_no == undefined ) { port_no = 4321 }
 
 
@@ -365,6 +371,33 @@ async function create_resolver(prog_lang, map_lang, dataset_type, mapping_url,
                    console.log('ERROR saving .eslintrc.js: '+err);
                 }
             });
+
+            console.log('GENERATING schema-basic/index.js ...');
+            let indexString = javascriptsqlitetransformer.generateJoinMonsterIndex(db_name)
+            fs.writeFileSync(schemaBasicDir+"/"+"index.js", indexString, function (err){
+                if(err){
+                   console.log('ERROR saving schema-basic/index.js: '+err);
+                }
+            });
+
+            console.log('GENERATING schema-basic/QueryRoot.js ...');
+            let queryRootString = javascriptsqlitetransformer.generateJoinMonsterQueryRoot(mappingDocument)
+            fs.writeFileSync(schemaBasicDir+"/"+"QueryRoot.js", queryRootString, function (err){
+                if(err){
+                   console.log('ERROR saving schema-basic/QueryRoot.js: '+err);
+                }
+            });
+
+            console.log('GENERATING Resolvers ...');
+            mappingDocument.triplesMaps.forEach((triplesMap) => {
+                let className = triplesMap.subjectMap.className;
+                let resolverString = javascriptsqlitetransformer.generateJoinMonsterResolvers(triplesMap)
+                fs.writeFileSync(schemaBasicDir+"/"+className+".js", resolverString, function (err){
+                    if(err){
+                       console.log(`ERROR saving schema-basic/${className}.js: ${err}`);
+                    }
+                });
+            })
 
             if(dataset_type=='csv'){
                 let dbFile = `${dataDir}/${db_name}`;

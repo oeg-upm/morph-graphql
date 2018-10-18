@@ -350,6 +350,22 @@ async function create_resolver(prog_lang, map_lang, dataset_type, mapping_url,
                 }
             });
 
+            console.log('GENERATING .babelrc ...');
+            let babelRcString = javascriptsqlitetransformer.generateJoinMonsterBabelRc(db_name)
+            fs.writeFileSync(project_dir+"/"+".babelrc", babelRcString, function (err){
+                if(err){
+                   console.log('ERROR saving .babelrc: '+err);
+                }
+            });
+
+            console.log('GENERATING .eslintrc.js ...');
+            let eslintrcString = javascriptsqlitetransformer.generateJoinMonsterEslintrc(db_name)
+            fs.writeFileSync(project_dir+"/"+".eslintrc.js", eslintrcString, function (err){
+                if(err){
+                   console.log('ERROR saving .eslintrc.js: '+err);
+                }
+            });
+
             if(dataset_type=='csv'){
                 let dbFile = `${dataDir}/${db_name}`;
                 fs.writeFileSync(dbFile,fs.readFileSync(tempdb.path));                

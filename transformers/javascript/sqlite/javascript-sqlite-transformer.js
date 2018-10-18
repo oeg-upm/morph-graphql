@@ -371,3 +371,13 @@ exports.generateDatabaseJS = function (db_name) {
     return dbJSString;
   }
   
+exports.generateJoinMonsterBabelRc = function () {
+  let content=fs.readFileSync('./transformers/javascript/sqlite/joinmonster/.babelrc');
+  return content;
+}
+
+exports.generateJoinMonsterEslintrc = function () {
+  let content=fs.readFileSync('./transformers/javascript/sqlite/joinmonster/.eslintrc.js');
+  return content;
+}
+

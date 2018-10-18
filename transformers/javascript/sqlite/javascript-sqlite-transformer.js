@@ -347,3 +347,13 @@ exports.generate_docker_startup_bat = function () {
     var content = fs.readFileSync('./transformers/javascript/startupDocker.bat');
     return content;
 }
+
+exports.generateJoinMonsterServer = function () {
+  let content=fs.readFileSync('./transformers/javascript/sqlite/joinmonster/server.js');
+  return content;
+}
+
+exports.generateJoinMonsterFetch = function () {
+  let content=fs.readFileSync('./transformers/javascript/sqlite/joinmonster/fetch.js');
+  return content;
+}

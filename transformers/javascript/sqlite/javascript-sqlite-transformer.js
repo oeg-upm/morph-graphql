@@ -357,3 +357,17 @@ exports.generateJoinMonsterFetch = function () {
   let content=fs.readFileSync('./transformers/javascript/sqlite/joinmonster/fetch.js');
   return content;
 }
+
+exports.generateDatabaseJS = function (db_name) {
+    let dbJSString = "";
+    dbJSString += "import path from 'path'\n"
+    dbJSString += `const dataFilePath = path.join(__dirname, '../data/${db_name}')\n`
+    dbJSString += `export default require('knex')({\n`
+    dbJSString += "\tclient: 'sqlite3',\n"
+    dbJSString += "\tconnection: {filename: dataFilePath},\n"
+    dbJSString += "\tuseNullAsDefault: true\n"
+    dbJSString += "})\n"
+
+    return dbJSString;
+  }
+  

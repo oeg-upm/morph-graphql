@@ -222,10 +222,7 @@ async function create_resolver(prog_lang, map_lang, dataset_type, mapping_url,
     if (!fs.existsSync(project_dir)){
         fs.mkdirSync(project_dir);
     }
-    let dataDir = `${project_dir}/data`;
-    if (!fs.existsSync(dataDir)){
-        fs.mkdirSync(dataDir);
-    }
+
 
 
     var data;
@@ -319,6 +316,16 @@ async function create_resolver(prog_lang, map_lang, dataset_type, mapping_url,
         });
 
         if(queryplanner == "joinmonster") {
+            let dataDir = `${project_dir}/data`;
+            if (!fs.existsSync(dataDir)){
+                fs.mkdirSync(dataDir);
+            }
+
+            let schemaBasicDir = `${project_dir}/schema-basic`;
+            if (!fs.existsSync(schemaBasicDir)){
+                fs.mkdirSync(schemaBasicDir);
+            }
+
             console.log('GENERATING server.js ...');
             let serverString = javascriptsqlitetransformer.generateJoinMonsterServer()
             fs.writeFileSync(project_dir+"server.js", serverString, function (err){
@@ -334,6 +341,19 @@ async function create_resolver(prog_lang, map_lang, dataset_type, mapping_url,
                    console.log('ERROR saving fetch.js: '+err);
                 }
             });
+
+            console.log('GENERATING schema-basic/database.js ...');
+            let dbJSString = javascriptsqlitetransformer.generateDatabaseJS(db_name)
+            fs.writeFileSync(schemaBasicDir+"/"+"database.js", dbJSString, function (err){
+                if(err){
+                   console.log('ERROR saving database.js: '+err);
+                }
+            });
+
+            if(dataset_type=='csv'){
+                let dbFile = `${dataDir}/${db_name}`;
+                fs.writeFileSync(dbFile,fs.readFileSync(tempdb.path));                
+           }
         }
 
         console.log('GENERATING package.json ...');
@@ -347,11 +367,7 @@ async function create_resolver(prog_lang, map_lang, dataset_type, mapping_url,
             console.log(`tempdb = ${tempdb}`)
             fs.writeFileSync(project_dir+db_name,fs.readFileSync(tempdb.path));
 
-            if(queryplanner == "joinmonster") {
 
-                let dbFile = `${dataDir}/${db_name}`;
-                fs.writeFileSync(dbFile,fs.readFileSync(tempdb.path));                
-            }
 
 
        }

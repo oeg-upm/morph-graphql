@@ -43,7 +43,7 @@
 	rr:predicateObjectMap [
 		  rr:predicate schema:email;
 		  rr:objectMap [
-		  	rmlc:functions "lower(substr(nombre,1,1) || apellido || '@fi.upm.es')"
+		  	rmlc:functions "lower(substr({nombre},1,1) || {apellido} || '@fi.upm.es')"
 		  ]
 	];
 .
@@ -67,7 +67,7 @@
 	            rml:reference "usuario"
 	        ];
 	        rmlc:parent [
-	            rmlc:functions "lower(substr(nombre,1,1) || apellido)"
+	            rmlc:functions "lower(substr({nombre},1,1) || {apellido})"
 	        ];
 	    ];
 	   ];
@@ -77,5 +77,4 @@
 	  rr:predicate schema:comment;
 	  rr:objectMap    [ rml:reference "mensaje" ]
 	];
-
 .

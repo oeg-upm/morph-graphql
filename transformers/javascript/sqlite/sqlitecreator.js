@@ -49,6 +49,10 @@ function createFunctionColumn(predicate_objectmaps){
     return columns;
 }
 
+exports.getPrimaryKeys = function(subjectMap) {
+    return extractPrimaryKeys(subjectMap);
+}
+
 function extractPrimaryKeys(subjectMap){
     let primaryKeys=[];
     if(subjectMap.referenceValue){
@@ -63,14 +67,15 @@ function extractPrimaryKeys(subjectMap){
             primaryKeys.push(key);
        }
     }
+    //console.log(`primaryKeys = ${primaryKeys}`)
     return primaryKeys;
 
 }
 
 
 function createdb(csvRows,source_name,tempdb,primaryKeys,sqlite,functionColumns){
-    console.log(`tempdb = ${tempdb}`)
-    console.log(`source_name = ${source_name}`)
+    //console.log(`tempdb = ${tempdb}`)
+    //console.log(`source_name = ${source_name}`)
 
     var db = new sqlite.Database(tempdb.path,sqlite.OPEN_READWRITE);
 
@@ -89,19 +94,25 @@ function createdb(csvRows,source_name,tempdb,primaryKeys,sqlite,functionColumns)
             db.run(createTableString);
             console.log(createTableString);
             for(let i=0; i<csvRows.length ; i++){
-                console.log(Object.values(csvRows[i]));
+                //console.log(Object.values(csvRows[i]));
                 let values = "\""+Object.values(csvRows[i]).join('","')+"\"";
                 functionColumns.forEach(function() {
                     values += ', NULL';
                 });
-                console.log(values);
+                //console.log(values);
                 var insert = "INSERT INTO "+source_name+" VALUES ("+values+");";
-                console.log(insert);
+                //console.log(`SQL INSERT = ${insert}`);
                 db.run(insert);
+                //console.log(`inserted`);
                 functionColumns.forEach(function (element) {
-                    let update = 'UPDATE '+source_name+ ' SET ' + element.column +' = (SELECT '+ element.function + ' FROM '+source_name+' WHERE '+element.column+ ' is NULL);';
-                    console.log(update);
+                    //let update = 'UPDATE '+source_name+ ' SET ' + element.column +' = (SELECT '+ element.function + ' FROM '+source_name+' WHERE '+element.column+ ' is NULL);';
+
+                    let functionString = element.function.split("{").join("").split("}").join("");
+                    let update = 'UPDATE '+source_name+ ' SET ' + element.column +' = (SELECT '+ functionString + ' FROM '+source_name+' WHERE '+element.column+ ' is NULL);';
+
+                    console.log(`SQL UPDATE = ${update}`);
                     db.run(update);
+                    //console.log(`updated`);
                 })
 
             }

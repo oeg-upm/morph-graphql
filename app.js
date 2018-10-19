@@ -170,13 +170,16 @@ app.get('/transform', function (req, res){
 //app.post('/transform', urlencodedParser, function (req, res) {
 app.post('/transform', function (req, res) {
   if (!req.body) { return res.sendStatus(400) }
+  /*
   console.log("req.body.keys = " + req.body.keys)
   console.log("req.body.length = " + req.body.length)
   console.log(`req.body.prog_lang = ${req.body.prog_lang}`)
+  console.log(`req.body.queryplanner = ${req.body.queryplanner}`)
   console.log(`req.body.dataset_type = ${req.body.dataset_type}`)
   console.log(`req.body.mapping_url = ${req.body.mapping_url}`)
   console.log(`req.body.db_name = ${req.body.db_name}`)
   console.log(`req.body.port_no = ${req.body.port_no}`)
+  */
   
   
     if(req.body.prog_lang && req.body.dataset_type && 
@@ -186,7 +189,8 @@ app.post('/transform', function (req, res) {
 
         var random_text_promise = create_resolver(req.body.prog_lang, 
             req.body.mapping_language, req.body.dataset_type, 
-            req.body.mapping_url, req.body.db_name, req.body.port_no)
+            req.body.mapping_url, req.body.db_name, req.body.port_no, 
+            req.body.queryplanner)
         random_text_promise.then(
             random_text => res.download('./tmp/'+random_text+".zip"),
         )
@@ -199,7 +203,9 @@ app.post('/transform', function (req, res) {
 })
 
 async function create_resolver(prog_lang, map_lang, dataset_type, mapping_url, 
-    db_name, port_no){
+    db_name, port_no, queryplanner){
+        /*
+
 
     console.log("prog_lang = "+ prog_lang)
     console.log("map_lang = "+ map_lang)
@@ -207,6 +213,9 @@ async function create_resolver(prog_lang, map_lang, dataset_type, mapping_url,
     console.log("mapping_url = "+ mapping_url)
     console.log("database name = "+db_name)
     console.log("port_no = "+ port_no)
+    console.log("queryplanner = "+ queryplanner)
+    */
+
     if(port_no == null || port_no == undefined ) { port_no = 4321 }
 
 
@@ -219,7 +228,9 @@ async function create_resolver(prog_lang, map_lang, dataset_type, mapping_url,
     if (!fs.existsSync(project_dir)){
         fs.mkdirSync(project_dir);
     }
-    
+
+
+
     var data;
     if(map_lang == 'rml') {
         console.log(`PARSING MAPPING DOCUMENT FROM ${mapping_url} ...`)
@@ -238,8 +249,8 @@ async function create_resolver(prog_lang, map_lang, dataset_type, mapping_url,
 
     let triplesMap = data["triplesMap"];
     let mappingDocument = data["mappingDocument"];
-    console.log(`mappingDocument = ${mappingDocument}`);
-    console.log(`mappingDocument.triplesMaps = ${mappingDocument.triplesMaps}`)
+    //console.log(`mappingDocument = ${mappingDocument}`);
+    //console.log(`mappingDocument.triplesMaps = ${mappingDocument.triplesMaps}`)
 
     if(prog_lang == 'python' && dataset_type == 'mongodb') {
 
@@ -309,7 +320,93 @@ async function create_resolver(prog_lang, map_lang, dataset_type, mapping_url,
                console.log('ERROR saving schema: '+err);
             }
         });
-        fs.writeFileSync(project_dir+"package.json", javascriptsqlitetransformer.generate_requirements());
+
+        if(queryplanner == "joinmonster") {
+            let dataDir = `${project_dir}/data`;
+            if (!fs.existsSync(dataDir)){
+                fs.mkdirSync(dataDir);
+            }
+
+            let schemaBasicDir = `${project_dir}/schema-basic`;
+            if (!fs.existsSync(schemaBasicDir)){
+                fs.mkdirSync(schemaBasicDir);
+            }
+
+            console.log('GENERATING server.js ...');
+            let serverString = javascriptsqlitetransformer.generateJoinMonsterServer()
+            fs.writeFileSync(project_dir+"server.js", serverString, function (err){
+                if(err){
+                   console.log('ERROR saving server.js: '+err);
+                }
+            });
+
+            console.log('GENERATING data/fetch.js ...');
+            let fetchString = javascriptsqlitetransformer.generateJoinMonsterFetch()
+            fs.writeFileSync(dataDir+"/"+"fetch.js", fetchString, function (err){
+                if(err){
+                   console.log('ERROR saving fetch.js: '+err);
+                }
+            });
+
+            console.log('GENERATING schema-basic/database.js ...');
+            let dbJSString = javascriptsqlitetransformer.generateDatabaseJS(db_name)
+            fs.writeFileSync(schemaBasicDir+"/"+"database.js", dbJSString, function (err){
+                if(err){
+                   console.log('ERROR saving database.js: '+err);
+                }
+            });
+
+            console.log('GENERATING .babelrc ...');
+            let babelRcString = javascriptsqlitetransformer.generateJoinMonsterBabelRc(db_name)
+            fs.writeFileSync(project_dir+"/"+".babelrc", babelRcString, function (err){
+                if(err){
+                   console.log('ERROR saving .babelrc: '+err);
+                }
+            });
+
+            console.log('GENERATING .eslintrc.js ...');
+            let eslintrcString = javascriptsqlitetransformer.generateJoinMonsterEslintrc(db_name)
+            fs.writeFileSync(project_dir+"/"+".eslintrc.js", eslintrcString, function (err){
+                if(err){
+                   console.log('ERROR saving .eslintrc.js: '+err);
+                }
+            });
+
+            console.log('GENERATING schema-basic/index.js ...');
+            let indexString = javascriptsqlitetransformer.generateJoinMonsterIndex(db_name)
+            fs.writeFileSync(schemaBasicDir+"/"+"index.js", indexString, function (err){
+                if(err){
+                   console.log('ERROR saving schema-basic/index.js: '+err);
+                }
+            });
+
+            console.log('GENERATING schema-basic/QueryRoot.js ...');
+            let queryRootString = javascriptsqlitetransformer.generateJoinMonsterQueryRoot(mappingDocument)
+            fs.writeFileSync(schemaBasicDir+"/"+"QueryRoot.js", queryRootString, function (err){
+                if(err){
+                   console.log('ERROR saving schema-basic/QueryRoot.js: '+err);
+                }
+            });
+
+            console.log('GENERATING Resolvers ...');
+            mappingDocument.triplesMaps.forEach((triplesMap) => {
+                let className = triplesMap.subjectMap.className;
+                let resolverString = javascriptsqlitetransformer.generateJoinMonsterResolvers(triplesMap)
+                fs.writeFileSync(schemaBasicDir+"/"+className+".js", resolverString, function (err){
+                    if(err){
+                       console.log(`ERROR saving schema-basic/${className}.js: ${err}`);
+                    }
+                });
+            })
+
+            if(dataset_type=='csv'){
+                let dbFile = `${dataDir}/${db_name}`;
+                fs.writeFileSync(dbFile,fs.readFileSync(tempdb.path));                
+           }
+        }
+
+        console.log('GENERATING package.json ...');
+        fs.writeFileSync(project_dir+"package.json", javascriptsqlitetransformer.generate_requirements(queryplanner));
         fs.writeFileSync(project_dir+"startup.sh", javascriptsqlitetransformer.generate_statup_script_sh());
         fs.writeFileSync(project_dir+"startup.bat", javascriptsqlitetransformer.generate_statup_script_bat());
         fs.writeFileSync(project_dir+"Dockerfile",javascriptsqlitetransformer.generate_docker_file());
@@ -318,6 +415,10 @@ async function create_resolver(prog_lang, map_lang, dataset_type, mapping_url,
         if(dataset_type=='csv'){
             console.log(`tempdb = ${tempdb}`)
             fs.writeFileSync(project_dir+db_name,fs.readFileSync(tempdb.path));
+
+
+
+
        }
 
         await zipDirectory("tmp/" + random_text, "tmp/" + random_text + ".zip");
@@ -347,4 +448,4 @@ function sleep(ms) {
   }
   
 
-app.listen(8082, () => console.log('Mapping Translator is listening on port 8082!'))
+app.listen(8084, () => console.log('Mapping Translator is listening on port 8084!'))

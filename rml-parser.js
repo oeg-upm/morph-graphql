@@ -74,6 +74,8 @@ class RMLParser {
             }
         }
     
+        //console.log(`\tsubjectMap.referenceValue = ${subjectMap.referenceValue}`);
+        //console.log(`\tsubjectMap.template = ${subjectMap.template}`);
         return subjectMap        
     }
 
@@ -98,17 +100,17 @@ class RMLParser {
     }
 
     buildTriplesMap(triplesMapId) {
-        console.log(`triplesMapId = ${triplesMapId}`);
+        //console.log(`triplesMapId = ${triplesMapId}`);
         
         let logicalSourceId = this.getLogicalSourceId(triplesMapId);
 
         let logicalSource = this.buildLogicalSource(logicalSourceId);
-        console.log(`\tlogicalSource = ${logicalSource}`);
+        //console.log(`\tlogicalSource = ${logicalSource}`);
 
         let subjectMapId = this.getSubjectMapId(triplesMapId);
 
         let subjectMap = this.buildSubjectMap(subjectMapId);
-        console.log(`\tsubjectMap.className = ${subjectMap.className}`);
+        //console.log(`\tsubjectMap.className = ${subjectMap.className}`);
 
         let predicateObjectMapsIds = this.getPredicateObjectMapsIds(triplesMapId)
 
@@ -120,11 +122,24 @@ class RMLParser {
 
         for (var i=0; i < predicateObjectMapsIds.length; i++) {
             var predicateObjectMapId = predicateObjectMapsIds[i];
-            console.log(`\tpredicateObjectMapId = ${predicateObjectMapId}`)
+            //console.log(`\tpredicateObjectMapId = ${predicateObjectMapId}`)
 
             let predicateObjectMap = this.buildPredicateObjectMap(predicateObjectMapId);
-            console.log(`\t\tpredicateObjectMap.predicate = ${predicateObjectMap.predicate}`)
-            console.log(`\t\tpredicateObjectMap.objectMap = ${predicateObjectMap.objectMap}`)
+            //console.log(`\t\tpredicateObjectMap.predicate = ${predicateObjectMap.predicate}`)
+            //console.log(`\t\tpredicateObjectMap.objectMap = ${predicateObjectMap.objectMap}`)
+            if(predicateObjectMap.objectMap.parentTriplesMap) {
+                console.log(`\t\tpredicateObjectMap.objectMap.parentTriplesMap = ${predicateObjectMap.objectMap.parentTriplesMap}`)
+                console.log(`\t\tpredicateObjectMap.objectMap.parentTriplesMap.subjectMap.className = ${predicateObjectMap.objectMap.parentTriplesMap.subjectMap.className}`)
+            }
+            
+            if(predicateObjectMap.objectMap.joinCondition) {
+
+                console.log(`\t\tpredicateObjectMap.objectMap.joinCondition = ${predicateObjectMap.objectMap.joinCondition}`)
+                console.log(`\t\tpredicateObjectMap.objectMap.joinCondition.child.referenceValue = ${predicateObjectMap.objectMap.joinCondition.child.referenceValue}`)
+                console.log(`\t\tpredicateObjectMap.objectMap.joinCondition.child.functionString = ${predicateObjectMap.objectMap.joinCondition.child.functionString}`)
+                console.log(`\t\tpredicateObjectMap.objectMap.joinCondition.parent.referenceValue = ${predicateObjectMap.objectMap.joinCondition.parent.referenceValue}`)
+                console.log(`\t\tpredicateObjectMap.objectMap.joinCondition.parent.functionString = ${predicateObjectMap.objectMap.joinCondition.parent.functionString}`)
+            }
 
             predicateObjectMaps.push(predicateObjectMap)
         }
@@ -172,6 +187,8 @@ class RMLParser {
         //console.log(`objectMapId = ${objectMapId}`);
         return objectMapId
     }
+
+
 
     buildObjectMap(objectMapId) {
         let objectMap = new ObjectMap();
@@ -275,19 +292,60 @@ class TermMap {
                          case 'boolean':
                          this.datatype = 'Boolean';
                              break;
-                     }
-                 }
-                 else {
+                    }
+                }
+                else {
                     this.datatype = 'String';
-                 }
+                }
+
+                if(item['rr:parentTriplesMap']) {
+                    //this.parentTriplesMap = item['rr:parentTriplesMap']["@id"];
+                    let parentTriplesMapId = item['rr:parentTriplesMap']["@id"]; 
+                    let rmlParser = new RMLParser(json);
+                    this.parentTriplesMap = rmlParser.buildTriplesMap(parentTriplesMapId);
+                }
+
+                if(item['rr:joinCondition']) {
+                    let joinConditionId = item['rr:joinCondition']["@id"];
+                    this.joinCondition = this.buildJoinCondition(json, joinConditionId)
+                }
 
                 break;
             }
         }
 
+
         //console.log("termMap.referenceValue: " + termMap.referenceValue)
         //console.log("termMap.template: " + termMap.template)
         //console.log("termMap.functionString: " + termMap.functionString)
+    }
+
+    buildJoinCondition(json, joinConditionId) {
+        let joinCondition = new JoinCondition();;
+
+        for(var i=0;i<json["@graph"].length;i++){
+            let item = json["@graph"][i];
+            let itemId = item["@id"];
+            //console.log(`itemId = ${itemId}`);
+            //console.log(`\tjoinCondition = ${joinCondition}`);
+            if(item["@id"]==joinConditionId){
+                let childId = item["rmlc:child"]["@id"];
+                //console.log(`childId = ${childId}`);
+                let child = new TermMap();
+                child.parseFromJson(json, childId);
+                //console.log(`child = ${child}`);
+                let parentId = item["rmlc:parent"]["@id"];
+                //console.log(`parentId = ${parentId}`);
+                let parent = new TermMap();
+                parent.parseFromJson(json, parentId);
+                //console.log(`parent = ${parent}`);
+                joinCondition.child = child;
+                joinCondition.parent = parent;
+                break
+            }
+        }
+        //console.log(`joinCondition = ${joinCondition}`);
+        return joinCondition;
     }
 
     templateToSQL() {
@@ -299,6 +357,39 @@ class TermMap {
         return templateInSQL;
     }
 
+    templateAsJoinMasterDB(prefix) {
+        let templateInSQL = this.template;
+        templateInSQL = `${templateInSQL}`
+        templateInSQL = "'" + templateInSQL + "'"
+        templateInSQL = templateInSQL.split("{").join("{" + prefix + ".")
+        templateInSQL = templateInSQL.split("{").join("' || {");
+        templateInSQL = templateInSQL.split("}").join("} || '");
+        templateInSQL = templateInSQL.split("}").join("");
+        templateInSQL = templateInSQL.split("{").join("");
+        templateInSQL = templateInSQL.split(prefix).join("${" + prefix + "}");
+        return templateInSQL;
+    }
+
+    templateAsJoinMonsterJS(prefix) {
+        console.log("this.template =  " + this.template)
+        let sqlJoinMonster = this.template;
+        sqlJoinMonster = sqlJoinMonster.split("{").join("${" + prefix + ".");
+        //sqlJoinMonster = sqlJoinMonster.split("}").join("");
+        //sqlJoinMonster = sqlJoinMonster.split(prefix).join(prefix + "}");        
+        console.log("sqlJoinMonster =  " + sqlJoinMonster)
+        return sqlJoinMonster;
+    }
+
+    functionStringAsSQLJoinMonster(prefix) {
+        console.log("this.functionString =  " + this.functionString)
+        let sqlJoinMonster = this.functionString;
+        sqlJoinMonster = sqlJoinMonster.split("{").join("${" + prefix + ".");
+        sqlJoinMonster = sqlJoinMonster.split("}").join("");
+        sqlJoinMonster = sqlJoinMonster.split(prefix).join(prefix + "}");
+        console.log("sqlJoinMonster =  " + sqlJoinMonster)
+        return sqlJoinMonster;
+    }
+
 }
 
 class SubjectMap extends TermMap {
@@ -307,7 +398,18 @@ class SubjectMap extends TermMap {
 }
 
 class ObjectMap extends TermMap {
+    getTermMap() { return this.termMap; }
+    getRefObjectMap() { return this.refObjectMap; }
+}
 
+class RefObjectMap {
+    getParentTriplesMap() { return this.parentTriplesMap; }
+    getJoinCondition() { return this.joinCondition; }
+}
+
+class JoinCondition {
+    getChild() { return this.child; }
+    getParent() { return this.parent; }
 }
 
 class PredicateObjectMap {
@@ -379,7 +481,7 @@ class TriplesMap {
             return filtered
           }, []);
 
-          console.log(`prSQLTriplesMap = ${prSQLTriplesMap}`);
+          //console.log(`prSQLTriplesMap = ${prSQLTriplesMap}`);
           return prSQLTriplesMap;
     }
 
@@ -392,7 +494,7 @@ class TriplesMap {
             }
             return filtered;
         }, []);
-        console.log(`condSQLTriplesMap = ${condSQLTriplesMap}`);
+        //console.log(`condSQLTriplesMap = ${condSQLTriplesMap}`);
         return condSQLTriplesMap;
     }
 

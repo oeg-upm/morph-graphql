@@ -9,11 +9,11 @@
 
 <TMPersona>
 	rml:logicalSource [
-		rml:source  "https://raw.githubusercontent.com/oeg-upm/mapping-translator/master/examples/example7/personas.csv";
+		rml:source  "https://raw.githubusercontent.com/fpriyatna/mapping-translator/master/examples/example5/personas.csv";
 	];
 
 	rr:subjectMap [
-		rr:template "http://ex.org/Person/{id}";
+		rml:reference "id";
 		rr:class schema:Person
 	];
 
@@ -50,27 +50,17 @@
 
 <TMPPublicacion>
 	rml:logicalSource [
-		rml:source  "https://raw.githubusercontent.com/oeg-upm/mapping-translator/master/examples/example7/comentarios.csv";
+		rml:source  "https://raw.githubusercontent.com/fpriyatna/mapping-translator/master/examples/example5/comentarios.csv";
 	];
 
 	rr:subjectMap [
-		rr:template "http://ex.org/{id}";
+		rml:reference "id";
 		rr:class schema:SocialMediaPosting
 	];
 
 	rr:predicateObjectMap [
 	  rr:predicate schema:author;
-	  rr:objectMap    [
-	    rr:parentTriplesMap <TMPersona>;
-	    rr:joinCondition [
-	        rmlc:child [
-	            rml:reference "usuario"
-	        ];
-	        rmlc:parent [
-	            rmlc:functions "lower(substr(nombre,1,1) || apellido)"
-	        ];
-	    ];
-	   ];
+	  rr:objectMap    [ rml:reference "usuario" ]
 	];
 
 	rr:predicateObjectMap [
@@ -78,4 +68,10 @@
 	  rr:objectMap    [ rml:reference "mensaje" ]
 	];
 
+	rr:predicateObjectMap [
+		rr:predicate schema:author;
+		rr:objectMap    [ 
+			rml:reference "mensaje" 
+		]
+	];
 .

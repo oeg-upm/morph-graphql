@@ -52,6 +52,6 @@ app.use(router.allowedMethods())
 // serve the custom build of GraphiQL
 app.use(koaStatic(path.join(__dirname, 'node_modules/graphsiql')))
 
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 4321
 app.listen(port, () => console.log(`server listening at http://localhost:${port}/graphql`))
 

@@ -1,4 +1,5 @@
 var fs = require('fs');
+const sqlitecretator = require('./sqlitecreator');
 
 exports.generateSchema = function(mappingDocument) {
 
@@ -83,7 +84,7 @@ exports.generateQueryResolvers = function(mappingDocument) {
         let class_name = triplesMap.subjectMap.className;
         let predicateObjectMaps = triplesMap.predicateObjectMaps;
         let alpha = triplesMap.getAlpha();
-        console.log(`alpha = ${alpha}`)
+        //console.log(`alpha = ${alpha}`)
 
         let prSQLTriplesMap = triplesMap.genPRSQL().join(",");
 
@@ -369,7 +370,7 @@ exports.generateDatabaseJS = function (db_name) {
     dbJSString += "})\n"
 
     return dbJSString;
-  }
+}
   
 exports.generateJoinMonsterBabelRc = function () {
   let content=fs.readFileSync('./transformers/javascript/sqlite/joinmonster/.babelrc');
@@ -381,3 +382,106 @@ exports.generateJoinMonsterEslintrc = function () {
   return content;
 }
 
+exports.generateJoinMonsterIndex = function () {
+  let content=fs.readFileSync('./transformers/javascript/sqlite/joinmonster/index.js');
+  return content;
+}
+
+exports.generateJoinMonsterQueryRoot = function (mappingDocument) {
+  let content = "";
+  content += "import {GraphQLObjectType,GraphQLList,GraphQLNonNull,GraphQLString,GraphQLInt} from 'graphql'\n"
+  content += `import joinMonster from 'join-monster'\n`
+  content += `import knex from './database'\n`
+  content += "import dbCall from '../data/fetch'\n"
+  content += mappingDocument.triplesMaps.map(function(triplesMap) {
+    let className = triplesMap.subjectMap.className;
+    return `import ${className} from './${className}'`
+  }).join("\n") + "\n";
+
+  content += "export default new GraphQLObjectType({\n"
+  content += "\tdescription: 'global query object',\n"
+  content += "\tname: 'Query',\n"
+  content += "\tfields: () => ({\n"
+  content += "\t\tversion: { type: GraphQLString, resolve: () => joinMonster.version },\n"
+  content += mappingDocument.triplesMaps.map(function(triplesMap) {
+    let className = triplesMap.subjectMap.className;
+    let listInstancesResolver = `\t\tlist${className}: { type: new GraphQLList(${className}), resolve: (parent, args, context, resolveInfo) => {\n`
+    listInstancesResolver += "\t\t\treturn joinMonster(resolveInfo, context, sql => dbCall(sql, knex, context))\n"
+    listInstancesResolver += "\t\t}}\n"
+    return listInstancesResolver
+  }).join(",\n") + "\n";
+
+
+  content += "\t})\n"
+  content += "})\n"
+  return content;
+}
+
+exports.generateJoinMonsterResolvers = function (triplesMap) {
+  let additionalImports = [];
+  let className = triplesMap.subjectMap.className;
+  let tmAlpha = triplesMap.getAlpha();
+  let primaryKeys = sqlitecretator.getPrimaryKeys(triplesMap.subjectMap);
+
+  let content = "";
+  content += "import {GraphQLObjectType,GraphQLList,GraphQLNonNull,GraphQLString,GraphQLInt,GraphQLFloat} from 'graphql'\n"
+  content += `import knex from './database'\n`
+  
+  content += `const ${className} = new GraphQLObjectType({`
+  content += `\tdescription: 'An instance of ${className}',\n`
+  content += `\tname: '${className}',\n`
+  content += `\tsqlTable: '${tmAlpha}',\n`
+  content += `\tuniqueKey: '${primaryKeys}',\n`
+  content += `\tfields: () => ({\n`
+  content += triplesMap.predicateObjectMaps.map(function (predicateObjectMap) {
+    /*
+    console.log(`predicateObjectMap = ${predicateObjectMap}`)
+    console.log(`predicateObjectMap.predicate = ${predicateObjectMap.predicate}`)
+    console.log(`predicateObjectMap.objectMap.referenceValue = ${predicateObjectMap.objectMap.referenceValue}`)
+    console.log(`predicateObjectMap.objectMap.functionString = ${predicateObjectMap.objectMap.functionString}`)
+    console.log(`predicateObjectMap.objectMap.template = ${predicateObjectMap.objectMap.template}`)
+    */
+
+
+
+    let predicate = predicateObjectMap.predicate;
+    let objectMap = predicateObjectMap.objectMap;
+    let poString = `\t\t${predicate}:{\n`
+    
+
+    if(objectMap.referenceValue) {
+      poString += "\t\t\ttype: GraphQLString,\n"
+      poString += `\t\t\tsqlColumn: '${objectMap.referenceValue}'`
+    } else if(objectMap.functionString) {
+      poString += "\t\t\ttype: GraphQLString,\n"
+      let functionStringInJoinMaster = objectMap.functionStringAsSQLJoinMonster("table");
+      poString += "\t\t\tsqlExpr: table => `" + functionStringInJoinMaster + "`"
+    } else if(objectMap.template) {
+      poString += "\t\t\ttype: GraphQLString,\n"
+      let templateInJoinMaster = objectMap.templateAsJoinMasterDB("table");
+      poString += "\t\t\tsqlExpr: table => `" + templateInJoinMaster + "`"
+    } else if(objectMap.parentTriplesMap) {
+      let parentTriplesMapSubjectMap = objectMap.parentTriplesMap.subjectMap;
+      let parentClassName = parentTriplesMapSubjectMap.className;
+      additionalImports.push(parentClassName);
+      poString += `\t\t\ttype: ${parentClassName},\n`
+      let joinCondition = objectMap.joinCondition;
+      let child = "${child}." + joinCondition.child.referenceValue;
+      let parent = joinCondition.parent.functionStringAsSQLJoinMonster("parent");
+      poString += "\t\t\tsqlJoin: (child, parent) => `" + child + " = " + parent + "`"
+    }
+
+    poString += "\n\t\t}";
+    return poString
+  }).join(",\n") + "\n";
+  content += `\t})\n`
+  content += "})\n"
+
+  content += `export default ${className}\n`
+  content += additionalImports.map(function(additionalImport) {
+    return `import ${additionalImport} from './${additionalImport}'`
+  })
+
+  console.log(`resolver for ${className} = \n${content}`)
+  return content;
+}

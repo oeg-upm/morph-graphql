@@ -300,7 +300,7 @@ class TermMap {
 
                 if(item['rr:parentTriplesMap']) {
                     //this.parentTriplesMap = item['rr:parentTriplesMap']["@id"];
-                    let parentTriplesMapId = item['rr:parentTriplesMap']["@id"]; 
+                    let parentTriplesMapId = item['rr:parentTriplesMap']["@id"];
                     let rmlParser = new RMLParser(json);
                     this.parentTriplesMap = rmlParser.buildTriplesMap(parentTriplesMapId);
                 }
@@ -375,7 +375,7 @@ class TermMap {
         let sqlJoinMonster = this.template;
         sqlJoinMonster = sqlJoinMonster.split("{").join("${" + prefix + ".");
         //sqlJoinMonster = sqlJoinMonster.split("}").join("");
-        //sqlJoinMonster = sqlJoinMonster.split(prefix).join(prefix + "}");        
+        //sqlJoinMonster = sqlJoinMonster.split(prefix).join(prefix + "}");
         console.log("sqlJoinMonster =  " + sqlJoinMonster)
         return sqlJoinMonster;
     }
@@ -502,7 +502,7 @@ class TriplesMap {
         let queryArguments = this.predicateObjectMaps.reduce(function(filtered, predicateObjectMap) {
             let predicate = predicateObjectMap.predicate;
             let objectMap = predicateObjectMap.objectMap;
-        
+
             if(objectMap.referenceValue || objectMap.functionString || objectMap.template) {
                 if(flag)
                     filtered.push(predicate+':'+objectMap.datatype);

@@ -127,19 +127,21 @@ class RMLParser {
             let predicateObjectMap = this.buildPredicateObjectMap(predicateObjectMapId);
             //console.log(`\t\tpredicateObjectMap.predicate = ${predicateObjectMap.predicate}`)
             //console.log(`\t\tpredicateObjectMap.objectMap = ${predicateObjectMap.objectMap}`)
+
+            /*
             if(predicateObjectMap.objectMap.parentTriplesMap) {
                 console.log(`\t\tpredicateObjectMap.objectMap.parentTriplesMap = ${predicateObjectMap.objectMap.parentTriplesMap}`)
                 console.log(`\t\tpredicateObjectMap.objectMap.parentTriplesMap.subjectMap.className = ${predicateObjectMap.objectMap.parentTriplesMap.subjectMap.className}`)
             }
             
             if(predicateObjectMap.objectMap.joinCondition) {
-
                 console.log(`\t\tpredicateObjectMap.objectMap.joinCondition = ${predicateObjectMap.objectMap.joinCondition}`)
                 console.log(`\t\tpredicateObjectMap.objectMap.joinCondition.child.referenceValue = ${predicateObjectMap.objectMap.joinCondition.child.referenceValue}`)
                 console.log(`\t\tpredicateObjectMap.objectMap.joinCondition.child.functionString = ${predicateObjectMap.objectMap.joinCondition.child.functionString}`)
                 console.log(`\t\tpredicateObjectMap.objectMap.joinCondition.parent.referenceValue = ${predicateObjectMap.objectMap.joinCondition.parent.referenceValue}`)
                 console.log(`\t\tpredicateObjectMap.objectMap.joinCondition.parent.functionString = ${predicateObjectMap.objectMap.joinCondition.parent.functionString}`)
             }
+            */
 
             predicateObjectMaps.push(predicateObjectMap)
         }
@@ -227,6 +229,18 @@ class TermMap {
     getReferenceValue() { return this.referenceValue }
     getFunctionString() { return this.functionString }
     getDatatype () { return this.datatype}
+
+    extractColumnsFromTemplate(){
+        let extractedColumns=[];
+        let splitedTemplate = this.template.split("{");
+
+        for(let i =1 ; i<splitedTemplate.length ; i++ ){
+            let key = splitedTemplate[i].split("}")[0];
+            extractedColumns.push(key);
+        }
+
+        return extractedColumns;
+    }
 
     getHashCode() {
         if(this.hashCode == undefined) {
@@ -371,22 +385,22 @@ class TermMap {
     }
 
     templateAsJoinMonsterJS(prefix) {
-        console.log("this.template =  " + this.template)
+        //console.log("this.template =  " + this.template)
         let sqlJoinMonster = this.template;
         sqlJoinMonster = sqlJoinMonster.split("{").join("${" + prefix + ".");
         //sqlJoinMonster = sqlJoinMonster.split("}").join("");
         //sqlJoinMonster = sqlJoinMonster.split(prefix).join(prefix + "}");
-        console.log("sqlJoinMonster =  " + sqlJoinMonster)
+        //console.log("sqlJoinMonster =  " + sqlJoinMonster)
         return sqlJoinMonster;
     }
 
     functionStringAsSQLJoinMonster(prefix) {
-        console.log("this.functionString =  " + this.functionString)
+        //console.log("this.functionString =  " + this.functionString)
         let sqlJoinMonster = this.functionString;
         sqlJoinMonster = sqlJoinMonster.split("{").join("${" + prefix + ".");
         sqlJoinMonster = sqlJoinMonster.split("}").join("");
         sqlJoinMonster = sqlJoinMonster.split(prefix).join(prefix + "}");
-        console.log("sqlJoinMonster =  " + sqlJoinMonster)
+        //console.log("sqlJoinMonster =  " + sqlJoinMonster)
         return sqlJoinMonster;
     }
 

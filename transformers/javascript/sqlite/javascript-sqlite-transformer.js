@@ -405,15 +405,18 @@ exports.generateJoinMonsterQueryRoot = function (mappingDocument) {
   content += "\t\tversion: { type: GraphQLString, resolve: () => joinMonster.version },\n"
   content += mappingDocument.triplesMaps.map(function(triplesMap) {
     let className = triplesMap.subjectMap.className;
-    let listInstancesResolver = `\t\tlist${className}: { type: new GraphQLList(${className}), resolve: (parent, args, context, resolveInfo) => {\n`
-    listInstancesResolver += "\t\t\treturn joinMonster(resolveInfo, context, sql => dbCall(sql, knex, context))\n"
-    listInstancesResolver += "\t\t}}\n"
+    let listInstancesResolver = `\t\tlist${className}: {\n`
+    listInstancesResolver += `\t\t\ttype: new GraphQLList(${className}), resolve: (parent, args, context, resolveInfo) => {\n`
+    listInstancesResolver += "\t\t\t\treturn joinMonster(resolveInfo, context, sql => dbCall(sql, knex, context))\n"
+    listInstancesResolver += "\t\t\t}\n"
+    listInstancesResolver += "\t\t}\n"
     return listInstancesResolver
   }).join(",\n") + "\n";
 
 
   content += "\t})\n"
   content += "})\n"
+  //console.log(`query root = ${content}`)
   return content;
 }
 
@@ -458,8 +461,17 @@ exports.generateJoinMonsterResolvers = function (triplesMap) {
       poString += "\t\t\tsqlExpr: table => `" + functionStringInJoinMaster + "`"
     } else if(objectMap.template) {
       poString += "\t\t\ttype: GraphQLString,\n"
-      let templateInJoinMaster = objectMap.templateAsJoinMasterDB("table");
-      poString += "\t\t\tsqlExpr: table => `" + templateInJoinMaster + "`"
+
+      //let templateInJoinMaster = objectMap.templateAsJoinMasterDB("table");
+      //poString += "\t\t\tsqlExpr: table => `" + templateInJoinMaster + "`"
+
+      let templateColumns = objectMap.extractColumnsFromTemplate();
+      let templateColumnsString = "[" + templateColumns.map(function(templateColumn) {return `'${templateColumn}'`}).join(",") + "]";
+      let sqlDepsString = `\t\t\tsqlDeps: ${templateColumnsString},\n`
+      poString += sqlDepsString;
+      let templateAsJoinMonsterJSString = objectMap.templateAsJoinMonsterJS("table");
+      let resolveString = "\t\t\tresolve: table => `" + templateAsJoinMonsterJSString + "`"
+      poString += resolveString;
     } else if(objectMap.parentTriplesMap) {
       let parentTriplesMapSubjectMap = objectMap.parentTriplesMap.subjectMap;
       let parentClassName = parentTriplesMapSubjectMap.className;
@@ -482,6 +494,6 @@ exports.generateJoinMonsterResolvers = function (triplesMap) {
     return `import ${additionalImport} from './${additionalImport}'`
   })
 
-  console.log(`resolver for ${className} = \n${content}`)
+  //console.log(`resolver for ${className} = \n${content}`)
   return content;
 }

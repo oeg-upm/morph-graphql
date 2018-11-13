@@ -388,6 +388,8 @@ exports.generateJoinMonsterIndex = function () {
 }
 
 exports.generateJoinMonsterQueryRoot = function (mappingDocument) {
+    let joinMonsterGenerator = new JoinMonsterGenerator()    
+
   let content = "";
   content += "import {GraphQLObjectType,GraphQLList,GraphQLNonNull,GraphQLString,GraphQLInt} from 'graphql'\n"
   content += `import joinMonster from 'join-monster'\n`
@@ -402,11 +404,38 @@ exports.generateJoinMonsterQueryRoot = function (mappingDocument) {
   content += "\tdescription: 'global query object',\n"
   content += "\tname: 'Query',\n"
   content += "\tfields: () => ({\n"
-  content += "\t\tversion: { type: GraphQLString, resolve: () => joinMonster.version },\n"
+  content += "\t\tversion: {\n"
+  content += "\t\t\ttype: GraphQLString,\n"
+  content += "\t\t\tresolve: () => joinMonster.version },\n"
   content += mappingDocument.triplesMaps.map(function(triplesMap) {
     let className = triplesMap.subjectMap.className;
-    let listInstancesResolver = `\t\tlist${className}: {\n`
-    listInstancesResolver += `\t\t\ttype: new GraphQLList(${className}), resolve: (parent, args, context, resolveInfo) => {\n`
+    let listInstancesResolver = `\t\t${className}: {\n`
+    listInstancesResolver += `\t\t\ttype: new GraphQLList(${className}),\n`
+
+    //GENERATING ARGS
+    listInstancesResolver += `\t\t\targs: {\n`
+    let queryArguments = triplesMap.genQueryArguments(false);
+    let queryArgumentsString = queryArguments.map(function(queryArgument) {
+        return `\t\t\t\t${queryArgument}:{type:GraphQLString}`
+    }).join(",\n")
+    listInstancesResolver += `${queryArgumentsString}\n`
+    listInstancesResolver += `\t\t\t},\n`
+
+    //GENERATING WHERE
+    listInstancesResolver += `\t\t\twhere: (table, args, context) => {\n`
+    listInstancesResolver += `\t\t\t\tlet sqlWhere = []\n`
+    let refObjectMapCondSQL = joinMonsterGenerator.genCondSQLRefObjectMapJoinMonster(triplesMap);
+    let refObjectMapCondSQLString = refObjectMapCondSQL.map(function(cond) {
+        return `\t\t\t\t${cond}`
+    }).join("\n")
+    listInstancesResolver += `${refObjectMapCondSQLString}\n`
+    listInstancesResolver += `\t\t\t\tlet sqlWhereString = sqlWhere.join(" AND ")\n`
+    listInstancesResolver += "\t\t\t\tconsole.log(`sqlWhereString = ${sqlWhereString}`)\n"
+    listInstancesResolver += "\t\t\t\treturn sqlWhereString\n"
+    listInstancesResolver += `\t\t\t},\n`
+
+    //GENERATING RESOLVE
+    listInstancesResolver += `\t\t\tresolve: (parent, args, context, resolveInfo) => {\n`
     listInstancesResolver += "\t\t\t\treturn joinMonster(resolveInfo, context, sql => dbCall(sql, knex, context))\n"
     listInstancesResolver += "\t\t\t}\n"
     listInstancesResolver += "\t\t}\n"

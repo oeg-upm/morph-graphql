@@ -604,7 +604,7 @@ class JoinMonsterGenerator {
         } else if(objectMap.template) {
             //let omHash = objectMap.getHashCode();
             //condSQL = `"${tablePrefix}.${omHash} = '${predicateWithPrefix}'"`
-            let templateAsSQL = this.templateAsJoinMasterDB(objectMap.template, "${table}")
+            let templateAsSQL = this.templateAsJoinMasterDB(objectMap.template, "table")
             condSQL = `${templateAsSQL} = '${predicateWithPrefix}'`
         } else {
             condSQL = null

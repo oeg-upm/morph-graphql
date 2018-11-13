@@ -204,9 +204,6 @@ app.post('/transform', function (req, res) {
 
 async function create_resolver(prog_lang, map_lang, dataset_type, mapping_url, 
     db_name, port_no, queryplanner){
-        /*
-
-
     console.log("prog_lang = "+ prog_lang)
     console.log("map_lang = "+ map_lang)
     console.log("dataset_type = "+ dataset_type)
@@ -214,7 +211,6 @@ async function create_resolver(prog_lang, map_lang, dataset_type, mapping_url,
     console.log("database name = "+db_name)
     console.log("port_no = "+ port_no)
     console.log("queryplanner = "+ queryplanner)
-    */
 
     if(port_no == null || port_no == undefined ) { port_no = 4321 }
 
@@ -400,6 +396,7 @@ async function create_resolver(prog_lang, map_lang, dataset_type, mapping_url,
             })
 
             if(dataset_type=='csv'){
+                console.log('GENERATING Database File ...');
                 let dbFile = `${dataDir}/${db_name}`;
                 fs.writeFileSync(dbFile,fs.readFileSync(tempdb.path));                
            }

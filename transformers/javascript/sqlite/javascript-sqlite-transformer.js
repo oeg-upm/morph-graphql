@@ -421,6 +421,8 @@ exports.generateJoinMonsterQueryRoot = function (mappingDocument) {
 }
 
 exports.generateJoinMonsterResolvers = function (triplesMap) {
+    let joinMonsterGenerator = new JoinMonsterGenerator()    
+
   let additionalImports = [];
   let className = triplesMap.subjectMap.className;
   let tmAlpha = triplesMap.getAlpha();
@@ -477,6 +479,29 @@ exports.generateJoinMonsterResolvers = function (triplesMap) {
       let parentClassName = parentTriplesMapSubjectMap.className;
       additionalImports.push(parentClassName);
       poString += `\t\t\ttype: ${parentClassName},\n`
+      
+      //GENERATING args
+      poString += `\t\t\targs: {\n`
+      let queryArguments = objectMap.parentTriplesMap.genQueryArguments(false);
+      let queryArgumentsString = queryArguments.map(function(queryArgument) {
+          return `\t\t\t\t${queryArgument}:{type:GraphQLString}`
+      }).join(",\n")
+      poString += `${queryArgumentsString}\n`
+      poString += `\t\t\t},\n`
+
+      //GENERATING WHERE
+      poString += `\t\t\twhere: (table, args, context) => {\n`
+      poString += `\t\t\t\tlet sqlWhere = []\n`
+      let refObjectMapCondSQL = joinMonsterGenerator.genCondSQLRefObjectMapJoinMonster(objectMap.parentTriplesMap);
+      let refObjectMapCondSQLString = refObjectMapCondSQL.map(function(cond) {
+          return `\t\t\t\t${cond}`
+      }).join("\n")
+      poString += `${refObjectMapCondSQLString}\n`
+      poString += `\t\t\t\tlet sqlWhereString = sqlWhere.join(" AND ")\n`
+      poString += "\t\t\t\tconsole.log(`sqlWhereString = ${sqlWhereString}`)\n"
+      poString += "\t\t\t\treturn sqlWhereString\n"
+      poString += `\t\t\t},\n`
+
       let joinCondition = objectMap.joinCondition;
       let child = "${child}." + joinCondition.child.referenceValue;
       let parent = joinCondition.parent.functionStringAsSQLJoinMonster("parent");
@@ -496,4 +521,91 @@ exports.generateJoinMonsterResolvers = function (triplesMap) {
 
   //console.log(`resolver for ${className} = \n${content}`)
   return content;
+}
+
+class JoinMonsterGenerator {
+    
+    genCondSQLRefObjectMapJoinMonster(triplesMap) {
+
+        /*
+        let condSQLTriplesMap = triplesMap.predicateObjectMaps.reduce(function(filtered, predicateObjectMap) {
+            let predicate = predicateObjectMap.predicate;
+            let condSQL = joinMonsterGenerator.genCondSQL(predicateObjectMap);
+            if(condSQL != null) {
+              filtered.push(`if(args.${predicate} != null) { sqlWhere.push(${condSQL}) }`)
+            }
+            return filtered;
+        }, []);
+        */
+
+        let condSQLTriplesMap = []
+        
+        for(i=0; i<triplesMap.predicateObjectMaps.length; i++) {
+            let predicateObjectMap = triplesMap.predicateObjectMaps[i];
+            let predicate = predicateObjectMap.predicate;
+            let condSQL = this.genCondSQL(predicateObjectMap);
+            if(condSQL != null) {
+                condSQLTriplesMap.push(`if(args.${predicate} != null) { sqlWhere.push(${condSQL}) }`)
+            }
+        }
+
+        //console.log(`condSQLTriplesMap = ${condSQLTriplesMap}`);
+        return condSQLTriplesMap;    
+    }
+
+    genCondSQL(predicateObjectMap) {
+        let table = "${table}";
+        let predicate = predicateObjectMap.predicate
+        let predicateWithPrefix = "${args." + predicate + "}"
+        let objectMap = predicateObjectMap.objectMap;
+        let condSQL = null;
+        if(objectMap.referenceValue) {
+          if(objectMap.datatype !== 'String'){
+              condSQL = `${table}.${objectMap.referenceValue} = ${predicateWithPrefix}`
+          }
+          else {
+              condSQL = `${table}.${objectMap.referenceValue} = '${predicateWithPrefix}'`
+          }
+    
+        } else if(objectMap.functionString) {
+          //let omHash = objectMap.getHashCode();
+          //condSQL = `"${tablePrefix}.${omHash} = '${predicateWithPrefix}'"`
+          let functionStringAsSQL = this.functionStringAsSQLJoinMonster(objectMap.functionString, "table");
+          condSQL = `${functionStringAsSQL} = '${predicateWithPrefix}'`
+        } else if(objectMap.template) {
+            //let omHash = objectMap.getHashCode();
+            //condSQL = `"${tablePrefix}.${omHash} = '${predicateWithPrefix}'"`
+            let templateAsSQL = this.templateAsJoinMasterDB(objectMap.template, "${table}")
+            condSQL = `${templateAsSQL} = '${predicateWithPrefix}'`
+        } else {
+            condSQL = null
+        }
+    
+        //console.log("condSQL = " + condSQL)
+        condSQL = "`" + condSQL + "`"
+        return condSQL
+    }        
+
+    templateAsJoinMasterDB(template, prefix) {
+        let templateInSQL = template;
+        templateInSQL = `${templateInSQL}`
+        templateInSQL = "'" + templateInSQL + "'"
+        templateInSQL = templateInSQL.split("{").join("{" + prefix + ".")
+        templateInSQL = templateInSQL.split("{").join("' || {");
+        templateInSQL = templateInSQL.split("}").join("} || '");
+        templateInSQL = templateInSQL.split("}").join("");
+        templateInSQL = templateInSQL.split("{").join("");
+        templateInSQL = templateInSQL.split(prefix).join("${" + prefix + "}");
+        return templateInSQL;
+    }
+
+    functionStringAsSQLJoinMonster(functionString, prefix) {
+        let sqlJoinMonster = functionString;
+        sqlJoinMonster = sqlJoinMonster.split("{").join("${" + prefix + ".");
+        sqlJoinMonster = sqlJoinMonster.split("}").join("");
+        sqlJoinMonster = sqlJoinMonster.split(prefix).join(prefix + "}");
+        //console.log("sqlJoinMonster =  " + sqlJoinMonster)
+        return sqlJoinMonster;
+    }
+
 }

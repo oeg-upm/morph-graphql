@@ -532,8 +532,18 @@ exports.generateJoinMonsterResolvers = function (triplesMap) {
       poString += `\t\t\t},\n`
 
       let joinCondition = objectMap.joinCondition;
-      let child = "${child}." + joinCondition.child.referenceValue;
-      let parent = joinCondition.parent.functionStringAsSQLJoinMonster("parent");
+      //let child = "${child}." + joinCondition.child.referenceValue;
+      //console.log("joinCondition.child.referenceValue = " + joinCondition.child.referenceValue)
+      let child = "${child}." + joinMonsterGenerator.termMapAsJoinMonster(
+          joinCondition.child, null);
+        //console.log("child = " + child)
+
+      //let parent = joinCondition.parent.functionStringAsSQLJoinMonster("parent");
+      //console.log("joinCondition.parent.referenceValue = " + joinCondition.parent.referenceValue)
+      let parent = joinMonsterGenerator.termMapAsJoinMonster(
+          joinCondition.parent, "parent");
+        //console.log("parent = " + parent)
+
       poString += "\t\t\tsqlJoin: (child, parent) => `" + child + " = " + parent + "`"
     }
 
@@ -635,6 +645,20 @@ class JoinMonsterGenerator {
         sqlJoinMonster = sqlJoinMonster.split(prefix).join(prefix + "}");
         //console.log("sqlJoinMonster =  " + sqlJoinMonster)
         return sqlJoinMonster;
+    }
+
+    termMapAsJoinMonster(termMap, prefix) {
+        console.log("termMap.referenceValue = " + termMap.referenceValue)
+        console.log("termMap.functionString = " + termMap.functionString)
+        console.log("prefix = " + prefix)
+
+        if(termMap.referenceValue) {
+            return termMap.referenceValue
+        } else if(termMap.functionString) {
+            return this.functionStringAsSQLJoinMonster(termMap.functionString, prefix)
+        } else {
+            return null;
+        }
     }
 
 }

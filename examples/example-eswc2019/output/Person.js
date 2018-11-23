@@ -11,7 +11,8 @@ const Person = new GraphQLObjectType({	description: 'An instance of Person',
 			resolve: table => `http://ex.org/Person/${table.id}`
 		},
 		name:{
-
+			type: GraphQLString,
+			sqlColumn: 'name'
 		}
 	})
 })

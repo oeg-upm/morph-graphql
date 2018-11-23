@@ -19,7 +19,7 @@
 
 	rr:predicateObjectMap [
 	  rr:predicate schema:name;
-	  rr:objectMap    [ rr:reference "name" ]
+	  rr:objectMap    [ rml:reference "name" ]
 	];
 .
 

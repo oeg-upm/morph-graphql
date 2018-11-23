@@ -21,8 +21,8 @@ export default new GraphQLObjectType({
 			where: (table, args, context) => {
 				let sqlWhere = []
 				if(args.identifier != null) { sqlWhere.push(`'http://ex.org/Comment/' || ${table}.id || '' = '${args.identifier}'`) }
-				if(args.author != null) { sqlWhere.push(`null`) }
 				if(args.comment != null) { sqlWhere.push(`${table}.comment = '${args.comment}'`) }
+				if(args.author != null) { sqlWhere.push(`null`) }
 				if(args.date != null) { sqlWhere.push(`${table}.date = '${args.date}'`) }
 				let sqlWhereString = sqlWhere.join(" AND ")
 				console.log(`sqlWhereString = ${sqlWhereString}`)
@@ -36,12 +36,13 @@ export default new GraphQLObjectType({
 		Person: {
 			type: new GraphQLList(Person),
 			args: {
-				identifier:{type:GraphQLString}
+				identifier:{type:GraphQLString},
+				name:{type:GraphQLString}
 			},
 			where: (table, args, context) => {
 				let sqlWhere = []
 				if(args.identifier != null) { sqlWhere.push(`'http://ex.org/Person/' || ${table}.id || '' = '${args.identifier}'`) }
-				if(args.name != null) { sqlWhere.push(`null`) }
+				if(args.name != null) { sqlWhere.push(`${table}.name = '${args.name}'`) }
 				let sqlWhereString = sqlWhere.join(" AND ")
 				console.log(`sqlWhereString = ${sqlWhereString}`)
 				return sqlWhereString

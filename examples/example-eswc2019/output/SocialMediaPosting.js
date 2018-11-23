@@ -10,24 +10,25 @@ const SocialMediaPosting = new GraphQLObjectType({	description: 'An instance of 
 			sqlDeps: ['id'],
 			resolve: table => `http://ex.org/Comment/${table.id}`
 		},
+		comment:{
+			type: GraphQLString,
+			sqlColumn: 'comment'
+		},
 		author:{
 			type: Person,
 			args: {
-				identifier:{type:GraphQLString}
+				identifier:{type:GraphQLString},
+				name:{type:GraphQLString}
 			},
 			where: (table, args, context) => {
 				let sqlWhere = []
 				if(args.identifier != null) { sqlWhere.push(`'http://ex.org/Person/' || ${table}.id || '' = '${args.identifier}'`) }
-				if(args.name != null) { sqlWhere.push(`null`) }
+				if(args.name != null) { sqlWhere.push(`${table}.name = '${args.name}'`) }
 				let sqlWhereString = sqlWhere.join(" AND ")
 				console.log(`sqlWhereString = ${sqlWhereString}`)
 				return sqlWhereString
 			},
-			sqlJoin: (child, parent) => `${child}.author = id`
-		},
-		comment:{
-			type: GraphQLString,
-			sqlColumn: 'comment'
+			sqlJoin: (child, parent) => `${child}.author = ${parent}.id`
 		},
 		date:{
 			type: GraphQLString,

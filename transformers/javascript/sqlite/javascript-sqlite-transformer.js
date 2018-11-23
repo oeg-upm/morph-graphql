@@ -390,24 +390,24 @@ exports.generateJoinMonsterIndex = function () {
 exports.generateJoinMonsterQueryRoot = function (mappingDocument) {
     let joinMonsterGenerator = new JoinMonsterGenerator()    
 
-  let content = "";
-  content += "import {GraphQLObjectType,GraphQLList,GraphQLNonNull,GraphQLString,GraphQLInt} from 'graphql'\n"
-  content += `import joinMonster from 'join-monster'\n`
-  content += `import knex from './database'\n`
-  content += "import dbCall from '../data/fetch'\n"
-  content += mappingDocument.triplesMaps.map(function(triplesMap) {
-    let className = triplesMap.subjectMap.className;
-    return `import ${className} from './${className}'`
-  }).join("\n") + "\n";
+    let content = "";
+    content += "import {GraphQLObjectType,GraphQLList,GraphQLNonNull,GraphQLString,GraphQLInt} from 'graphql'\n"
+    content += `import joinMonster from 'join-monster'\n`
+    content += `import knex from './database'\n`
+    content += "import dbCall from '../data/fetch'\n"
+    content += mappingDocument.triplesMaps.map(function(triplesMap) {
+        let className = triplesMap.subjectMap.className;
+        return `import ${className} from './${className}'`
+    }).join("\n") + "\n";
 
-  content += "export default new GraphQLObjectType({\n"
-  content += "\tdescription: 'global query object',\n"
-  content += "\tname: 'Query',\n"
-  content += "\tfields: () => ({\n"
-  content += "\t\tversion: {\n"
-  content += "\t\t\ttype: GraphQLString,\n"
-  content += "\t\t\tresolve: () => joinMonster.version },\n"
-  content += mappingDocument.triplesMaps.map(function(triplesMap) {
+    content += "export default new GraphQLObjectType({\n"
+    content += "\tdescription: 'global query object',\n"
+    content += "\tname: 'Query',\n"
+    content += "\tfields: () => ({\n"
+    content += "\t\tversion: {\n"
+    content += "\t\t\ttype: GraphQLString,\n"
+    content += "\t\t\tresolve: () => joinMonster.version },\n"
+    content += mappingDocument.triplesMaps.map(function(triplesMap) {
     let className = triplesMap.subjectMap.className;
     let listInstancesResolver = `\t\t${className}: {\n`
     listInstancesResolver += `\t\t\ttype: new GraphQLList(${className}),\n`
@@ -452,22 +452,22 @@ exports.generateJoinMonsterQueryRoot = function (mappingDocument) {
 exports.generateJoinMonsterResolvers = function (triplesMap) {
     let joinMonsterGenerator = new JoinMonsterGenerator()    
 
-  let additionalImports = [];
-  let className = triplesMap.subjectMap.className;
-  let tmAlpha = triplesMap.getAlpha();
-  let primaryKeys = sqlitecretator.getPrimaryKeys(triplesMap.subjectMap);
+    let additionalImports = [];
+    let className = triplesMap.subjectMap.className;
+    let tmAlpha = triplesMap.getAlpha();
+    let primaryKeys = sqlitecretator.getPrimaryKeys(triplesMap.subjectMap);
 
-  let content = "";
-  content += "import {GraphQLObjectType,GraphQLList,GraphQLNonNull,GraphQLString,GraphQLInt,GraphQLFloat} from 'graphql'\n"
-  content += `import knex from './database'\n`
+    let content = "";
+    content += "import {GraphQLObjectType,GraphQLList,GraphQLNonNull,GraphQLString,GraphQLInt,GraphQLFloat} from 'graphql'\n"
+    content += `import knex from './database'\n`
   
-  content += `const ${className} = new GraphQLObjectType({`
-  content += `\tdescription: 'An instance of ${className}',\n`
-  content += `\tname: '${className}',\n`
-  content += `\tsqlTable: '${tmAlpha}',\n`
-  content += `\tuniqueKey: '${primaryKeys}',\n`
-  content += `\tfields: () => ({\n`
-  content += triplesMap.predicateObjectMaps.map(function (predicateObjectMap) {
+    content += `const ${className} = new GraphQLObjectType({`
+    content += `\tdescription: 'An instance of ${className}',\n`
+    content += `\tname: '${className}',\n`
+    content += `\tsqlTable: '${tmAlpha}',\n`
+    content += `\tuniqueKey: '${primaryKeys}',\n`
+    content += `\tfields: () => ({\n`
+    content += triplesMap.predicateObjectMaps.map(function (predicateObjectMap) {
     /*
     console.log(`predicateObjectMap = ${predicateObjectMap}`)
     console.log(`predicateObjectMap.predicate = ${predicateObjectMap.predicate}`)
@@ -504,47 +504,54 @@ exports.generateJoinMonsterResolvers = function (triplesMap) {
       let resolveString = "\t\t\tresolve: table => `" + templateAsJoinMonsterJSString + "`"
       poString += resolveString;
     } else if(objectMap.parentTriplesMap) {
-      let parentTriplesMapSubjectMap = objectMap.parentTriplesMap.subjectMap;
-      let parentClassName = parentTriplesMapSubjectMap.className;
-      additionalImports.push(parentClassName);
-      poString += `\t\t\ttype: ${parentClassName},\n`
+        let parentTriplesMapSubjectMap = objectMap.parentTriplesMap.subjectMap;
+        let parentClassName = parentTriplesMapSubjectMap.className;
+        additionalImports.push(parentClassName);
+        poString += `\t\t\ttype: ${parentClassName},\n`
       
-      //GENERATING args
-      poString += `\t\t\targs: {\n`
-      let queryArguments = objectMap.parentTriplesMap.genQueryArguments(false);
-      let queryArgumentsString = queryArguments.map(function(queryArgument) {
-          return `\t\t\t\t${queryArgument}:{type:GraphQLString}`
-      }).join(",\n")
-      poString += `${queryArgumentsString}\n`
-      poString += `\t\t\t},\n`
+        //GENERATING args
+        poString += `\t\t\targs: {\n`
+        let queryArguments = objectMap.parentTriplesMap.genQueryArguments(false);
+        let queryArgumentsString = queryArguments.map(function(queryArgument) {
+            return `\t\t\t\t${queryArgument}:{type:GraphQLString}`
+        }).join(",\n")
+        poString += `${queryArgumentsString}\n`
+        poString += `\t\t\t},\n`
 
-      //GENERATING WHERE
-      poString += `\t\t\twhere: (table, args, context) => {\n`
-      poString += `\t\t\t\tlet sqlWhere = []\n`
-      let refObjectMapCondSQL = joinMonsterGenerator.genCondSQLRefObjectMapJoinMonster(objectMap.parentTriplesMap);
-      let refObjectMapCondSQLString = refObjectMapCondSQL.map(function(cond) {
-          return `\t\t\t\t${cond}`
-      }).join("\n")
-      poString += `${refObjectMapCondSQLString}\n`
-      poString += `\t\t\t\tlet sqlWhereString = sqlWhere.join(" AND ")\n`
-      poString += "\t\t\t\tconsole.log(`sqlWhereString = ${sqlWhereString}`)\n"
-      poString += "\t\t\t\treturn sqlWhereString\n"
-      poString += `\t\t\t},\n`
+        //GENERATING WHERE
+        poString += `\t\t\twhere: (table, args, context) => {\n`
+        poString += `\t\t\t\tlet sqlWhere = []\n`
+        let refObjectMapCondSQL = joinMonsterGenerator.genCondSQLRefObjectMapJoinMonster(objectMap.parentTriplesMap);
+        let refObjectMapCondSQLString = refObjectMapCondSQL.map(function(cond) {
+            return `\t\t\t\t${cond}`
+        }).join("\n")
+        poString += `${refObjectMapCondSQLString}\n`
+        poString += `\t\t\t\tlet sqlWhereString = sqlWhere.join(" AND ")\n`
+        poString += "\t\t\t\tconsole.log(`sqlWhereString = ${sqlWhereString}`)\n"
+        poString += "\t\t\t\treturn sqlWhereString\n"
+        poString += `\t\t\t},\n`
 
-      let joinCondition = objectMap.joinCondition;
-      //let child = "${child}." + joinCondition.child.referenceValue;
-      //console.log("joinCondition.child.referenceValue = " + joinCondition.child.referenceValue)
-      let child = "${child}." + joinMonsterGenerator.termMapAsJoinMonster(
-          joinCondition.child, null);
+        let joinCondition = objectMap.joinCondition;
+        //let child = "${child}." + joinCondition.child.referenceValue;
+        //console.log("joinCondition.child.referenceValue = " + joinCondition.child.referenceValue)
+        let child = joinMonsterGenerator.termMapAsJoinMonster(
+            joinCondition.child, null);
+        if(joinCondition.child.referenceValue) {
+            child = "${child}." + child
+        }
         //console.log("child = " + child)
 
-      //let parent = joinCondition.parent.functionStringAsSQLJoinMonster("parent");
-      //console.log("joinCondition.parent.referenceValue = " + joinCondition.parent.referenceValue)
-      let parent = joinMonsterGenerator.termMapAsJoinMonster(
-          joinCondition.parent, "parent");
+        //let parent = joinCondition.parent.functionStringAsSQLJoinMonster("parent");
+        //console.log("joinCondition.parent.referenceValue = " + joinCondition.parent.referenceValue)
+        let parent = joinMonsterGenerator.termMapAsJoinMonster(
+            joinCondition.parent, "parent");
+        if(joinCondition.parent.referenceValue) {
+            parent = "${parent}." + parent
+        }
+
         //console.log("parent = " + parent)
 
-      poString += "\t\t\tsqlJoin: (child, parent) => `" + child + " = " + parent + "`"
+        poString += "\t\t\tsqlJoin: (child, parent) => `" + child + " = " + parent + "`"
     }
 
     poString += "\n\t\t}";
@@ -648,9 +655,9 @@ class JoinMonsterGenerator {
     }
 
     termMapAsJoinMonster(termMap, prefix) {
-        console.log("termMap.referenceValue = " + termMap.referenceValue)
-        console.log("termMap.functionString = " + termMap.functionString)
-        console.log("prefix = " + prefix)
+        //console.log("termMap.referenceValue = " + termMap.referenceValue)
+        //console.log("termMap.functionString = " + termMap.functionString)
+        //console.log("prefix = " + prefix)
 
         if(termMap.referenceValue) {
             return termMap.referenceValue

@@ -52,7 +52,7 @@
 	            rml:reference "author"
 	        ];
 	        rmlc:parent [
-	            rmlc:reference "id"
+	            rml:reference "id"
 	        ];
 	    ];
 	   ];

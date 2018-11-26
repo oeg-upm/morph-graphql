@@ -500,8 +500,12 @@ exports.generateJoinMonsterResolvers = function (triplesMap) {
       let templateColumnsString = "[" + templateColumns.map(function(templateColumn) {return `'${templateColumn}'`}).join(",") + "]";
       let sqlDepsString = `\t\t\tsqlDeps: ${templateColumnsString},\n`
       poString += sqlDepsString;
-      let templateAsJoinMonsterJSString = objectMap.templateAsJoinMonsterJS("table");
-      let resolveString = "\t\t\tresolve: table => `" + templateAsJoinMonsterJSString + "`"
+      //let templateAsJoinMonsterJSString = objectMap.templateAsJoinMonsterJS("table");
+      //let resolveString = "\t\t\tresolve: table => `" + templateAsJoinMonsterJSString + "`"
+
+      let templateAsJoinMonsterSQL = joinMonsterGenerator.templateAsJoinMasterDB(objectMap.template, "table")
+      let resolveString = "\t\t\sqlExpr: table => `" + templateAsJoinMonsterSQL + "`"
+      
       poString += resolveString;
     } else if(objectMap.parentTriplesMap) {
         let parentTriplesMapSubjectMap = objectMap.parentTriplesMap.subjectMap;

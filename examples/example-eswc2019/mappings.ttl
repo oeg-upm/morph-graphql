@@ -19,7 +19,7 @@
 
 	rr:predicateObjectMap [
 	  rr:predicate schema:name;
-	  rr:objectMap    [ rml:template "{fname} {lname}" ]
+	  rr:objectMap    [ rr:template "{fname} {lname}" ]
 	];
 	
 	rr:predicateObjectMap [

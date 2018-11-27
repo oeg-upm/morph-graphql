@@ -63,6 +63,40 @@
 	    ];
 	   ];
 	];
+.
 
+<TriplesMapComments>
+	rml:logicalSource [
+		rml:source  "https://raw.githubusercontent.com/oeg-upm/mapping-translator/master/examples/example-eswc2019/accounts.csv";
+	];
 
+	rr:subjectMap [
+		rr:template "http://ex.org/Account/{id}";
+		rr:class ex:SocialMediaAccount
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:username;
+	  rr:objectMap    [ rml:reference "username" ]
+	];
+	
+	rr:predicateObjectMap [
+	  rr:predicate ex:accountType;
+	  rr:objectMap    [ rml:reference "account_type" ]
+	];
+	
+	rr:predicateObjectMap [
+	  rr:predicate ex:belongsTo;
+	  rr:objectMap    [
+	    rr:parentTriplesMap <TriplesMapPerson>;
+	    rr:joinCondition [
+	        rmlc:child [
+	            rml:reference "userid"
+	        ];
+	        rmlc:parent [
+	            rml:reference "id"
+	        ];
+	    ];
+	   ];
+	];
 .

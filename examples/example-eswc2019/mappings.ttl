@@ -65,7 +65,7 @@
 	];
 .
 
-<TriplesMapComments>
+<TriplesMapAccounts>
 	rml:logicalSource [
 		rml:source  "https://raw.githubusercontent.com/oeg-upm/mapping-translator/master/examples/example-eswc2019/accounts.csv";
 	];

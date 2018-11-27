@@ -1,6 +1,72 @@
 # mapping-translator
 Translate OBDA mappings (R2RML/RML) into GraphQL Resolvers
 
+## EXAMPLE ESWC2019: Translating mappings online for Javascript and a set of CSV files (assuming that you have npm and node or docker installed)
+### The mappings used in the examples
+- url: https://raw.githubusercontent.com/oeg-upm/mapping-translator/master/examples/example-eswc2019/mappings.ttl
+- Person is mapped to authors.csv: https://raw.githubusercontent.com/oeg-upm/mapping-translator/master/examples/example-eswc2019/authors.csv
+- SocialMediaPosting is mapped to comments.csv: https://raw.githubusercontent.com/oeg-upm/mapping-translator/master/examples/example-eswc2019/comments.csv
+- 
+
+1. ```mkdir output```
+2. ```cd output```
+3. Translate the corresponding RML: 
+   ```curl -X POST http://mappingtranslator.mappingpedia.linkeddata.es/transform -H 'Content-Type: application/json' -d '{ "prog_lang": "javascript", "dataset_type":"csv", "mapping_url":"https://raw.githubusercontent.com/oeg-upm/mapping-translator/master/examples/example-eswc2019/mappings.ttl", "db_name":"eswc2019example.sqlite", "mapping_language":"rml", "queryplanner":"joinmonster" }' > output.zip```
+5. ```unzip output.zip```
+6. ```npm install```
+7. ```npm start```
+9. Go to http://localhost:4321/graphql from your browser, use some of the queries below
+
+### To query all posts created by the user whose name is Freddy Priyatna
+```
+{
+  SocialMediaPosting {
+    identifier
+    comment
+    author(name: "Freddy Priyatna") {
+      identifier
+      name
+    }
+  }
+}
+```
+
+## EXAMPLE 7: Translating mappings online for Javascript and a set of CSV files (assuming that you have npm and node or docker installed)
+### The mappings used in the examples
+- url: https://raw.githubusercontent.com/oeg-upm/mapping-translator/master/examples/example7/personPost7b.rml.ttl
+- Person is mapped to personas.csv (https://github.com/oeg-upm/mapping-translator/blob/master/examples/example7/personas.csv), givenName is mapped to nombre, familyName is mapped to apellido, email is mapped to some function of nombre and apellido, name is mapped to the concatenation of nombre and apellido
+- SocialMediaPosting is mapped to comentarios.csv (https://github.com/oeg-upm/mapping-translator/blob/master/examples/example7/comentarios.csv), author is mapped to usuario, comment is mapped to mensaje
+- 
+
+1. ```mkdir output```
+2. ```cd output```
+3. Translate the corresponding RML: 
+   ```curl -X POST http://mappingtranslator.mappingpedia.linkeddata.es/transform -H 'Content-Type: application/json' -d '{ "prog_lang": "javascript", "dataset_type":"csv", "mapping_url":"https://raw.githubusercontent.com/oeg-upm/mapping-translator/master/examples/example7/personPost7b.rml.ttl", "db_name":"example7.sqlite", "mapping_language":"rml", "queryplanner":"joinmonster" }' > output.zip```
+5. ```unzip output.zip```
+6. ```npm install```
+7. ```npm start```
+9. Go to http://localhost:4321/graphql from your browser, use some of the queries below
+
+
+
+### To query all posts and the information of the user who create the post of each posts
+```
+query {
+  listSocialMediaPosting {
+    identifier
+    comment
+    author {
+      identifier
+      email
+      familyName
+      givenName
+      name
+      telephone
+    }
+  } 
+}
+```
+
 ## EXAMPLE 1: Installing and Running the mapping translator
 With Node:
 1. ```git clone https://github.com/oeg-upm/mapping-translator```
@@ -173,41 +239,7 @@ mutation {
 }
 ```
 
-## EXAMPLE 7: Translating mappings online for Javascript and a set of CSV files (assuming that you have npm and node or docker installed)
-### The mappings used in the examples
-- url: https://raw.githubusercontent.com/oeg-upm/mapping-translator/master/examples/example7/personPost7b.rml.ttl
-- Person is mapped to personas.csv (https://github.com/oeg-upm/mapping-translator/blob/master/examples/example7/personas.csv), givenName is mapped to nombre, familyName is mapped to apellido, email is mapped to some function of nombre and apellido, name is mapped to the concatenation of nombre and apellido
-- SocialMediaPosting is mapped to comentarios.csv (https://github.com/oeg-upm/mapping-translator/blob/master/examples/example7/comentarios.csv), author is mapped to usuario, comment is mapped to mensaje
-- 
 
-1. ```mkdir output```
-2. ```cd output```
-3. Translate the corresponding RML: 
-   ```curl -X POST http://mappingtranslator.mappingpedia.linkeddata.es/transform -H 'Content-Type: application/json' -d '{ "prog_lang": "javascript", "dataset_type":"csv", "mapping_url":"https://raw.githubusercontent.com/oeg-upm/mapping-translator/master/examples/example7/personPost7b.rml.ttl", "db_name":"example7.sqlite", "mapping_language":"rml", "queryplanner":"joinmonster" }' > output.zip```
-5. ```unzip output.zip```
-6. ```npm install```
-7. ```node start```
-9. Go to http://localhost:4321/graphql from your browser, use some of the queries below
-
-
-
-### To query all posts and the information of the user who create the post of each posts
-```
-query {
-  listSocialMediaPosting {
-    identifier
-    comment
-    author {
-      identifier
-      email
-      familyName
-      givenName
-      name
-      telephone
-    }
-  } 
-}
-```
 
 
 # Screenshot

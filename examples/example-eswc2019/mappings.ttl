@@ -29,41 +29,6 @@
 	
 .
 
-<TriplesMapComments>
-	rml:logicalSource [
-		rml:source  "https://raw.githubusercontent.com/oeg-upm/mapping-translator/master/examples/example-eswc2019/comments.csv";
-	];
-
-	rr:subjectMap [
-		rr:template "http://ex.org/Comment/{id}";
-		rr:class schema:SocialMediaPosting
-	];
-
-	rr:predicateObjectMap [
-	  rr:predicate schema:comment;
-	  rr:objectMap    [ rml:reference "comment" ]
-	];
-	
-	rr:predicateObjectMap [
-	  rr:predicate schema:date;
-	  rr:objectMap    [ rml:reference "date" ]
-	];
-	
-	rr:predicateObjectMap [
-	  rr:predicate schema:author;
-	  rr:objectMap    [
-	    rr:parentTriplesMap <TriplesMapPerson>;
-	    rr:joinCondition [
-	        rmlc:child [
-	            rml:reference "author"
-	        ];
-	        rmlc:parent [
-	            rml:reference "id"
-	        ];
-	    ];
-	   ];
-	];
-.
 
 <TriplesMapAccounts>
 	rml:logicalSource [

@@ -1,0 +1,42 @@
+@prefix rr: <http://www.w3.org/ns/r2rml#>.
+@prefix rml: <http://semweb.mmlab.be/ns/rml#> .
+@prefix rmlc: <http://www.oeg-upm.net/ns/rmlc#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+@prefix ex: <http://www.example.com/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix fno: <http://w3id.org/function/ontology>.
+@prefix schema: <http://schema.org/>.
+
+<TMExpects>
+	rml:logicalSource [
+		rml:source  "https://raw.githubusercontent.com/fpriyatna/mapping-translator/master/examples/example8/expects.csv";
+	];
+
+	rr:subjectMap [
+		rr:template "http://tools.mappingpedia.linkeddata.es/{name}";
+		rr:class fno:Function
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate fno:expects;
+	  rr:objectMap    [ rr:reference  "parameter" ]
+	];
+.
+
+#<TMReturns>
+#	rml:logicalSource [
+#		rml:source  "https://raw.githubusercontent.com/fpriyatna/mapping-translator/master/examples/example8/returns.csv";
+#	];
+
+#	rr:subjectMap [
+#		rr:template "http://tools.mappingpedia.linkeddata.es/{name}";
+#		rr:class fno:Function
+#	];
+
+#	rr:predicateObjectMap [
+#	  rr:predicate fno:returns;
+#	  rr:objectMap    [ rr:reference  "output" ]
+#	];
+#.
+

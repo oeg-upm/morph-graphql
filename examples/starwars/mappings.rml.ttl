@@ -14,7 +14,7 @@
 	];
 
 	rr:subjectMap [
-		rr:template "http://starwars.mappingpedia.linkeddata.es/character/{name}";
+		rr:template "http://starwars.mappingpedia.linkeddata.es/character/{id}";
 		rr:class schema:Character
 	];
 

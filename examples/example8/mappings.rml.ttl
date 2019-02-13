@@ -15,7 +15,7 @@
 
 	rr:subjectMap [
 		rr:template "http://tools.mappingpedia.linkeddata.es/{name}";
-		rr:class fno:Function
+		rr:class schema:Function
 	];
 
 	rr:predicateObjectMap [
@@ -31,7 +31,7 @@
 
 #	rr:subjectMap [
 #		rr:template "http://tools.mappingpedia.linkeddata.es/{name}";
-#		rr:class fno:Function
+#		rr:class schema:Function
 #	];
 
 #	rr:predicateObjectMap [

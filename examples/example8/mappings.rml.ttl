@@ -20,7 +20,7 @@
 
 	rr:predicateObjectMap [
 	  rr:predicate schema:expects;
-	  rr:objectMap    [ rr:reference  "parameter" ]
+	  rr:objectMap    [ rml:reference  "parameter" ]
 	];
 .
 
@@ -36,7 +36,7 @@
 
 #	rr:predicateObjectMap [
 #	  rr:predicate schema:returns;
-#	  rr:objectMap    [ rr:reference  "output" ]
+#	  rr:objectMap    [ rml:reference  "output" ]
 #	];
 #.
 

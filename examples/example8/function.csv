@@ -1,2 +1,3 @@
-morph-rdb,fpriyatna
-morph-csv,dchaves
+name,url
+morph-rdb,https://github.com/oeg-upm/morph-rdb
+morph-csv,https://github.com/morph-csv

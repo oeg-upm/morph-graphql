@@ -19,7 +19,7 @@
 	];
 
 	rr:predicateObjectMap [
-	  rr:predicate fno:expects;
+	  rr:predicate schema:expects;
 	  rr:objectMap    [ rr:reference  "parameter" ]
 	];
 .
@@ -35,7 +35,7 @@
 #	];
 
 #	rr:predicateObjectMap [
-#	  rr:predicate fno:returns;
+#	  rr:predicate schema:returns;
 #	  rr:objectMap    [ rr:reference  "output" ]
 #	];
 #.

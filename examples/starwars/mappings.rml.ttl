@@ -50,8 +50,12 @@
 	];
 
 	rr:subjectMap [
-		rr:template "http://starwars.mappingpedia.linkeddata.es/movie/{movieid}";
-		rr:class schema:Movie
+		rr:template "http://starwars.mappingpedia.linkeddata.es/movie/{charid}/{movieid}";
+		rr:class schema:Appears
 	];
-	
+
+	rr:predicateObjectMap [
+	  rr:predicate schema:movieName;
+	  rr:objectMap    [ rml:reference  "movieid" ]
+	];	
 .

@@ -37,7 +37,7 @@
 	            rml:reference "id"
 	        ];
 	        rmlc:parent [
-	            rml:reference "movieid"
+	            rml:reference "charid"
 	        ];
 	    ];
 	   ];

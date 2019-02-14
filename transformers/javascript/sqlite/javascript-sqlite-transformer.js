@@ -516,7 +516,7 @@ exports.generateJoinMonsterResolvers = function (triplesMap) {
         let parentTriplesMapSubjectMap = objectMap.parentTriplesMap.subjectMap;
         let parentClassName = parentTriplesMapSubjectMap.className;
         additionalImports.push(parentClassName);
-        poString += `\t\t\ttype: ${parentClassName},\n`
+        poString += `\t\t\ttype: new GraphQLList(${parentClassName}),\n`
       
         //GENERATING args
         poString += `\t\t\targs: {\n`

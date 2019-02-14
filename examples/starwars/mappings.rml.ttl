@@ -29,7 +29,7 @@
 	];
 	
 	rr:predicateObjectMap [
-	  rr:predicate ex:belongsTo;
+	  rr:predicate ex:appearsIn;
 	  rr:objectMap    [
 	    rr:parentTriplesMap <TMAppears>;
 	    rr:joinCondition [
@@ -55,7 +55,7 @@
 	];
 
 	rr:predicateObjectMap [
-	  rr:predicate schema:movieName;
+	  rr:predicate schema:movieId;
 	  rr:objectMap    [ rml:reference  "movieid" ]
 	];	
 .

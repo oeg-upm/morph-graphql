@@ -92,7 +92,7 @@
 	];
 
 	rr:subjectMap [
-		rr:template "http://starwars.mappingpedia.linkeddata.es/movie/{charid}/{movieid}";
+		rr:template "http://starwars.mappingpedia.linkeddata.es/movie/{charid}/{episodeid}";
 		rr:class schema:Appears
 	];
 

@@ -81,6 +81,26 @@ query FetchLukeAndLeiaAliased {
 }
 ```
 
+### to verify that the hero of episode Empire is a human
+```
+{
+  Heroes {
+    identifier
+    hero {
+      identifier
+      name
+      type(name: "Human") {
+        identifier
+        name
+      }
+    }
+    episode(code: "Empire") {
+      identifier
+      code
+    }
+  }
+}
+```
 
 
 

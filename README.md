@@ -31,6 +31,20 @@ Translate OBDA mappings (R2RML/RML) into GraphQL Resolvers
 }
 ```
 
+### To query the hero in every episode
+```
+{
+  Character(name: "R2 D2") {
+    identifier
+    name
+    friends {
+      identifier
+      charid
+      friendId
+    }
+  }
+}
+```
 
 ## EXAMPLE ESWC2019: Translating mappings online for Javascript and a set of CSV files (assuming that you have npm and node or docker installed)
 ### The mappings used in the examples

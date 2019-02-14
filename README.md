@@ -17,16 +17,17 @@ Translate OBDA mappings (R2RML/RML) into GraphQL Resolvers
 
 ### To query the hero in every episode
 ```
-query { Heroes {
-  episode {
-    identifier
-    code
+{
+  Heroes {
+    episode {
+      identifier
+      code
+    }
+    hero {
+      identifier
+      name
+    }
   }
-  hero {
-    identifier
-    name
-  }
-}
 }
 ```
 

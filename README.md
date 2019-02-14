@@ -15,12 +15,18 @@ Translate OBDA mappings (R2RML/RML) into GraphQL Resolvers
 7. ```npm start```
 9. Go to http://localhost:4321/graphql from your browser, use some of the queries below
 
-### To query all heroes
+### To query the hero in every episode
 ```
-{
-  Heroes {
+query { Heroes {
+  episode {
     identifier
+    code
   }
+  hero {
+    identifier
+    name
+  }
+}
 }
 ```
 

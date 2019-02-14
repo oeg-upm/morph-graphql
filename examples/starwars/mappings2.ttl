@@ -141,17 +141,7 @@
 
 
 	rr:predicateObjectMap [
-	  rr:predicate schema:friend;
-	  rr:objectMap    [
-	    rr:parentTriplesMap <TMCharacters>;
-	    rr:joinCondition [
-	        rmlc:child [
-	            rml:reference "fid"
-	        ];
-	        rmlc:parent [
-	            rml:reference "id"
-	        ];
-	    ];
-	   ];
-	];
+	  rr:predicate schema:friendId;
+	  rr:objectMap    [ rml:reference  "fid" ]
+	];	
 .

@@ -31,7 +31,7 @@ Translate OBDA mappings (R2RML/RML) into GraphQL Resolvers
 }
 ```
 
-### To query the hero in every episode
+### to query for the ID and friends of R2-D2
 ```
 {
   Character(name: "R2 D2") {

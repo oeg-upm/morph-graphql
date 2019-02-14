@@ -1,0 +1,8 @@
+name,parameter
+morph-rdb,r2rml
+morph-rdb,rdb
+morph-rdb,sparql
+morph-csv,rml
+morph-csv,csvw
+morph-csv,csv
+morph-csv,sparql

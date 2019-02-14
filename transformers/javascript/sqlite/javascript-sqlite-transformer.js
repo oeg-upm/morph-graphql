@@ -465,7 +465,12 @@ exports.generateJoinMonsterResolvers = function (triplesMap) {
     content += `\tdescription: 'An instance of ${className}',\n`
     content += `\tname: '${className}',\n`
     content += `\tsqlTable: '${tmAlpha}',\n`
-    content += `\tuniqueKey: '${primaryKeys}',\n`
+    //content += `\tuniqueKey: '${primaryKeys}',\n`
+    console.log(`primaryKeys = ${primaryKeys}`)
+    let uniqueKey = "[" + primaryKeys.map(function(primaryKey) { return `'${primaryKey}'`}).join(",") + "]";
+    console.log(`uniqueKey = ${uniqueKey}`)
+    
+    content += `\tuniqueKey: ${uniqueKey},\n`
     content += `\tfields: () => ({\n`
     content += triplesMap.predicateObjectMaps.map(function (predicateObjectMap) {
     /*

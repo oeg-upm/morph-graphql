@@ -67,6 +67,20 @@ query FetchLukeAndLeiaAliased {
 }
 ```
 
+### to verify that R2-D2 is a droid
+```
+{
+  Character(name: "R2 D2") {
+    identifier
+    name
+    type(name: "Droid") {
+      identifier
+      name
+    }
+  }
+}
+```
+
 
 
 

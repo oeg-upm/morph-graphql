@@ -22,12 +22,7 @@
 	  rr:predicate schema:name;
 	  rr:objectMap    [ rr:template "{fname} {lname}" ]
 	];
-	
-	rr:predicateObjectMap [
-	  rr:predicate schema:type;
-	  rr:objectMap    [ rml:reference  "type" ]
-	];
-	
+
 	rr:predicateObjectMap [
 	  rr:predicate ex:appearsIn;
 	  rr:objectMap    [
@@ -42,6 +37,37 @@
 	    ];
 	   ];
 	];
+	
+	rr:predicateObjectMap [
+	  rr:predicate schema:type;
+	  rr:objectMap    [
+	    rr:parentTriplesMap <TMTypes>;
+	    rr:joinCondition [
+	        rmlc:child [
+	            rml:reference "typeid"
+	        ];
+	        rmlc:parent [
+	            rml:reference "id"
+	        ];
+	    ];
+	   ];
+	];
+.
+
+<TMTypes>
+	rml:logicalSource [
+		rml:source  "https://raw.githubusercontent.com/fpriyatna/mapping-translator/master/examples/starwars/types.csv";
+	];
+
+	rr:subjectMap [
+		rr:template "http://starwars.mappingpedia.linkeddata.es/type/{id}";
+		rr:class schema:CharacterType
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate schema:name;
+	  rr:objectMap    [ rml:reference  "name" ]
+	];	
 .
 
 <TMAppears>

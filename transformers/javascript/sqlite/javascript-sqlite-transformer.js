@@ -570,9 +570,11 @@ exports.generateJoinMonsterResolvers = function (triplesMap) {
   content += "})\n"
 
   content += `export default ${className}\n`
-  content += additionalImports.map(function(additionalImport) {
+  let additionalImportsString = additionalImports.map(function(additionalImport) {
     return `import ${additionalImport} from './${additionalImport}'`
-  })
+  }).join("\n")
+  console.log(`additionalImportsString = ${additionalImportsString}`)
+  content += additionalImportsString
 
   //console.log(`resolver for ${className} = \n${content}`)
   return content;

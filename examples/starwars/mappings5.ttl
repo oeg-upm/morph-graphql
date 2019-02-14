@@ -52,6 +52,22 @@
 	    ];
 	   ];
 	];
+
+	rr:predicateObjectMap [
+	  rr:predicate schema:friends;
+	  rr:objectMap    [
+	    rr:parentTriplesMap <TMFriendship>;
+	    rr:joinCondition [
+	        rmlc:child [
+	            rml:reference "id"
+	        ];
+	        rmlc:parent [
+	            rml:reference "id"
+	        ];
+	    ];
+	   ];
+	];
+
 .
 
 <TMTypes>
@@ -98,12 +114,71 @@
 
 
 	rr:predicateObjectMap [
-	  rr:predicate schema:character;
+	  rr:predicate schema:episode;
 	  rr:objectMap    [
 	    rr:parentTriplesMap <TMEpisodes>;
 	    rr:joinCondition [
 	        rmlc:child [
 	            rml:reference "episodeid"
+	        ];
+	        rmlc:parent [
+	            rml:reference "id"
+	        ];
+	    ];
+	   ];
+	];
+.
+
+<TMFriendship>
+	rml:logicalSource [
+		rml:source  "https://raw.githubusercontent.com/fpriyatna/mapping-translator/master/examples/starwars/friends.csv";
+	];
+
+	rr:subjectMap [
+		rr:template "http://starwars.mappingpedia.linkeddata.es/friends/{id}/{fid}";
+		rr:class schema:Friendship
+	];
+
+
+	rr:predicateObjectMap [
+	  rr:predicate schema:friendId;
+	  rr:objectMap    [ rml:reference  "fid" ]
+	];	
+.
+
+<TMHeroes>
+	rml:logicalSource [
+		rml:source  "https://raw.githubusercontent.com/fpriyatna/mapping-translator/master/examples/starwars/heroes.csv";
+	];
+
+	rr:subjectMap [
+		rr:template "http://starwars.mappingpedia.linkeddata.es/heroes/{episodeid}/{charid}";
+		rr:class schema:Heroes
+	];
+
+
+	rr:predicateObjectMap [
+	  rr:predicate schema:episode;
+	  rr:objectMap    [
+	    rr:parentTriplesMap <TMEpisodes>;
+	    rr:joinCondition [
+	        rmlc:child [
+	            rml:reference "episodeid"
+	        ];
+	        rmlc:parent [
+	            rml:reference "id"
+	        ];
+	    ];
+	   ];
+	];
+	
+	rr:predicateObjectMap [
+	  rr:predicate schema:hero;
+	  rr:objectMap    [
+	    rr:parentTriplesMap <TMCharacters>;
+	    rr:joinCondition [
+	        rmlc:child [
+	            rml:reference "charid"
 	        ];
 	        rmlc:parent [
 	            rml:reference "id"

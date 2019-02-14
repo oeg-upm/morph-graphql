@@ -70,18 +70,45 @@
 	];	
 .
 
+<TMEpisodes>
+	rml:logicalSource [
+		rml:source  "https://raw.githubusercontent.com/fpriyatna/mapping-translator/master/examples/starwars/episodes.csv";
+	];
+
+	rr:subjectMap [
+		rr:template "http://starwars.mappingpedia.linkeddata.es/episode/{id}";
+		rr:class schema:Episode
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate schema:code;
+	  rr:objectMap    [ rml:reference  "code" ]
+	];	
+.
+
 <TMAppears>
 	rml:logicalSource [
 		rml:source  "https://raw.githubusercontent.com/fpriyatna/mapping-translator/master/examples/starwars/appears.csv";
 	];
 
 	rr:subjectMap [
-		rr:template "http://starwars.mappingpedia.linkeddata.es/movie/{charid}/{movieid}";
+		rr:template "http://starwars.mappingpedia.linkeddata.es/movie/{charid}/{episodeid}";
 		rr:class schema:Appears
 	];
 
+
 	rr:predicateObjectMap [
-	  rr:predicate schema:movieId;
-	  rr:objectMap    [ rml:reference  "movieid" ]
-	];	
+	  rr:predicate schema:episode;
+	  rr:objectMap    [
+	    rr:parentTriplesMap <TMEpisodes>;
+	    rr:joinCondition [
+	        rmlc:child [
+	            rml:reference "episodeid"
+	        ];
+	        rmlc:parent [
+	            rml:reference "id"
+	        ];
+	    ];
+	   ];
+	];
 .

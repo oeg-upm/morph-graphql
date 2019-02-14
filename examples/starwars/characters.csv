@@ -1,8 +1,8 @@
-id,fname,lname,type
-1000,Luke,Skywalker,Human
-1001,Darth,Vader,Human
-1002,Han,Solo,Human
-1003,Leia,Organa,Human
-1004,Wilhuff,Tarkin,Human
-2000,C,3PO,Droid
-2001,R2,D2,Droid
+id,fname,lname,typeid
+1000,Luke,Skywalker,H
+1001,Darth,Vader,H
+1002,Han,Solo,H
+1003,Leia,Organa,H
+1004,Wilhuff,Tarkin,H
+2000,C,3PO,D
+2001,R2,D2,D

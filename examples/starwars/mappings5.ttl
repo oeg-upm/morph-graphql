@@ -153,7 +153,7 @@
 
 	rr:subjectMap [
 		rr:template "http://starwars.mappingpedia.linkeddata.es/heroes/{episodeid}/{charid}";
-		rr:class schema:Friendship
+		rr:class schema:Heroes
 	];
 
 

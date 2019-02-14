@@ -46,6 +46,16 @@ Translate OBDA mappings (R2RML/RML) into GraphQL Resolvers
 }
 ```
 
+### to query for Luke Skywalker directly, using his ID
+```
+{
+  Character(identifier: "http://starwars.mappingpedia.linkeddata.es/character/1000") {
+    name
+  }
+}
+
+```
+
 ## EXAMPLE ESWC2019: Translating mappings online for Javascript and a set of CSV files (assuming that you have npm and node or docker installed)
 ### The mappings used in the examples
 - url: https://raw.githubusercontent.com/oeg-upm/mapping-translator/master/examples/example-eswc2019/mappings.ttl

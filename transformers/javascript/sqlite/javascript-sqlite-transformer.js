@@ -409,7 +409,7 @@ exports.generateJoinMonsterQueryRoot = function (mappingDocument) {
     content += "\t\t\tresolve: () => joinMonster.version },\n"
     content += mappingDocument.triplesMaps.map(function(triplesMap) {
     let className = triplesMap.subjectMap.className;
-    let listInstancesResolver = `\t\t${className}: {\n`
+    let listInstancesResolver = `\t\tlist${className}: {\n`
     listInstancesResolver += `\t\t\ttype: new GraphQLList(${className}),\n`
 
     //GENERATING ARGS

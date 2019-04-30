@@ -18,7 +18,7 @@ Translate OBDA mappings (R2RML/RML) into GraphQL Resolvers
 ### To query the hero in every episode
 ```
 {
-  Heroes {
+  listHeroes {
     episode {
       identifier
       code
@@ -34,7 +34,7 @@ Translate OBDA mappings (R2RML/RML) into GraphQL Resolvers
 ### to query for the ID and friends of R2-D2
 ```
 {
-  Character(name: "R2 D2") {
+  listCharacter(name: "R2 D2") {
     identifier
     name
     friends {
@@ -49,7 +49,7 @@ Translate OBDA mappings (R2RML/RML) into GraphQL Resolvers
 ### to query for Luke Skywalker directly, using his ID
 ```
 {
-  Character(identifier: "http://starwars.mappingpedia.linkeddata.es/character/1000") {
+  listCharacter(identifier: "http://starwars.mappingpedia.linkeddata.es/character/1000") {
     name
   }
 }
@@ -58,10 +58,10 @@ Translate OBDA mappings (R2RML/RML) into GraphQL Resolvers
 ### to query for both Luke and Leia
 ```
 query FetchLukeAndLeiaAliased {
-  luke: Character(identifier: "http://starwars.mappingpedia.linkeddata.es/character/1000") {
+  luke: listCharacter(identifier: "http://starwars.mappingpedia.linkeddata.es/character/1000") {
     name
   }
-  leia: Character(identifier: "http://starwars.mappingpedia.linkeddata.es/character/1003") {
+  leia: listCharacter(identifier: "http://starwars.mappingpedia.linkeddata.es/character/1003") {
     name
   }
 }
@@ -70,7 +70,7 @@ query FetchLukeAndLeiaAliased {
 ### to verify that R2-D2 is a droid
 ```
 {
-  Character(name: "R2 D2") {
+  listCharacter(name: "R2 D2") {
     identifier
     name
     type(name: "Droid") {
@@ -84,7 +84,7 @@ query FetchLukeAndLeiaAliased {
 ### to verify that the hero of episode Empire is a human
 ```
 {
-  Heroes {
+  listHeroes {
     identifier
     hero {
       identifier

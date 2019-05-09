@@ -21,7 +21,7 @@
     "body-parser": "^1.18.3",
     "express": "^4.16.3",
     "jQuery": "^1.7.4",
-    "jquery": "^3.3.1",
+    "jquery": ">=3.4.0"
     "jsdom": "^12.0.0",
     "jszip": "^3.1.5",
     "nodemon": "^1.18.3",

@@ -1,0 +1,51 @@
+@prefix rr: <http://www.w3.org/ns/r2rml#> .
+@prefix schema: <http://schema.org/>.
+@prefix ex: <http://example.com/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rml: <http://semweb.mmlab.be/ns/rml#> .
+@prefix ql: <http://semweb.mmlab.be/ns/ql#> .
+@base <http://example.com/base/> .
+
+<STUDENTMAPPING>
+  a rr:TriplesMap;
+    
+  rml:logicalSource [ 
+	rml:source "Universidad";
+    rml:referenceFormulation ql:JSONPath;
+    rml:iterator "$.estudiantes[*]"
+  ];
+  
+  rr:subjectMap [
+    rr:termType rr:BlankNode;
+    rr:class "Student";
+  ];
+
+  rr:predicateObjectMap [
+    rr:predicate schema:identifier; 
+    rr:objectMap [
+      rr:template "http://example.com/{nombre}";
+    ]
+  ];
+  
+  rr:predicateObjectMap [
+    rr:predicate schema:givenName; 
+    rr:objectMap [
+      rml:reference "nombre";
+    ]
+  ];
+
+  rr:predicateObjectMap [ 
+    rr:predicate schema:familyName; 
+    rr:objectMap [
+      rml:reference "apellido";
+    ]
+  ];
+  
+  rr:predicateObjectMap [ 
+    rr:predicate schema:fullName; 
+    rr:objectMap [
+      rr:template "{apellido}, {nombre}";
+    ]
+  ];
+  
+].								

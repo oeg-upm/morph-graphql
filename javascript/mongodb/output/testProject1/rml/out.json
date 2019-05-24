@@ -1,0 +1,136 @@
+[
+  {
+    "@type": "http://schema.org/Direction",
+    "http://schema.org/_id": "5ce528901c9d4400001e2d7b",
+    "http://schema.org/street": "calle Fake A",
+    "http://schema.org/number": "1",
+    "@id": "_:http%3A%2F%2Fsti2.at%2F%23DIRECTIONmapping_1"
+  },
+  {
+    "@type": "http://schema.org/Direction",
+    "http://schema.org/_id": "5ce528d41c9d440000816846",
+    "http://schema.org/street": "calle Fake B",
+    "http://schema.org/number": "2",
+    "@id": "_:http%3A%2F%2Fsti2.at%2F%23DIRECTIONmapping_2"
+  },
+  {
+    "@type": "http://schema.org/Teacher",
+    "http://schema.org/_id": "5ce5299a1c9d44000099a999",
+    "http://schema.org/name": "David Chaves",
+    "@id": "_:http%3A%2F%2Fsti2.at%2F%23PROFESORmapping_1"
+  },
+  {
+    "@type": "http://schema.org/Teacher",
+    "http://schema.org/_id": "5ce5299a1c9d44000099a998",
+    "http://schema.org/name": "Oscar Corcho",
+    "@id": "_:http%3A%2F%2Fsti2.at%2F%23PROFESORmapping_2"
+  },
+  {
+    "@type": "http://schema.org/Teacher",
+    "http://schema.org/_id": "5ce5299a1c9d44000099a999",
+    "http://schema.org/name": "David Chaves",
+    "@id": "_:http%3A%2F%2Fsti2.at%2F%23PROFESORmapping_3"
+  },
+  {
+    "@type": "http://schema.org/Student",
+    "http://schema.org/_id": "5ce5299a1c9d44000099a991",
+    "http://schema.org/name": "David Moreno",
+    "http://schema.org/email": "david@email.com",
+    "http://schema.org/age": "21",
+    "http://schema.org/failer": "false",
+    "@id": "_:http%3A%2F%2Fsti2.at%2F%23STUDENTmapping_1",
+    "http://schema.org/location": {
+      "@id": "_:http%3A%2F%2Fsti2.at%2F%23DIRECTIONmapping_1"
+    },
+    "http://schema.org/subjects": [
+      {
+        "@id": "_:http%3A%2F%2Fsti2.at%2F%23SUBJECTmapping_1"
+      },
+      {
+        "@id": "_:http%3A%2F%2Fsti2.at%2F%23SUBJECTmapping_2"
+      }
+    ]
+  },
+  {
+    "@type": "http://schema.org/Student",
+    "http://schema.org/_id": "5ce556f61c9d440000816847",
+    "http://schema.org/name": "Álvaro Sainz del Nogal",
+    "http://schema.org/email": "alvaro@email.com",
+    "http://schema.org/age": "22",
+    "http://schema.org/failer": "false",
+    "@id": "_:http%3A%2F%2Fsti2.at%2F%23STUDENTmapping_2",
+    "http://schema.org/location": {
+      "@id": "_:http%3A%2F%2Fsti2.at%2F%23DIRECTIONmapping_2"
+    },
+    "http://schema.org/subjects": [
+      {
+        "@id": "_:http%3A%2F%2Fsti2.at%2F%23SUBJECTmapping_3"
+      },
+      {
+        "@id": "_:http%3A%2F%2Fsti2.at%2F%23SUBJECTmapping_4"
+      },
+      {
+        "@id": "_:http%3A%2F%2Fsti2.at%2F%23SUBJECTmapping_5"
+      }
+    ]
+  },
+  {
+    "@type": "http://schema.org/Subject",
+    "http://schema.org/_id": "5ce52a481c9d44000099a993",
+    "http://schema.org/name": "Web semántica y Linked data",
+    "http://schema.org/credits": "3",
+    "http://schema.org/type": "Optativa",
+    "@id": "_:http%3A%2F%2Fsti2.at%2F%23SUBJECTmapping_1",
+    "http://schema.org/profesor": [
+      {
+        "@id": "_:http%3A%2F%2Fsti2.at%2F%23PROFESORmapping_1"
+      },
+      {
+        "@id": "_:http%3A%2F%2Fsti2.at%2F%23PROFESORmapping_3"
+      }
+    ]
+  },
+  {
+    "@type": "http://schema.org/Subject",
+    "http://schema.org/_id": "5ce52a3d1c9d44000099a992",
+    "http://schema.org/name": "Trabajo de fin de grado",
+    "http://schema.org/credits": "12",
+    "http://schema.org/type": "Básica",
+    "@id": "_:http%3A%2F%2Fsti2.at%2F%23SUBJECTmapping_2"
+  },
+  {
+    "@type": "http://schema.org/Subject",
+    "http://schema.org/_id": "5ce52a5f1c9d44000099a995",
+    "http://schema.org/name": "Inteligencia Artificial",
+    "http://schema.org/credits": "6",
+    "http://schema.org/type": "Obligatoria",
+    "@id": "_:http%3A%2F%2Fsti2.at%2F%23SUBJECTmapping_3",
+    "http://schema.org/profesor": {
+      "@id": "_:http%3A%2F%2Fsti2.at%2F%23PROFESORmapping_2"
+    }
+  },
+  {
+    "@type": "http://schema.org/Subject",
+    "http://schema.org/_id": "5ce52a481c9d44000099a993",
+    "http://schema.org/name": "Web Semántica y Linked Data",
+    "http://schema.org/credits": "3",
+    "http://schema.org/type": "Optativa",
+    "@id": "_:http%3A%2F%2Fsti2.at%2F%23SUBJECTmapping_4",
+    "http://schema.org/profesor": [
+      {
+        "@id": "_:http%3A%2F%2Fsti2.at%2F%23PROFESORmapping_1"
+      },
+      {
+        "@id": "_:http%3A%2F%2Fsti2.at%2F%23PROFESORmapping_3"
+      }
+    ]
+  },
+  {
+    "@type": "http://schema.org/Subject",
+    "http://schema.org/_id": "5ce52a3d1c9d44000099a992",
+    "http://schema.org/name": "Trabajo de fin de grado",
+    "http://schema.org/credits": "12",
+    "http://schema.org/type": "Básica",
+    "@id": "_:http%3A%2F%2Fsti2.at%2F%23SUBJECTmapping_5"
+  }
+]

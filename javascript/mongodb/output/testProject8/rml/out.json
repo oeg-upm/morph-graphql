@@ -1,0 +1,75 @@
+[
+  {
+    "@type": "http://schema.org/Direction",
+    "http://schema.org/_id": "1",
+    "http://schema.org/street": "calle Fake",
+    "http://schema.org/number": "1",
+    "@id": "_:http%3A%2F%2Fsti2.at%2F%23DIRECTIONmapping_1"
+  },
+  {
+    "@type": "http://schema.org/Direction",
+    "http://schema.org/_id": "2",
+    "http://schema.org/street": "calle Fake",
+    "http://schema.org/number": "2",
+    "@id": "_:http%3A%2F%2Fsti2.at%2F%23DIRECTIONmapping_2"
+  },
+  {
+    "@type": "http://schema.org/Student",
+    "http://schema.org/_id": "2",
+    "http://schema.org/name": "David Moreno",
+    "http://schema.org/email": "david@email.com",
+    "http://schema.org/age": "21",
+    "http://schema.org/failer": "false",
+    "@id": "_:http%3A%2F%2Fsti2.at%2F%23STUDENTmapping_1",
+    "http://schema.org/location": {
+      "@id": "_:http%3A%2F%2Fsti2.at%2F%23DIRECTIONmapping_1"
+    },
+    "http://schema.org/subjects": {
+      "@id": "_:http%3A%2F%2Fsti2.at%2F%23SUBJECTmapping_1"
+    }
+  },
+  {
+    "@type": "http://schema.org/Student",
+    "http://schema.org/_id": "1",
+    "http://schema.org/name": "Álvaro Sainz del Nogal",
+    "http://schema.org/email": "alvaro@email.com",
+    "http://schema.org/age": "21",
+    "http://schema.org/failer": "false",
+    "@id": "_:http%3A%2F%2Fsti2.at%2F%23STUDENTmapping_2",
+    "http://schema.org/location": {
+      "@id": "_:http%3A%2F%2Fsti2.at%2F%23DIRECTIONmapping_2"
+    },
+    "http://schema.org/subjects": [
+      {
+        "@id": "_:http%3A%2F%2Fsti2.at%2F%23SUBJECTmapping_2"
+      },
+      {
+        "@id": "_:http%3A%2F%2Fsti2.at%2F%23SUBJECTmapping_3"
+      }
+    ]
+  },
+  {
+    "@type": "http://schema.org/Subject",
+    "http://schema.org/_id": "2",
+    "http://schema.org/name": "Web semántica y Linked data",
+    "http://schema.org/credits": "3",
+    "http://schema.org/type": "Optativa",
+    "@id": "_:http%3A%2F%2Fsti2.at%2F%23SUBJECTmapping_1"
+  },
+  {
+    "@type": "http://schema.org/Subject",
+    "http://schema.org/_id": "1",
+    "http://schema.org/name": "Inteligencia Artificial",
+    "http://schema.org/credits": "6",
+    "http://schema.org/type": "Obligatoria",
+    "@id": "_:http%3A%2F%2Fsti2.at%2F%23SUBJECTmapping_2"
+  },
+  {
+    "@type": "http://schema.org/Subject",
+    "http://schema.org/_id": "2",
+    "http://schema.org/name": "Web Semántica y Linked Data",
+    "http://schema.org/credits": "3",
+    "http://schema.org/type": "Optativa",
+    "@id": "_:http%3A%2F%2Fsti2.at%2F%23SUBJECTmapping_3"
+  }
+]

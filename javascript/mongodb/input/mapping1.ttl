@@ -1,0 +1,161 @@
+@prefix rr: <http://www.w3.org/ns/r2rml#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rml: <http://semweb.mmlab.be/ns/rml#> .
+@prefix prefix: <http://mytestprefix.org/> .
+@prefix ql: <http://semweb.mmlab.be/ns/ql#> .
+@prefix schema: <http://schema.org/>.
+@base <http://sti2.at/> . #the base for the classes
+
+<#STUDENTSOURCE>
+rml:source "./input/input1.json";
+rml:referenceFormulation ql:JSONPath;
+rml:iterator "$.*".
+
+<#SUBJECTSOURCE>
+rml:source "./input/input1.json";
+rml:referenceFormulation ql:JSONPath;
+rml:iterator "$.*.matricula.*".
+
+<#DIRECTIONSOURCE>
+rml:source "./input/input1.json";
+rml:referenceFormulation ql:JSONPath;
+rml:iterator "$.*.localizacion".
+
+<#PROFESORSOURCE>
+rml:source "./input/input1.json";
+rml:referenceFormulation ql:JSONPath;
+rml:iterator "$.*.matricula.*.profesor".
+
+
+<#STUDENTmapping>
+rml:logicalSource <#STUDENTSOURCE>;
+
+ rr:subjectMap [
+    rr:termType rr:BlankNode;
+    rr:class schema:Student;
+ ];
+
+rr:predicateObjectMap [
+    rr:predicate schema:_id;
+    rr:objectMap [ rml:reference "_id" ];
+];
+
+rr:predicateObjectMap [
+    rr:predicate schema:name;
+    rr:objectMap [ rml:reference "nombre" ];
+];
+
+rr:predicateObjectMap [
+    rr:predicate schema:email;
+    rr:objectMap [ rml:reference "email" ];
+];
+
+rr:predicateObjectMap [
+    rr:predicate schema:location;
+    rr:objectMap  [
+           rr:parentTriplesMap <#DIRECTIONmapping>;
+           rr:joinCondition [
+            rr:child "_id" ;
+            rr:parent "^._id";
+            ]
+        ];
+];
+
+rr:predicateObjectMap [
+    rr:predicate schema:age;
+    rr:objectMap [ rml:reference "edad" ];
+];
+
+rr:predicateObjectMap [
+    rr:predicate schema:failer;
+    rr:objectMap [ rml:reference "repetidor" ];
+];
+
+rr:predicateObjectMap [
+    rr:predicate schema:subjects;
+    rr:objectMap  [
+           rr:parentTriplesMap <#SUBJECTmapping>;
+           rr:joinCondition [
+            rr:child "_id" ;
+            rr:parent "^^._id";
+            ]
+        ];
+].
+
+<#SUBJECTmapping>
+rml:logicalSource <#SUBJECTSOURCE>;
+
+ rr:subjectMap [
+    rr:termType rr:BlankNode;
+    rr:class schema:Subject;
+ ];
+
+rr:predicateObjectMap [
+     rr:predicate schema:_id;
+     rr:objectMap [ rml:reference "_id" ];
+];
+
+rr:predicateObjectMap [
+    rr:predicate schema:name;
+    rr:objectMap [ rml:reference "nombre" ];
+];
+
+rr:predicateObjectMap [
+    rr:predicate schema:credits;
+    rr:objectMap [ rml:reference "creditos" ];
+];
+
+rr:predicateObjectMap [
+    rr:predicate schema:profesor;
+    rr:objectMap  [
+           rr:parentTriplesMap <#PROFESORmapping>;
+           rr:joinCondition [
+            rr:child "_id" ;
+            rr:parent "^._id";
+            ]
+        ];
+];
+
+rr:predicateObjectMap [
+    rr:predicate schema:type;
+    rr:objectMap [ rml:reference "tipo" ];
+].
+
+<#DIRECTIONmapping>
+rml:logicalSource <#DIRECTIONSOURCE>;
+rr:subjectMap [
+    rr:termType rr:BlankNode;
+    rr:class schema:Direction;
+];
+
+rr:predicateObjectMap [
+     rr:predicate schema:_id;
+     rr:objectMap [ rml:reference "_id" ];
+];
+
+rr:predicateObjectMap [
+    rr:predicate schema:street;
+    rr:objectMap [ rml:reference "calle" ];
+];
+
+rr:predicateObjectMap [
+    rr:predicate schema:number;
+    rr:objectMap [ rml:reference "numero" ];
+].
+
+<#PROFESORmapping>
+rml:logicalSource <#PROFESORSOURCE>;
+rr:subjectMap [
+    rr:termType rr:BlankNode;
+    rr:class schema:Teacher;
+];
+
+rr:predicateObjectMap [
+     rr:predicate schema:_id;
+     rr:objectMap [ rml:reference "_id" ];
+];
+
+rr:predicateObjectMap [
+    rr:predicate schema:name;
+    rr:objectMap [ rml:reference "nombre" ];
+].

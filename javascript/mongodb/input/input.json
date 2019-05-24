@@ -1,0 +1,41 @@
+[
+  {
+    "id": "0001",
+    "nombre": "Tom A.",
+    "edad": 15,
+    "direccion": {
+      "calle": "calle 1"
+    },
+    "asignaturas": {
+      "Asignatura":
+      [
+        {
+          "id": "0001",
+          "nombre": "Sistemas dinámicos, caos y fractales",
+          "creditos": 6
+        },
+        {
+          "id": "0003",
+          "nombre": "Inteligencia artificial",
+          "creditos": 6
+        }
+      ]
+    }
+  },
+  {
+    "id": "0002",
+    "nombre": "Tom B.",
+    "edad": 16,
+    "asignaturas": {
+      "Asignatura":
+      [
+        {
+          "id": "0002",
+          "nombre": "Web semántica y linked data",
+          "creditos": 3,
+          "departamento": "IA"
+        }
+      ]
+    }
+  }
+]

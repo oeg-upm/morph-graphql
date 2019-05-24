@@ -16,7 +16,7 @@ exports.generateSchema = function(mappingDocument) {
         console.log(`Building query arguments for triplesMap ${class_name} ...`)
         let queryArguments = triplesMap.genQueryArguments(true);
 
-        schema += `\t\t${class_name}(${queryArguments.join(",")}): [${class_name}]\n`
+        schema += `\t\tlist${class_name}(${queryArguments.join(",")}): [${class_name}]\n`
     })
 
     schema += "\t}"  + "\n\n"
@@ -91,7 +91,7 @@ exports.generateQueryResolvers = function(mappingDocument) {
         var queryResolvers = "";
         let queryArguments = triplesMap.genQueryArguments(false);
 
-        queryResolvers += `\t${class_name}: function({${queryArguments.join(",")}}) {\n`
+        queryResolvers += `\tlist${class_name}: function({${queryArguments.join(",")}}) {\n`
 
         let sqlSelectFrom = `SELECT ${prSQLTriplesMap} FROM ${alpha}`
         queryResolvers += "\t\tlet sqlSelectFrom = `" + sqlSelectFrom + "`\n"

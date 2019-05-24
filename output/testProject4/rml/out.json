@@ -1,0 +1,17 @@
+[
+  {
+    "@type": "http://schema.org/Student",
+    "http://schema.org/_id": "0002",
+    "http://schema.org/name": "David Moreno",
+    "http://schema.org/age": "21",
+    "@id": "_:http%3A%2F%2Fsti2.at%2F%23ALUMNOmapping_1"
+  },
+  {
+    "@type": "http://schema.org/Student",
+    "http://schema.org/_id": "0001",
+    "http://schema.org/name": "Álvaro Sainz del Nogal",
+    "http://schema.org/email": "alvaro@email.com",
+    "http://schema.org/age": "21",
+    "@id": "_:http%3A%2F%2Fsti2.at%2F%23ALUMNOmapping_2"
+  }
+]

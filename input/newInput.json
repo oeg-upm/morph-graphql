@@ -1,0 +1,35 @@
+[
+  {
+    "nombre": "David Moreno",
+    "edad": 21,
+    "email": "david@email.com",
+    "asignaturas": {
+      "Asignatura":
+      [
+        {
+          "nombre": "Web semántica y Linked data",
+          "creditos": 3
+        },
+        {
+          "nombre": "Sistemas dinámicos, caos y fractales",
+          "creditos": 6,
+          "departamento": "DMA"
+        }
+
+      ]
+    }
+  },
+  {
+    "nombre": "Álvaro Sainz del Nogal",
+    "edad": 21,
+    "asignaturas": {
+      "Asignatura":
+      [
+        {
+          "nombre": "Inteligencia Artificial",
+          "creditos": 6
+        }
+      ]
+    }
+  }
+]

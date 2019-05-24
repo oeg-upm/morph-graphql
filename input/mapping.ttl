@@ -1,0 +1,126 @@
+@prefix rr: <http://www.w3.org/ns/r2rml#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rml: <http://semweb.mmlab.be/ns/rml#> .
+@prefix prefix: <http://mytestprefix.org/> .
+@prefix ql: <http://semweb.mmlab.be/ns/ql#> .
+@base <http://sti2.at/> . #the base for the classes
+
+
+<#LOGICALSOURCE>
+rml:source "./input/input.json";
+rml:referenceFormulation ql:JSONPath;
+rml:iterator "$.*".
+
+<#SUBJECTSOURCE>
+rml:source "./input/input.json";
+rml:referenceFormulation ql:JSONPath;
+rml:iterator "$.asignaturas.Asignatura.*".
+
+<#REQUIRESSOURCE>
+rml:source "./input/input.json";
+rml:referenceFormulation ql:JSONPath;
+rml:iterator "$.asignaturas.Asignatura.*.requires.*".
+
+<#DIRECCIONSOURCE>
+rml:source "./input/input.json";
+rml:referenceFormulation ql:JSONPath;
+rml:iterator "$.direccion".
+
+
+<#Mapping>
+rml:logicalSource <#LOGICALSOURCE>;
+
+ rr:subjectMap [
+    rr:termType rr:BlankNode;
+    rr:class prefix:Person;
+ ];
+
+rr:predicateObjectMap [
+    rr:predicate prefix:id;
+    rr:objectMap [ rml:reference "id" ];
+];
+
+rr:predicateObjectMap [
+    rr:predicate prefix:name;
+    rr:objectMap [ rml:reference "nombre" ];
+];
+
+rr:predicateObjectMap [
+    rr:predicate prefix:age;
+    rr:objectMap [ rml:reference "edad" ];
+];
+
+rr:predicateObjectMap [
+    rr:predicate prefix:direccion;
+    rr:objectMap  [
+
+           rr:parentTriplesMap <#DIRECCIONmapping>;
+        ];
+];
+
+rr:predicateObjectMap [
+    rr:predicate prefix:asignaturas;
+    rr:objectMap  [
+
+           rr:parentTriplesMap <#SUBJECTmapping>;
+        ];
+].
+
+<#SUBJECTmapping>
+rml:logicalSource <#SUBJECTSOURCE>;
+
+ rr:subjectMap [
+    rr:termType rr:BlankNode;
+    rr:class prefix:Asignatura;
+ ];
+
+rr:predicateObjectMap [
+    rr:predicate prefix:id;
+    rr:objectMap [ rml:reference "id" ];
+];
+
+rr:predicateObjectMap [
+    rr:predicate prefix:name;
+    rr:objectMap [ rml:reference "nombre" ];
+];
+
+rr:predicateObjectMap [
+    rr:predicate prefix:credits;
+    rr:objectMap [ rml:reference "creditos" ];
+];
+
+rr:predicateObjectMap [
+    rr:predicate prefix:department;
+    rr:objectMap [ rml:reference "departamento" ];
+];
+
+rr:predicateObjectMap [
+    rr:predicate prefix:requires;
+    rr:objectMap  [
+           rr:parentTriplesMap <#REQmapping>;
+        ];
+].
+
+<#REQmapping>
+rml:logicalSource <#REQUIRESSOURCE>;
+rr:subjectMap [
+    rr:termType rr:BlankNode;
+    rr:class prefix:Requirement;
+];
+
+rr:predicateObjectMap [
+    rr:predicate prefix:thing;
+    rr:objectMap [ rml:reference "thing" ];
+].
+
+<#DIRECCIONmapping>
+rml:logicalSource <#DIRECCIONSOURCE>;
+rr:subjectMap [
+    rr:termType rr:BlankNode;
+    rr:class prefix:Direccion;
+];
+
+rr:predicateObjectMap [
+    rr:predicate prefix:street;
+    rr:objectMap [ rml:reference "calle" ];
+].

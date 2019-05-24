@@ -1,0 +1,41 @@
+{
+  "name": "test",
+  "version": "1.0.0",
+  "description": "Genaración automática de GraphQL Resolvers & Schemas a partir de mappings RML en .ttl",
+  "main": "index.js",
+  "module": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "David Moreno",
+  "license": "ISC",
+  "dependencies": {
+    "archiver": "^3.0.0",
+    "body-parser": "^1.19.0",
+    "esm": "^3.2.9",
+    "express": "^4.16.4",
+    "express-graphql": "^0.7.1",
+    "file-system": "^2.2.2",
+    "fs": "0.0.1-security",
+    "graphql": "^14.1.1",
+    "graphql-tools": "^4.0.4",
+    "html2plaintext": "^2.1.2",
+    "jquery": "^3.4.1",
+    "jsonld": "^1.5.4",
+    "jsonpath-plus": "^0.18.0",
+    "jszip": "^3.2.1",
+    "lodash": "^4.17.11",
+    "mkdirp": "^0.5.1",
+    "mongo-graphql-starter": "^0.8.0",
+    "mongodb": "^3.1.13",
+    "n3": "^1.0.5",
+    "pug": "^2.0.3",
+    "rocketrml": "^1.0.1",
+    "safe-eval": "^0.4.1",
+    "stream-json": "^1.2.1",
+    "sync-request": "^6.1.0",
+    "url": "^0.11.0",
+    "utm": "^1.1.1",
+    "zip-local": "^0.3.4"
+  }
+}

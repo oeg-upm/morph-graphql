@@ -1,0 +1,37 @@
+html
+  head
+    title= Transform
+
+    script(src="https://code.jquery.com/jquery-3.1.1.min.js",integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=",crossorigin="anonymous")
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.3/semantic.min.js")
+    link(href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.3/semantic.min.css", type="text/css", rel="stylesheet")
+
+    body
+        <div class="ui container">
+
+            h1= message
+
+            <form class="ui form" method="POST" action="transform">
+            <div class="field">
+            <label>MongoDB database URL or connString</label>
+            <input type="text" name="db_url" placeholder="mongodb+srv:..."/>
+            </div>
+            <div class="field">
+            <label>MongoDB database name</label>
+            <input type="text" name="db_name" placeholder="name..."/>
+            </div>
+            <div class="field">
+            <label>Mapping local path</label>
+            <input type="text" name="mapping_path" placeholder="local path...">
+            </div>
+            <div class="field">
+            <label>Output folder name</label>
+            <input type="text" name="output_folder" placeholder="folder name...">
+            </div>
+            <div class="field">
+            <label>Port to be used as Graphiql endpoint</label>
+            <input type="text" name="port_no" placeholder="port number..."/>
+            </div>
+            <button class="ui button" href="/" type="submit">Submit</button>
+            </form>
+        </div>

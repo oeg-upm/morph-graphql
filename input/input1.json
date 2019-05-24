@@ -1,0 +1,71 @@
+[
+  {
+    "_id": "5ce5299a1c9d44000099a991",
+    "nombre": "David Moreno",
+    "edad": 21,
+    "localizacion": {
+          "_id": "5ce528901c9d4400001e2d7b",
+          "calle": "calle Fake A",
+          "numero": 1
+        },
+    "repetidor": false,
+    "email": "david@email.com",
+    "matricula":
+      [ {
+          "_id": "5ce52a481c9d44000099a993",
+          "nombre": "Web semántica y Linked data",
+          "creditos": 3,
+          "profesor":{
+            "_id": "5ce5299a1c9d44000099a999",
+            "nombre": "David Chaves"
+          },
+          "tipo": "Optativa"
+        },
+        {
+          "_id": "5ce52a3d1c9d44000099a992",
+          "nombre": "Trabajo de fin de grado",
+          "creditos": 12,
+          "tipo": "Básica"
+        } ]
+  }
+  ,
+  {
+    "_id": "5ce556f61c9d440000816847",
+    "nombre": "Álvaro Sainz del Nogal",
+    "edad": 22,
+    "localizacion": {
+          "_id": "5ce528d41c9d440000816846",
+          "calle": "calle Fake B",
+          "numero": 2
+    } ,
+    "email": "alvaro@email.com",
+    "repetidor": false,
+    "matricula":
+      [ {
+          "_id": "5ce52a5f1c9d44000099a995",
+          "nombre": "Inteligencia Artificial",
+          "creditos": 6,
+          "profesor":{
+            "_id": "5ce5299a1c9d44000099a998",
+            "nombre": "Oscar Corcho"
+          },
+          "tipo": "Obligatoria"
+        },
+        {
+          "_id": "5ce52a481c9d44000099a993",
+          "nombre": "Web Semántica y Linked Data",
+          "creditos": 3,
+          "profesor":{
+            "_id": "5ce5299a1c9d44000099a999",
+            "nombre": "David Chaves"
+          },
+          "tipo": "Optativa"
+        },
+        {
+          "_id": "5ce52a3d1c9d44000099a992",
+          "nombre": "Trabajo de fin de grado",
+          "creditos": 12,
+          "tipo": "Básica"
+        } ]
+  }
+]

@@ -1,0 +1,74 @@
+@prefix rr: <http://www.w3.org/ns/r2rml#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rml: <http://semweb.mmlab.be/ns/rml#> .
+@prefix prefix: <http://mytestprefix.org/> .
+@prefix ql: <http://semweb.mmlab.be/ns/ql#> .
+@prefix schema: <http://schema.org/>.
+@base <http://sti2.at/> . #the base for the classes
+
+<#STUDENTSOURCE>
+rml:source "./input/newInput.json";
+rml:referenceFormulation ql:JSONPath;
+rml:iterator "$.*".
+
+<#SUBJECTSOURCE>
+rml:source "./input/newInput.json";
+rml:referenceFormulation ql:JSONPath;
+rml:iterator "$.*.asignaturas.Asignatura.*".
+
+<#ALUMNOmapping>
+rml:logicalSource <#STUDENTSOURCE>;
+
+ rr:subjectMap [
+    rr:termType rr:BlankNode;
+    rr:class schema:Student;
+ ];
+
+rr:predicateObjectMap [
+    rr:predicate schema:name;
+    rr:objectMap [ rml:reference "nombre" ];
+];
+
+rr:predicateObjectMap [
+    rr:predicate schema:email;
+    rr:objectMap [ rml:reference "email" ];
+];
+
+rr:predicateObjectMap [
+    rr:predicate schema:age;
+    rr:objectMap [ rml:reference "edad" ];
+];
+
+rr:predicateObjectMap [
+    rr:predicate schema:subjects;
+    rr:objectMap  [
+           rr:parentTriplesMap <#SUBJECTmapping>;
+           rr:joinCondition [
+            rr:child "nombre" ;
+            rr:parent "^^^.nombre";
+            ]
+        ];
+].
+
+<#SUBJECTmapping>
+rml:logicalSource <#SUBJECTSOURCE>;
+
+ rr:subjectMap [
+    rr:termType rr:BlankNode;
+    rr:class schema:Subject;
+ ];
+
+rr:predicateObjectMap [
+    rr:predicate schema:name;
+    rr:objectMap [ rml:reference "nombre" ];
+];
+
+rr:predicateObjectMap [
+    rr:predicate schema:credits;
+    rr:objectMap [ rml:reference "creditos" ];
+];
+
+rr:predicateObjectMap [
+    rr:predicate schema:department;
+    rr:objectMap [ rml:reference "departamento" ];
+].

@@ -1,0 +1,40 @@
+@prefix rr: <http://www.w3.org/ns/r2rml#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rml: <http://semweb.mmlab.be/ns/rml#> .
+@prefix prefix: <http://mytestprefix.org/> .
+@prefix ql: <http://semweb.mmlab.be/ns/ql#> .
+@prefix schema: <http://schema.org/>.
+@base <http://sti2.at/> . #the base for the classes
+
+<#LOGICALSOURCE>
+rml:source "./input/input3.json";
+rml:referenceFormulation ql:JSONPath;
+rml:iterator "$.*".
+
+<#ALUMNOmapping>
+rml:logicalSource <#LOGICALSOURCE>;
+
+ rr:subjectMap [
+    rr:termType rr:BlankNode;
+    rr:class schema:Student;
+ ];
+
+rr:predicateObjectMap [
+    rr:predicate schema:_id;
+    rr:objectMap [ rml:reference "_id" ];
+];
+
+rr:predicateObjectMap [
+    rr:predicate schema:name;
+    rr:objectMap [ rml:reference "nombre" ];
+];
+
+rr:predicateObjectMap [
+    rr:predicate schema:email;
+    rr:objectMap [ rml:reference "email" ];
+];
+
+rr:predicateObjectMap [
+    rr:predicate schema:age;
+    rr:objectMap [ rml:reference "edad" ];
+].

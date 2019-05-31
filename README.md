@@ -1,19 +1,19 @@
-# mapping-translator
+# morph-GraphQL
 Translate OBDA mappings (R2RML/RML) into GraphQL Resolvers
 
 ## EXAMPLE Starwars: Translating mappings online for Javascript and a set of CSV files (assuming that you have npm and node or docker installed)
 ### The mappings used in the examples
-- url: https://raw.githubusercontent.com/fpriyatna/mapping-translator/master/examples/starwars/mappings6.ttl
+- url: https://raw.githubusercontent.com/oeg-upm/morph-graphql/master/examples/starwars/mappings.ttl
 
 
 1. ```mkdir output```
 2. ```cd output```
 3. Translate the corresponding RML: 
-   ```curl -X POST http://mappingtranslator.mappingpedia.linkeddata.es/transform -H 'Content-Type: application/json' -d '{ "prog_lang": "javascript", "dataset_type":"csv", "mapping_url":"https://raw.githubusercontent.com/fpriyatna/mapping-translator/master/examples/starwars/mappings6.ttl", "db_name":"starwars6.sqlite", "mapping_language":"rml", "queryplanner":"joinmonster" }' > output.zip```
-5. ```unzip output.zip```
-6. ```npm install```
-7. ```npm start```
-9. Go to http://localhost:4321/graphql from your browser, use some of the queries below
+   ```curl -X POST http://graphql.morph.oeg-upm.net/transform -H 'Content-Type: application/json' -d '{ "prog_lang": "javascript", "dataset_type":"csv", "mapping_url":"https://raw.githubusercontent.com/oeg-upm/morph-graphql/master/examples/starwars/mappings.ttl", "db_name":"starwars.sqlite", "mapping_language":"rml", "queryplanner":"joinmonster" }' > output.zip```
+4. ```unzip output.zip```
+5. ```npm install```
+6. ```npm start```
+7. Go to http://localhost:4321/graphql from your browser, use some of the queries below
 
 ### To query the hero in every episode
 ```

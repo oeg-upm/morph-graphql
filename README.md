@@ -9,7 +9,7 @@ Translate OBDA mappings (R2RML/RML) into GraphQL Resolvers
 1. ```mkdir output```
 2. ```cd output```
 3. Translate the corresponding RML: 
-   ```curl -X POST http://mappingtranslator.mappingpedia.linkeddata.es/transform -H 'Content-Type: application/json' -d '{ "prog_lang": "javascript", "dataset_type":"csv", "mapping_url":"https://raw.githubusercontent.com/fpriyatna/mapping-translator/master/examples/starwars/mappings6.ttl", "db_name":"starwars6.sqlite", "mapping_language":"rml", "queryplanner":"joinmonster" }' > output.zip```
+   ```curl -X POST http://graphql.morph.oeg-upm.net/transform -H 'Content-Type: application/json' -d '{ "prog_lang": "javascript", "dataset_type":"csv", "mapping_url":"https://raw.githubusercontent.com/oeg-upm/morph-graphql/master/examples/starwars/mappings.ttl", "db_name":"starwars.sqlite", "mapping_language":"rml", "queryplanner":"joinmonster" }' > output.zip```
 5. ```unzip output.zip```
 6. ```npm install```
 7. ```npm start```

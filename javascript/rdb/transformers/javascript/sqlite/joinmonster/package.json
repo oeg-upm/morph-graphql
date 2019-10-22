@@ -38,7 +38,7 @@
     "graphsiql": "0.0.6",
     "join-monster": "^2.0.0",
     "kcors": "^1.3.2",
-    "knex": "^0.12.2",
+    "knex": ">=0.19.5",
     "koa": "^2.2.0",
     "koa-convert": "^1.2.0",
     "koa-custom-graphiql": "^1.0.0",

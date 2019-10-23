@@ -1,0 +1,167 @@
+@prefix rr: <http://www.w3.org/ns/r2rml#>.
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+@prefix ex: <http://www.example.com/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix fno: <http://w3id.org/function/ontology>.
+@prefix schema: <http://schema.org/>.
+
+<TMCharacters>
+	rr:logicalTable  [
+		rr:tableName  "https://raw.githubusercontent.com/fpriyatna/mapping-translator/master/examples/starwars/characters.csv";
+	];
+
+	rr:subjectMap [
+		rr:template "http://starwars.mappingpedia.linkeddata.es/character/{id}";
+		rr:class schema:Character
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate schema:name;
+	  rr:objectMap    [ rr:template "{fname} {lname}" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:appearsIn;
+	  rr:objectMap    [
+	    rr:parentTriplesMap <TMAppears>;
+	    rr:joinCondition [
+	        rr:child "id" ;
+	        rr:parent "charid" ;
+	    ];
+	   ];
+	];
+	
+	rr:predicateObjectMap [
+	  rr:predicate schema:type;
+	  rr:objectMap    [
+	    rr:parentTriplesMap <TMTypes>;
+	    rr:joinCondition [
+	        rr:child "typeid" ;
+	        rr:parent "id" ;
+	    ];
+	   ];
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate schema:friends;
+	  rr:objectMap    [
+	    rr:parentTriplesMap <TMFriendship>;
+	    rr:joinCondition [
+	        rr:child "id" ;
+	        rr:parent "id" ;
+	    ];
+	   ];
+	];
+
+.
+
+<TMTypes>
+	rr:logicalTable  [
+		rr:tableName  "https://raw.githubusercontent.com/fpriyatna/mapping-translator/master/examples/starwars/types.csv";
+	];
+
+	rr:subjectMap [
+		rr:template "http://starwars.mappingpedia.linkeddata.es/type/{id}";
+		rr:class schema:CharacterType
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate schema:name;
+	  rr:objectMap    [ rr:column  "name" ]
+	];	
+.
+
+<TMEpisodes>
+	rr:logicalTable [
+		rr:tableName  "https://raw.githubusercontent.com/fpriyatna/mapping-translator/master/examples/starwars/episodes.csv";
+	];
+
+	rr:subjectMap [
+		rr:template "http://starwars.mappingpedia.linkeddata.es/episode/{id}";
+		rr:class schema:Episode
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate schema:code;
+	  rr:objectMap    [ rr:column  "code" ]
+	];	
+.
+
+<TMAppears>
+	rr:logicalTable [
+		rr:tableName  "https://raw.githubusercontent.com/fpriyatna/mapping-translator/master/examples/starwars/appears.csv";
+	];
+
+	rr:subjectMap [
+		rr:template "http://starwars.mappingpedia.linkeddata.es/movie/{charid}/{episodeid}";
+		rr:class schema:Appears
+	];
+
+
+	rr:predicateObjectMap [
+	  rr:predicate schema:episode;
+	  rr:objectMap    [
+	    rr:parentTriplesMap <TMEpisodes>;
+	    rr:joinCondition [
+	        rr:child "episodeid" ;
+	        rr:parent "id" ;
+	    ];
+	   ];
+	];
+.
+
+<TMFriendship>
+	rr:logicalTable [
+		rr:tableName  "https://raw.githubusercontent.com/fpriyatna/mapping-translator/master/examples/starwars/friends.csv";
+	];
+
+	rr:subjectMap [
+		rr:template "http://starwars.mappingpedia.linkeddata.es/friends/{id}/{fid}";
+		rr:class schema:Friendship
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate schema:charid;
+	  rr:objectMap    [ rr:column  "id" ]
+	];	
+
+	rr:predicateObjectMap [
+	  rr:predicate schema:friendId;
+	  rr:objectMap    [ rr:column  "fid" ]
+	];	
+.
+
+<TMHeroes>
+	rr:logicalTable [
+		rr:tableName  "https://raw.githubusercontent.com/fpriyatna/mapping-translator/master/examples/starwars/heroes.csv";
+	];
+
+	rr:subjectMap [
+		rr:template "http://starwars.mappingpedia.linkeddata.es/heroes/{episodeid}/{charid}";
+		rr:class schema:Heroes
+	];
+
+
+	rr:predicateObjectMap [
+	  rr:predicate schema:episode;
+	  rr:objectMap    [
+	    rr:parentTriplesMap <TMEpisodes>;
+	    rr:joinCondition [
+	        rr:child "episodeid" ;
+	        rr:parent "id" ;
+	    ];
+	   ];
+	];
+	
+	rr:predicateObjectMap [
+	  rr:predicate schema:hero;
+	  rr:objectMap    [
+	    rr:parentTriplesMap <TMCharacters>;
+	    rr:joinCondition [
+	        rr:child "charid" ;
+	        rr:parent "id" ;
+	    ];
+	   ];
+	];
+.

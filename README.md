@@ -17,9 +17,10 @@ Translate OBDA mappings (R2RML/RML) into GraphQL Resolvers
 
 ### Installation Instructions
 With Node:
-1. ```git clone https://github.com/oeg-upm/morph-graphql```
-2. ```cd morph-graphql```
-3. ```node app.js```
+1. ```npm install```
+2. ```git clone https://github.com/oeg-upm/morph-graphql```
+3. ```cd morph-graphql```
+4. ```node app.js```
 
 With docker:
 1. ```docker run -d -p 8082:8082 --name mapping-translator oegdataintegration/mapping-translator:1.0```

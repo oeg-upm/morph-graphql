@@ -15,7 +15,12 @@ Translate OBDA mappings (R2RML/RML) into GraphQL Resolvers
 ### Queries
 ![](https://raw.githubusercontent.com/oeg-upm/morph-graphql/master/examples/starwars/queries.png)
 
-### Instructions
+### Installation Instructions
+1. ```git clone https://github.com/oeg-upm/morph-graphql```
+2. ```cd morph-graphql```
+3. ```node app.js```
+
+### Running Instructions
 1. ```mkdir output```
 2. ```cd output```
 3. Translate the corresponding RML: 

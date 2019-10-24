@@ -30,8 +30,8 @@ With docker:
 ### Running Instructions
 1. ```mkdir output```
 2. ```cd output```
-3. Translate the corresponding RML: 
-   ```curl -X POST http://localhost:8082/transform -H 'Content-Type: application/json' -d '{ "prog_lang": "javascript", "dataset_type":"csv", "mapping_url":"https://raw.githubusercontent.com/oeg-upm/morph-graphql/master/examples/starwars/mappings.rmlc.ttl", "db_name":"starwars.sqlite", "mapping_language":"rml", "queryplanner":"joinmonster" }' > output.zip```
+3. Translate the corresponding mappings: 
+   ```curl -X POST http://localhost:8082/transform -H 'Content-Type: application/json' -d '{ "prog_lang": "javascript", "dataset_type":"csv", "mapping_url":"https://raw.githubusercontent.com/oeg-upm/morph-graphql/master/examples/starwars/mappings.r2rml.ttl", "db_name":"starwars.sqlite", "mapping_language":"r2rml", "queryplanner":"joinmonster" }' > output.zip```
 4. ```unzip output.zip```
 5. ```npm install```
 6. ```npm start```

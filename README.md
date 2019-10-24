@@ -20,7 +20,9 @@ With Node:
 1. ```npm install```
 2. ```git clone https://github.com/oeg-upm/morph-graphql```
 3. ```cd morph-graphql```
-4. ```node app.js```
+4. ```cd javascript```
+5. ```cd rdb```
+6. ```node app.js```
 
 With docker:
 1. ```docker run -d -p 8082:8082 --name mapping-translator oegdataintegration/mapping-translator:1.0```

@@ -544,16 +544,13 @@ exports.generateJoinMonsterResolvers = function (triplesMap) {
         //let child = "${child}." + joinCondition.child.referenceValue;
         //console.log("joinCondition.child.referenceValue = " + joinCondition.child.referenceValue)
         
-        console.log("joinCondition.child es....." + joinCondition.child)
         let child = joinMonsterGenerator.termMapAsJoinMonster(
             joinCondition.child, null);
         if(joinCondition.child.referenceValue) {
             child = "${child}." + child
-            console.log("child 1 = " + child)
         }
         else if (joinCondition.child){
             child = "${child}." + joinCondition.child
-            console.log("child 2 = " + joinCondition.child)
 
         }
         
@@ -567,13 +564,11 @@ exports.generateJoinMonsterResolvers = function (triplesMap) {
         }
         else if (joinCondition.parent){
             parent = "${parent}." + joinCondition.parent
-            console.log("parent 2 = " + joinCondition.parent)
         }
 
         //
 
         poString += "\t\t\tsqlJoin: (child, parent) => `" + child + " = " + parent + "`"
-        console.log('Hello im poString.... =' + poString)
     }
 
     poString += "\n\t\t}";

@@ -347,12 +347,12 @@ class TermMap {
             console.log(`\tjoinCondition = ${joinCondition}`);
             if(item["@id"]==joinConditionId){
                 let childId = item["rr:child"];
-                console.log(`childId = ${childId}`);
+                // console.log(`childId = ${childId}`);
                 let child = new TermMap();
                 child.parseFromJson(json, childId);
                 //console.log(`child = ${child}`);
                 let parentId = item["rr:parent"];
-                console.log(`parentId = ${parentId}`);
+                // console.log(`parentId = ${parentId}`);
                 let parent = new TermMap();
                 parent.parseFromJson(json, parentId);
                 //console.log(`parent = ${parent}`);

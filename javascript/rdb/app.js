@@ -9,6 +9,7 @@ const url = require('url');
 const fs = require('fs');
 const uuid = require('uuid');
 const rmlparser = require('./rml-parser');
+const r2rmlparser = require('./r2rml-parser');
 const javascriptsqlitetransformer = require('./transformers/javascript/sqlite/javascript-sqlite-transformer');
 const sqlitecretator = require('./transformers/javascript/sqlite/sqlitecreator');
 
@@ -231,7 +232,12 @@ async function create_resolver(prog_lang, map_lang, dataset_type, mapping_url,
     if(map_lang == 'rml') {
         console.log(`PARSING MAPPING DOCUMENT FROM ${mapping_url} ...`)
         data = rmlparser.get_jsonld_from_mapping(mapping_url)
-    } else {
+    } 
+    else if(map_lang == 'r2rml') {
+        console.log(`PARSING MAPPING DOCUMENT FROM ${mapping_url} ...`)
+        data = r2rmlparser.get_jsonld_from_mapping(mapping_url)
+    } 
+    else {
         console.log(map_lang + " is not supported yet!")
     }
 

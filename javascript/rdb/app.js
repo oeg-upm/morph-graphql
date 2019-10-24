@@ -8,7 +8,7 @@ const sqlite = require('sqlite3');
 const url = require('url');
 const fs = require('fs');
 const uuid = require('uuid');
-const rmlparser = require('./rml-parser');
+const rmlcparser = require('./rmlc-parser');
 const r2rmlparser = require('./r2rml-parser');
 const javascriptsqlitetransformer = require('./transformers/javascript/sqlite/javascript-sqlite-transformer');
 const sqlitecretator = require('./transformers/javascript/sqlite/sqlitecreator');
@@ -229,9 +229,9 @@ async function create_resolver(prog_lang, map_lang, dataset_type, mapping_url,
 
 
     var data;
-    if(map_lang == 'rml') {
+    if(map_lang == 'rmlc') {
         console.log(`PARSING MAPPING DOCUMENT FROM ${mapping_url} ...`)
-        data = rmlparser.get_jsonld_from_mapping(mapping_url)
+        data = rmlcparser.get_jsonld_from_mapping(mapping_url)
     } 
     else if(map_lang == 'r2rml') {
         console.log(`PARSING MAPPING DOCUMENT FROM ${mapping_url} ...`)

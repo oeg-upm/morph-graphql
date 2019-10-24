@@ -321,6 +321,7 @@ class TermMap {
 
                 if(item['rr:joinCondition']) {
                     let joinConditionId = item['rr:joinCondition']["@id"];
+                    //ub39bL160C23
                     this.joinCondition = this.buildJoinCondition(json, joinConditionId)
                 }
 
@@ -343,20 +344,20 @@ class TermMap {
             let item = json["@graph"][i];
             let itemId = item["@id"];
             //console.log(`itemId = ${itemId}`);
-            //console.log(`\tjoinCondition = ${joinCondition}`);
+            console.log(`\tjoinCondition = ${joinCondition}`);
             if(item["@id"]==joinConditionId){
                 let childId = item["rr:child"];
-                //console.log(`childId = ${childId}`);
+                console.log(`childId = ${childId}`);
                 let child = new TermMap();
                 child.parseFromJson(json, childId);
                 //console.log(`child = ${child}`);
                 let parentId = item["rr:parent"];
-                //console.log(`parentId = ${parentId}`);
+                console.log(`parentId = ${parentId}`);
                 let parent = new TermMap();
                 parent.parseFromJson(json, parentId);
                 //console.log(`parent = ${parent}`);
-                joinCondition.child = child;
-                joinCondition.parent = parent;
+                joinCondition.child = childId;
+                joinCondition.parent = parentId ;
                 break
             }
         }

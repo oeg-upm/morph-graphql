@@ -543,12 +543,20 @@ exports.generateJoinMonsterResolvers = function (triplesMap) {
         let joinCondition = objectMap.joinCondition;
         //let child = "${child}." + joinCondition.child.referenceValue;
         //console.log("joinCondition.child.referenceValue = " + joinCondition.child.referenceValue)
+        
+        console.log("joinCondition.child es....." + joinCondition.child)
         let child = joinMonsterGenerator.termMapAsJoinMonster(
             joinCondition.child, null);
         if(joinCondition.child.referenceValue) {
             child = "${child}." + child
+            console.log("child 1 = " + child)
         }
-        //console.log("child = " + child)
+        else if (joinCondition.child){
+            child = "${child}." + joinCondition.child
+            console.log("child 2 = " + joinCondition.child)
+
+        }
+        
 
         //let parent = joinCondition.parent.functionStringAsSQLJoinMonster("parent");
         //console.log("joinCondition.parent.referenceValue = " + joinCondition.parent.referenceValue)
@@ -557,10 +565,15 @@ exports.generateJoinMonsterResolvers = function (triplesMap) {
         if(joinCondition.parent.referenceValue) {
             parent = "${parent}." + parent
         }
+        else if (joinCondition.parent){
+            parent = "${parent}." + joinCondition.parent
+            console.log("parent 2 = " + joinCondition.parent)
+        }
 
-        //console.log("parent = " + parent)
+        //
 
         poString += "\t\t\tsqlJoin: (child, parent) => `" + child + " = " + parent + "`"
+        console.log('Hello im poString.... =' + poString)
     }
 
     poString += "\n\t\t}";

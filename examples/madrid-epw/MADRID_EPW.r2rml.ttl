@@ -14,7 +14,7 @@
 <MADRID>
 
 	rr:logicalTable [
-		rr:tableName "MADRID"
+		rr:tableName "https://raw.githubusercontent.com/oeg-upm/morph-graphql/master/examples/madrid-epw/MADRID.csv"
 	];
 
 	rr:subjectMap [

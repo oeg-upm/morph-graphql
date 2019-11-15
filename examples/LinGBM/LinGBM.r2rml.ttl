@@ -96,7 +96,7 @@
 
 	rr:subjectMap [
 		rr:template "http://lingbm.linkeddata.es/product/{nr}";
-		rr:class schema:Review
+		rr:class schema:Product
 	];
 
 	rr:predicateObjectMap [

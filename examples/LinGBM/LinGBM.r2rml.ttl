@@ -23,7 +23,13 @@
 
 	rr:predicateObjectMap [
 	  rr:predicate ex:product;
-	  rr:objectMap    [ rr:column  "product" ]
+	  rr:objectMap    [
+	    rr:parentTriplesMap <TMProduct>;
+	    rr:joinCondition [
+	        rr:child "product" ;
+	        rr:parent "nr" ;
+	    ];
+	   ];
 	];
 
 	rr:predicateObjectMap [

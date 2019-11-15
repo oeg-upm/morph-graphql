@@ -1,0 +1,94 @@
+@prefix rr: <http://www.w3.org/ns/r2rml#>.
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+@prefix ex: <http://www.example.com/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix fno: <http://w3id.org/function/ontology>.
+@prefix schema: <http://schema.org/>.
+
+<TMReview>
+	rr:logicalTable  [
+		rr:tableName  "review";
+	];
+
+	rr:subjectMap [
+		rr:template "http://lingbm.linkeddata.es/review/{id}";
+		rr:class schema:Review
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:nr;
+	  rr:objectMap    [ rr:column  "nr" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:product;
+	  rr:objectMap    [ rr:column  "product" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:producer;
+	  rr:objectMap    [ rr:column  "producer" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:person;
+	  rr:objectMap    [ rr:column  "person" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:reviewDate;
+	  rr:objectMap    [ rr:column  "reviewDate" ]
+	];
+
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:title;
+	  rr:objectMap    [ rr:column  "title" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:text;
+	  rr:objectMap    [ rr:column  "text" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:language;
+	  rr:objectMap    [ rr:column  "language" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:rating1;
+	  rr:objectMap    [ rr:column  "rating1" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:rating2;
+	  rr:objectMap    [ rr:column  "rating2" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:rating3;
+	  rr:objectMap    [ rr:column  "rating3" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:rating4;
+	  rr:objectMap    [ rr:column  "rating4" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:publisher;
+	  rr:objectMap    [ rr:column  "publisher" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:publishDate;
+	  rr:objectMap    [ rr:column  "publishDate" ]
+	];
+
+
+
+
+.
+

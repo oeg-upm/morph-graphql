@@ -343,7 +343,7 @@
 	    rr:parentTriplesMap <TMProductWithReview>;
 	    rr:joinCondition [
 	        rr:child "product" ;
-	        rr:parent "product_nr" ;
+	        rr:parent "nr" ;
 	    ];
 	   ];
 	];

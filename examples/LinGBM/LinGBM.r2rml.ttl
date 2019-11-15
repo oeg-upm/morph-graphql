@@ -203,7 +203,7 @@
 	];
 
 	rr:subjectMap [
-		rr:template "http://lingbm.linkeddata.es/product_with_review/{product_nr}";
+		rr:template "http://lingbm.linkeddata.es/product_with_review/{nr}";
 		rr:class schema:ProductWithReview
 	];
 

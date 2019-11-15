@@ -12,7 +12,7 @@
 	];
 
 	rr:subjectMap [
-		rr:template "http://lingbm.linkeddata.es/review/{id}";
+		rr:template "http://lingbm.linkeddata.es/review/{nr}";
 		rr:class schema:Review
 	];
 

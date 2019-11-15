@@ -195,3 +195,76 @@
 	  rr:objectMap    [ rr:column  "publishDate" ]
 	];
 .
+
+<TMOffer>
+	rr:logicalTable  [
+		rr:tableName  "offer";
+	];
+
+	rr:subjectMap [
+		rr:template "http://lingbm.linkeddata.es/offer/{nr}";
+		rr:class schema:Offer
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:nr;
+	  rr:objectMap    [ rr:column  "nr" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:product;
+	  rr:objectMap    [
+	    rr:parentTriplesMap <TMProduct>;
+	    rr:joinCondition [
+	        rr:child "product" ;
+	        rr:parent "nr" ;
+	    ];
+	   ];
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:producer;
+	  rr:objectMap    [ rr:column  "producer" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:vendor;
+	  rr:objectMap    [ rr:column  "vendor" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:price;
+	  rr:objectMap    [ rr:column  "price" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:validFrom;
+	  rr:objectMap    [ rr:column  "validFrom" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:validTo;
+	  rr:objectMap    [ rr:column  "validTo" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:deliveryDays;
+	  rr:objectMap    [ rr:column  "deliveryDays" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:offerWebpage;
+	  rr:objectMap    [ rr:column  "offerWebpage" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:publisher;
+	  rr:objectMap    [ rr:column  "publisher" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:publishDate;
+	  rr:objectMap    [ rr:column  "publishDate" ]
+	];
+
+.

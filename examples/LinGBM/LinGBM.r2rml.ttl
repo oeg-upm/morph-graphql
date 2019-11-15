@@ -258,6 +258,17 @@
 	];
 
 	rr:predicateObjectMap [
+	  rr:predicate ex:productWithReview;
+	  rr:objectMap    [
+	    rr:parentTriplesMap <TMProductWithReview>;
+	    rr:joinCondition [
+	        rr:child "product" ;
+	        rr:parent "product_nr" ;
+	    ];
+	   ];
+	];
+
+	rr:predicateObjectMap [
 	  rr:predicate ex:producer;
 	  rr:objectMap    [ rr:column  "producer" ]
 	];

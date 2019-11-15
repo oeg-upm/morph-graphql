@@ -150,33 +150,33 @@
 	];
 
 	rr:predicateObjectMap [
-	  rr:predicate ex:propertyText1;
-	  rr:objectMap    [ rr:column  "propertyText1" ]
+	  rr:predicate ex:propertyTex1;
+	  rr:objectMap    [ rr:column  "propertyTex1" ]
 	];
 
 	rr:predicateObjectMap [
-	  rr:predicate ex:propertyText2;
-	  rr:objectMap    [ rr:column  "propertyText2" ]
+	  rr:predicate ex:propertyTex2;
+	  rr:objectMap    [ rr:column  "propertyTex2" ]
 	];
 
 	rr:predicateObjectMap [
-	  rr:predicate ex:propertyText3;
-	  rr:objectMap    [ rr:column  "propertyText3" ]
+	  rr:predicate ex:propertyTex3;
+	  rr:objectMap    [ rr:column  "propertyTex3" ]
 	];
 
 	rr:predicateObjectMap [
-	  rr:predicate ex:propertyText4;
-	  rr:objectMap    [ rr:column  "propertyText4" ]
+	  rr:predicate ex:propertyTex4;
+	  rr:objectMap    [ rr:column  "propertyTex4" ]
 	];
 	
 	rr:predicateObjectMap [
-	  rr:predicate ex:propertyText5;
-	  rr:objectMap    [ rr:column  "propertyText5" ]
+	  rr:predicate ex:propertyTex5;
+	  rr:objectMap    [ rr:column  "propertyTex5" ]
 	];
 	
 	rr:predicateObjectMap [
-	  rr:predicate ex:propertyText6;
-	  rr:objectMap    [ rr:column  "propertyText6" ]
+	  rr:predicate ex:propertyTex6;
+	  rr:objectMap    [ rr:column  "propertyTex6" ]
 	];
 	
 	rr:predicateObjectMap [

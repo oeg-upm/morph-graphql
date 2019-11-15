@@ -1,4 +1,3 @@
-q1
 query offer_product_review {
   listOffer(identifier: "http://lingbm.linkeddata.es/offer/2") {
     identifier

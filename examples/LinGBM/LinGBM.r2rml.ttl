@@ -86,9 +86,106 @@
 	  rr:predicate ex:publishDate;
 	  rr:objectMap    [ rr:column  "publishDate" ]
 	];
-
-
-
-
 .
 
+
+<TMProduct>
+	rr:logicalTable  [
+		rr:tableName  "product";
+	];
+
+	rr:subjectMap [
+		rr:template "http://lingbm.linkeddata.es/product/{nr}";
+		rr:class schema:Review
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:nr;
+	  rr:objectMap    [ rr:column  "nr" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:label;
+	  rr:objectMap    [ rr:column  "label" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:comment;
+	  rr:objectMap    [ rr:column  "comment" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:producer;
+	  rr:objectMap    [ rr:column  "producer" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:propertyNum1;
+	  rr:objectMap    [ rr:column  "propertyNum1" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:propertyNum2;
+	  rr:objectMap    [ rr:column  "propertyNum2" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:propertyNum3;
+	  rr:objectMap    [ rr:column  "propertyNum3" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:propertyNum4;
+	  rr:objectMap    [ rr:column  "propertyNum4" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:propertyNum5;
+	  rr:objectMap    [ rr:column  "propertyNum5" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:propertyNum6;
+	  rr:objectMap    [ rr:column  "propertyNum6" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:propertyText1;
+	  rr:objectMap    [ rr:column  "propertyText1" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:propertyText2;
+	  rr:objectMap    [ rr:column  "propertyText2" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:propertyText3;
+	  rr:objectMap    [ rr:column  "propertyText3" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:propertyText4;
+	  rr:objectMap    [ rr:column  "propertyText4" ]
+	];
+	
+	rr:predicateObjectMap [
+	  rr:predicate ex:propertyText5;
+	  rr:objectMap    [ rr:column  "propertyText5" ]
+	];
+	
+	rr:predicateObjectMap [
+	  rr:predicate ex:propertyText6;
+	  rr:objectMap    [ rr:column  "propertyText6" ]
+	];
+	
+	rr:predicateObjectMap [
+	  rr:predicate ex:publisher;
+	  rr:objectMap    [ rr:column  "publisher" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:publishDate;
+	  rr:objectMap    [ rr:column  "publishDate" ]
+	];
+.

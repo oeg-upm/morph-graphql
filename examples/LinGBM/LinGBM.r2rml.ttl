@@ -196,6 +196,41 @@
 	];
 .
 
+<TMProductWithReview>
+	rr:logicalTable  [
+		#CREATE VIEW product_with_review AS SELECT product.nr as product_nr, review.nr as review_nr FROM product inner join review on product.nr = review.product
+		rr:tableName  "product_with_review";
+	];
+
+	rr:subjectMap [
+		rr:template "http://lingbm.linkeddata.es/product_with_review/{product_nr}/{review_nr}";
+		rr:class schema:ProductWithReview
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:product;
+	  rr:objectMap    [
+	    rr:parentTriplesMap <TMProduct>;
+	    rr:joinCondition [
+	        rr:child "product_nr" ;
+	        rr:parent "nr" ;
+	    ];
+	   ];
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:review;
+	  rr:objectMap    [
+	    rr:parentTriplesMap <TMReview>;
+	    rr:joinCondition [
+	        rr:child "review_nr" ;
+	        rr:parent "nr" ;
+	    ];
+	   ];
+	];
+
+.
+
 <TMOffer>
 	rr:logicalTable  [
 		rr:tableName  "offer";

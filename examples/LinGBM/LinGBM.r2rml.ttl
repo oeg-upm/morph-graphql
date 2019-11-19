@@ -121,7 +121,7 @@
 	];
 
 	rr:predicateObjectMap [
-	  rr:predicate ex:product;
+	  rr:predicate ex:producer;
 	  rr:objectMap    [
 	    rr:parentTriplesMap <TMProducer>;
 	    rr:joinCondition [
@@ -229,7 +229,7 @@
 	];
 
 	rr:predicateObjectMap [
-	  rr:predicate ex:product;
+	  rr:predicate ex:producer;
 	  rr:objectMap    [
 	    rr:parentTriplesMap <TMProducer>;
 	    rr:joinCondition [

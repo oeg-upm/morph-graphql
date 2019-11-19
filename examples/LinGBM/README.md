@@ -141,3 +141,25 @@ query subquerySearch {
 }
 ```
 
+
+#### q12
+```
+query subqueryFilter1 {
+  listOffer {
+    identifier
+    price
+    offerWebpage
+    vendor(identifier: "http://lingbm.linkeddata.es/vendor/1") {
+      identifier
+    }
+    product {
+      identifier
+      label
+      comment
+      producer(identifier: "http://lingbm.linkeddata.es/producer/16") {
+        identifier
+      }
+    }
+  }
+}
+```

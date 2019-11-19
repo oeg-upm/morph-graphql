@@ -100,4 +100,27 @@ query offer_product_review_person_country {
 }
 ```
 
+#### q6
+```
+query vendor_offer_product_producer_country {
+  listOffer {
+    identifier
+    vendor(identifier: "http://lingbm.linkeddata.es/vendor/1") {
+      identifier
+    }
+    product {
+      identifier
+      producer {
+        identifier
+        country {
+          identifier
+          code
+        }
+      }
+    }
+  }
+}
+```
+
+
 

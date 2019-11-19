@@ -122,5 +122,22 @@ query vendor_offer_product_producer_country {
 }
 ```
 
-
+#### q11
+```
+query subquerySearch {
+  listOffer {
+    identifier
+    price
+    offerWebpage
+    vendor(identifier: "http://lingbm.linkeddata.es/vendor/1") {
+      identifier
+    }
+    product {
+      identifier
+      label
+      comment
+    }
+  }
+}
+```
 

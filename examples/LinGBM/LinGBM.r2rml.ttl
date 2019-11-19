@@ -38,14 +38,11 @@
 	];
 
 	rr:predicateObjectMap [
-	  rr:predicate ex:reviewer;
-	  rr:objectMap    [
-	    rr:parentTriplesMap <TMPerson>;
-	    rr:joinCondition [
-	        rr:child "person" ;
-	        rr:parent "nr" ;
-	    ];
-	   ];
+		rr:predicate ex:reviewer;
+		rr:objectMap    [
+			rr:parentTriplesMap <TMPerson>;
+			rr:joinCondition [ rr:child "person" ; rr:parent "nr" ; ];
+		];
 	];
 
 	rr:predicateObjectMap [
@@ -309,7 +306,6 @@
 	  rr:objectMap    [ rr:column  "publishDate" ]
 	];
 
-
 	rr:predicateObjectMap [
 		rr:predicate ex:review;
 		rr:objectMap    [
@@ -419,7 +415,6 @@
 	  rr:objectMap    [ rr:column  "nr" ]
 	];
 
-
 	rr:predicateObjectMap [
 	  rr:predicate ex:label;
 	  rr:objectMap    [ rr:column  "label" ]
@@ -436,14 +431,11 @@
 	];
 
 	rr:predicateObjectMap [
-	  rr:predicate ex:country;
-	  rr:objectMap    [
-	    rr:parentTriplesMap <TMCountry>;
-	    rr:joinCondition [
-	        rr:child "country" ;
-	        rr:parent "code" ;
-	    ];
-	   ];
+		rr:predicate ex:country;
+		rr:objectMap    [
+			rr:parentTriplesMap <TMCountry>;
+			rr:joinCondition [ rr:child "country" ; rr:parent "code" ; ];
+		];
 	];
 
 	rr:predicateObjectMap [
@@ -485,14 +477,11 @@
 	];
 
 	rr:predicateObjectMap [
-	  rr:predicate ex:country;
-	  rr:objectMap    [
-	    rr:parentTriplesMap <TMCountry>;
-	    rr:joinCondition [
-	        rr:child "country" ;
-	        rr:parent "code" ;
-	    ];
-	   ];
+		rr:predicate ex:country;
+		rr:objectMap    [
+			rr:parentTriplesMap <TMCountry>;
+			rr:joinCondition [ rr:child "country" ; rr:parent "code" ; ];
+		];
 	];
 
 	rr:predicateObjectMap [
@@ -551,14 +540,11 @@
 	];
 
 	rr:predicateObjectMap [
-	  rr:predicate ex:country;
-	  rr:objectMap    [
-	    rr:parentTriplesMap <TMCountry>;
-	    rr:joinCondition [
-	        rr:child "country" ;
-	        rr:parent "code" ;
-	    ];
-	   ];
+		rr:predicate ex:country;
+		rr:objectMap    [
+			rr:parentTriplesMap <TMCountry>;
+			rr:joinCondition [ rr:child "country" ; rr:parent "code" ; ];
+		];
 	];
 
 	rr:predicateObjectMap [

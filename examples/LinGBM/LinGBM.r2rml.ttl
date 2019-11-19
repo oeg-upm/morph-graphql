@@ -38,8 +38,14 @@
 	];
 
 	rr:predicateObjectMap [
-	  rr:predicate ex:person;
-	  rr:objectMap    [ rr:column  "person" ]
+	  rr:predicate ex:product;
+	  rr:objectMap    [
+	    rr:parentTriplesMap <TMPerson>;
+	    rr:joinCondition [
+	        rr:child "person" ;
+	        rr:parent "nr" ;
+	    ];
+	   ];
 	];
 
 	rr:predicateObjectMap [

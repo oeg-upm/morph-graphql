@@ -58,7 +58,7 @@ query offer_product_review {
 
 #### q2
 ```
-{
+query producer_product_review {
   listProductWithReview {
     identifier
     producer(identifier: "http://lingbm.linkeddata.es/producer/8") {

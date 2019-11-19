@@ -373,7 +373,13 @@
 
 	rr:predicateObjectMap [
 	  rr:predicate ex:vendor;
-	  rr:objectMap    [ rr:column  "vendor" ]
+	  rr:objectMap    [
+	    rr:parentTriplesMap <TMVendor>;
+	    rr:joinCondition [
+	        rr:child "vendor" ;
+	        rr:parent "nr" ;
+	    ];
+	   ];
 	];
 
 	rr:predicateObjectMap [

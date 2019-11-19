@@ -210,7 +210,7 @@
 
 <TMProductWithReview>
 	rr:logicalTable  [
-		#SELECT product.*, review.nr as review_nr FROM product inner join review on product.nr = review.product
+		#CREATE VIEW product_with_review AS SELECT product.*, review.nr as review_nr FROM product inner join review on product.nr = review.product
 		rr:tableName  "product_with_review";
 	];
 
@@ -503,3 +503,21 @@
 	];
 
 .
+
+<TMCountry>
+	rr:logicalTable  [
+		#CREATE VIEW country AS SELECT DISTINCT country AS code FROM person
+		rr:tableName  "country";
+	];
+
+	rr:subjectMap [
+		rr:template "http://lingbm.linkeddata.es/country/{code}";
+		rr:class schema:Country
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:code;
+	  rr:objectMap    [ rr:column  "code" ]
+	];
+.
+

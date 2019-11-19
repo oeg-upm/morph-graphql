@@ -72,4 +72,32 @@ query offer_product_review {
 }
 ```
 
+#### q4
+```
+query offer_product_review_person_country {
+  listOffer(identifier: "http://lingbm.linkeddata.es/offer/2") {
+    identifier
+    productWithReview {
+      identifier
+      label
+      comment
+      review {
+        identifier
+        title
+        text
+        rating1
+        rating2
+        rating3
+        rating4
+        reviewer {
+          country {
+            code
+          }
+        }
+      }
+    }
+  }
+}
+```
+
 

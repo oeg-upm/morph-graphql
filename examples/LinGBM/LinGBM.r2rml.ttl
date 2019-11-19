@@ -489,7 +489,13 @@
 
 	rr:predicateObjectMap [
 	  rr:predicate ex:country;
-	  rr:objectMap    [ rr:column  "country" ]
+	  rr:objectMap    [
+	    rr:parentTriplesMap <TMCountry>;
+	    rr:joinCondition [
+	        rr:child "country" ;
+	        rr:parent "code" ;
+	    ];
+	   ];
 	];
 
 	rr:predicateObjectMap [

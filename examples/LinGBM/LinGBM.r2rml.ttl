@@ -174,17 +174,17 @@
 	  rr:predicate ex:propertyTex4;
 	  rr:objectMap    [ rr:column  "propertyTex4" ]
 	];
-	
+
 	rr:predicateObjectMap [
 	  rr:predicate ex:propertyTex5;
 	  rr:objectMap    [ rr:column  "propertyTex5" ]
 	];
-	
+
 	rr:predicateObjectMap [
 	  rr:predicate ex:propertyTex6;
 	  rr:objectMap    [ rr:column  "propertyTex6" ]
 	];
-	
+
 	rr:predicateObjectMap [
 	  rr:predicate ex:publisher;
 	  rr:objectMap    [ rr:column  "publisher" ]
@@ -276,17 +276,17 @@
 	  rr:predicate ex:propertyTex4;
 	  rr:objectMap    [ rr:column  "propertyTex4" ]
 	];
-	
+
 	rr:predicateObjectMap [
 	  rr:predicate ex:propertyTex5;
 	  rr:objectMap    [ rr:column  "propertyTex5" ]
 	];
-	
+
 	rr:predicateObjectMap [
 	  rr:predicate ex:propertyTex6;
 	  rr:objectMap    [ rr:column  "propertyTex6" ]
 	];
-	
+
 	rr:predicateObjectMap [
 	  rr:predicate ex:publisher;
 	  rr:objectMap    [ rr:column  "publisher" ]
@@ -381,6 +381,59 @@
 	rr:predicateObjectMap [
 	  rr:predicate ex:offerWebpage;
 	  rr:objectMap    [ rr:column  "offerWebpage" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:publisher;
+	  rr:objectMap    [ rr:column  "publisher" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:publishDate;
+	  rr:objectMap    [ rr:column  "publishDate" ]
+	];
+
+.
+
+<TMProducer>
+	rr:logicalTable  [
+		rr:tableName  "producer";
+	];
+
+	rr:subjectMap [
+		rr:template "http://lingbm.linkeddata.es/producer/{nr}";
+		rr:class schema:Producer
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:nr;
+	  rr:objectMap    [ rr:column  "nr" ]
+	];
+
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:label;
+	  rr:objectMap    [ rr:column  "label" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:comment;
+	  rr:objectMap    [ rr:column  "comment" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:homepage;
+	  rr:objectMap    [ rr:column  "homepage" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:country;
+	  rr:objectMap    [ rr:column  "country" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:validTo;
+	  rr:objectMap    [ rr:column  "validTo" ]
 	];
 
 	rr:predicateObjectMap [

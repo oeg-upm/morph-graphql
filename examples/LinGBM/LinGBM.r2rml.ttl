@@ -38,7 +38,7 @@
 	];
 
 	rr:predicateObjectMap [
-	  rr:predicate ex:product;
+	  rr:predicate ex:reviewer;
 	  rr:objectMap    [
 	    rr:parentTriplesMap <TMPerson>;
 	    rr:joinCondition [

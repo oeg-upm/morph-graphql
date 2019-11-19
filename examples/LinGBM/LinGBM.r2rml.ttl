@@ -30,11 +30,12 @@
 	];
 
 	rr:predicateObjectMap [
-	  rr:predicate ex:producer;
+		rr:predicate ex:producer;
 		rr:objectMap    [
 			rr:parentTriplesMap <TMProducer>;
 			rr:joinCondition [ rr:child "producer" ; rr:parent "nr" ; ];
-		];	];
+		];	
+	];
 
 	rr:predicateObjectMap [
 	  rr:predicate ex:reviewer;
@@ -126,14 +127,11 @@
 	];
 
 	rr:predicateObjectMap [
-	  rr:predicate ex:producer;
-	  rr:objectMap    [
-	    rr:parentTriplesMap <TMProducer>;
-	    rr:joinCondition [
-	        rr:child "producer" ;
-	        rr:parent "nr" ;
-	    ];
-	   ];
+		rr:predicate ex:producer;
+		rr:objectMap    [
+			rr:parentTriplesMap <TMProducer>;
+			rr:joinCondition [ rr:child "producer" ; rr:parent "nr" ; ];
+		];
 	];
 
 	rr:predicateObjectMap [
@@ -234,14 +232,11 @@
 	];
 
 	rr:predicateObjectMap [
-	  rr:predicate ex:producer;
-	  rr:objectMap    [
-	    rr:parentTriplesMap <TMProducer>;
-	    rr:joinCondition [
-	        rr:child "producer" ;
-	        rr:parent "nr" ;
-	    ];
-	   ];
+		rr:predicate ex:producer;
+		rr:objectMap    [
+			rr:parentTriplesMap <TMProducer>;
+			rr:joinCondition [ rr:child "producer" ; rr:parent "nr" ; ];
+		];
 	];
 
 	rr:predicateObjectMap [
@@ -316,14 +311,11 @@
 
 
 	rr:predicateObjectMap [
-	  rr:predicate ex:review;
-	  rr:objectMap    [
-	    rr:parentTriplesMap <TMReview>;
-	    rr:joinCondition [
-	        rr:child "review_nr" ;
-	        rr:parent "nr" ;
-	    ];
-	   ];
+		rr:predicate ex:review;
+		rr:objectMap    [
+			rr:parentTriplesMap <TMReview>;
+			rr:joinCondition [ rr:child "review_nr" ; rr:parent "nr" ; ];
+		];
 	];
 
 .
@@ -344,41 +336,35 @@
 	];
 
 	rr:predicateObjectMap [
-	  rr:predicate ex:product;
-	  rr:objectMap    [
-	    rr:parentTriplesMap <TMProduct>;
-	    rr:joinCondition [
-	        rr:child "product" ;
-	        rr:parent "nr" ;
-	    ];
-	   ];
+		rr:predicate ex:product;
+		rr:objectMap    [
+			rr:parentTriplesMap <TMProduct>;
+			rr:joinCondition [ rr:child "product" ; rr:parent "nr" ; ];
+		];
 	];
 
 	rr:predicateObjectMap [
-	  rr:predicate ex:productWithReview;
-	  rr:objectMap    [
-	    rr:parentTriplesMap <TMProductWithReview>;
-	    rr:joinCondition [
-	        rr:child "product" ;
-	        rr:parent "nr" ;
-	    ];
-	   ];
+		rr:predicate ex:productWithReview;
+		rr:objectMap    [
+			rr:parentTriplesMap <TMProductWithReview>;
+			rr:joinCondition [ rr:child "product" ; rr:parent "nr" ; ];
+		];
 	];
 
 	rr:predicateObjectMap [
 	  rr:predicate ex:producer;
-	  rr:objectMap    [ rr:column  "producer" ]
+		rr:objectMap    [
+			rr:parentTriplesMap <TMProducer>;
+			rr:joinCondition [ rr:child "producer" ; rr:parent "nr" ; ];
+		];	
 	];
 
 	rr:predicateObjectMap [
-	  rr:predicate ex:vendor;
-	  rr:objectMap    [
-	    rr:parentTriplesMap <TMVendor>;
-	    rr:joinCondition [
-	        rr:child "vendor" ;
-	        rr:parent "nr" ;
-	    ];
-	   ];
+		rr:predicate ex:vendor;
+		rr:objectMap    [
+			rr:parentTriplesMap <TMVendor>;
+			rr:joinCondition [ rr:child "vendor" ; rr:parent "nr" ; ];
+		];
 	];
 
 	rr:predicateObjectMap [

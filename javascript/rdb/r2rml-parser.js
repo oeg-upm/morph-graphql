@@ -344,7 +344,7 @@ class TermMap {
             let item = json["@graph"][i];
             let itemId = item["@id"];
             //console.log(`itemId = ${itemId}`);
-            console.log(`\tjoinCondition = ${joinCondition}`);
+            //console.log(`\tjoinCondition = ${joinCondition}`);
             if(item["@id"]==joinConditionId){
                 let childId = item["rr:child"];
                 // console.log(`childId = ${childId}`);

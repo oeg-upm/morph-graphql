@@ -432,11 +432,6 @@
 	];
 
 	rr:predicateObjectMap [
-	  rr:predicate ex:validTo;
-	  rr:objectMap    [ rr:column  "validTo" ]
-	];
-
-	rr:predicateObjectMap [
 	  rr:predicate ex:publisher;
 	  rr:objectMap    [ rr:column  "publisher" ]
 	];

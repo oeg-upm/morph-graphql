@@ -454,3 +454,46 @@
 	];
 
 .
+
+<TMPerson>
+	rr:logicalTable  [
+		rr:tableName  "person";
+	];
+
+	rr:subjectMap [
+		rr:template "http://lingbm.linkeddata.es/person/{nr}";
+		rr:class schema:Person
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:nr;
+	  rr:objectMap    [ rr:column  "nr" ]
+	];
+
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:name;
+	  rr:objectMap    [ rr:column  "name" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:mbox_sha1sum;
+	  rr:objectMap    [ rr:column  "mbox_sha1sum" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:country;
+	  rr:objectMap    [ rr:column  "country" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:publisher;
+	  rr:objectMap    [ rr:column  "publisher" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:publishDate;
+	  rr:objectMap    [ rr:column  "publishDate" ]
+	];
+
+.

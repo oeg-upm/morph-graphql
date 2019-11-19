@@ -22,8 +22,8 @@ With docker:
 1. ```docker run -d -p 8082:8082 --name mapping-translator oegdataintegration/mapping-translator:1.0```
 
 ### Running Instructions
-1. ```mkdir LinGBM```
-2. ```cd LinGBM```
+1. ```mkdir LinGBM1000```
+2. ```cd LinGBM1000```
 3. Translate the corresponding mappings: 
    ```curl -X POST http://localhost:8082/transform -H 'Content-Type: application/json' -d '{ "prog_lang": "javascript", "dataset_type":"sqlite", "mapping_url":"https://raw.githubusercontent.com/oeg-upm/morph-graphql/master/examples/LinGBM/LinGBM.r2rml.ttl", "db_name":"LinGBM1000.sqlite", "mapping_language":"r2rml", "queryplanner":"joinmonster" }' > LinGBM1000.zip```
 4. ```unzip LinGBM1000.zip```

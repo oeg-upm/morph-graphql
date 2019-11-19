@@ -55,3 +55,21 @@ query offer_product_review {
   }
 }
 ```
+
+#### q2
+```
+{
+  listProductWithReview {
+    identifier
+    producer(identifier: "http://lingbm.linkeddata.es/producer/8") {
+      identifier
+    }
+    review {
+      identifier
+      title
+    }
+  }
+}
+```
+
+

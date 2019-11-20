@@ -654,7 +654,7 @@
 
 	rr:predicateObjectMap [
 		rr:predicate ex:parent;
-		rr:objectMap    [ rr:parent  "parent" ]
+		rr:objectMap    [ rr:column  "parent" ]
 	];
 
 	rr:predicateObjectMap [

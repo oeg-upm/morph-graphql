@@ -668,3 +668,39 @@
 	];
 
 .
+
+<TMProductTypeProduct>
+	rr:logicalTable  [
+		rr:tableName  "producttypeproduct";
+	];
+
+	rr:subjectMap [
+		rr:template "http://lingbm.linkeddata.es/producttypeproduct/{product}/{productType}";
+		rr:class schema:ProductTypeProduct
+	];
+
+	rr:predicateObjectMap [
+		rr:predicate ex:product;
+		rr:objectMap    [
+			rr:parentTriplesMap <TMProduct>;
+			rr:joinCondition [ rr:child "product" ; rr:parent "nr" ; ];
+		];
+	];
+
+	rr:predicateObjectMap [
+		rr:predicate ex:productWithReview;
+		rr:objectMap    [
+			rr:parentTriplesMap <TMProductWithReview>;
+			rr:joinCondition [ rr:child "product" ; rr:parent "nr" ; ];
+		];
+	];
+
+	rr:predicateObjectMap [
+		rr:predicate ex:producttype;
+		rr:objectMap    [
+			rr:parentTriplesMap <TMProductType>;
+			rr:joinCondition [ rr:child "productType" ; rr:parent "nr" ; ];
+		];
+	];
+.
+

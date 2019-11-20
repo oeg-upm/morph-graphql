@@ -5,6 +5,7 @@ class RMLParser {
         this.json = json;
     }
 
+
     getTriplesMapsIds() {
         let triplesMapsIds = [];
 
@@ -99,9 +100,7 @@ class RMLParser {
         return predicateObjectMapsIds
     }
 
-    buildTriplesMap(triplesMapId) {
-        //console.log(`triplesMapId = ${triplesMapId}`);
-        
+    buildTriplesMap(triplesMapId) {        
         let logicalSourceId = this.getLogicalSourceId(triplesMapId);
 
         let logicalSource = this.buildLogicalSource(logicalSourceId);
@@ -148,9 +147,29 @@ class RMLParser {
 
         let triplesMap = new TriplesMap(logicalSource, subjectMap, predicateObjectMaps);
         return triplesMap;
-
     }
 
+
+    buildTriplesMapWithoutPredicateObjectMaps(triplesMapId) {        
+        console.log(`buildTriplesMapWithoutPredicateObjectMaps : ${triplesMapId} ...`)
+
+        let logicalSourceId = this.getLogicalSourceId(triplesMapId);
+        let logicalSource = this.buildLogicalSource(logicalSourceId);
+        let subjectMapId = this.getSubjectMapId(triplesMapId);
+        let subjectMap = this.buildSubjectMap(subjectMapId);
+        let predicateObjectMapsIds = this.getPredicateObjectMapsIds(triplesMapId)
+
+        let predicateObjectMaps = []
+        let subjectMapAsPredicateObjectMapIdentifier = new PredicateObjectMap();
+        subjectMapAsPredicateObjectMapIdentifier.predicate = "identifier";
+        subjectMapAsPredicateObjectMapIdentifier.objectMap = subjectMap;
+        predicateObjectMaps.push(subjectMapAsPredicateObjectMapIdentifier)
+
+        let triplesMap = new TriplesMap(logicalSource, subjectMap, predicateObjectMaps);
+        this.mapIdTriplesMap[triplesMapId] = triplesMap;
+
+        return triplesMap;
+    }
 
 
     buildPredicateObjectMap(predicateObjectMapId) {
@@ -315,8 +334,9 @@ class TermMap {
                 if(item['rr:parentTriplesMap']) {
                     //this.parentTriplesMap = item['rr:parentTriplesMap']["@id"];
                     let parentTriplesMapId = item['rr:parentTriplesMap']["@id"];
+
                     let rmlParser = new RMLParser(json);
-                    this.parentTriplesMap = rmlParser.buildTriplesMap(parentTriplesMapId);
+                    this.parentTriplesMap = rmlParser.buildTriplesMapWithoutPredicateObjectMaps(parentTriplesMapId);
                 }
 
                 if(item['rr:joinCondition']) {

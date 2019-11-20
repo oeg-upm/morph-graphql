@@ -98,7 +98,7 @@ query review_product_producttype_parenttype {
 ```
 
 
-#### q4
+#### q4: Queries of this template retrieve details of the reviews about the products in a given offer, including the country code of the reviewer’s country.
 ```
 query offer_product_review_person_country {
   listOffer(nr: "2") {
@@ -128,7 +128,7 @@ query offer_product_review_person_country {
 }
 ```
 
-#### q5
+#### q5: Queries of this template go from a given product to its reviews and back, repeatedly for four times, and request the review titles along the way and the product label in the end.
 ```
 query product_review_product {
   listProductWithReview(nr: "370") {
@@ -163,7 +163,7 @@ query product_review_product {
 }
 ```
 
-#### q6
+#### q6: Queries of this template retrieve the country of the producers that produce the products offered by a given vendor.
 ```
 query vendor_offer_product_producer_country {
   listOffer {
@@ -185,7 +185,7 @@ query vendor_offer_product_producer_country {
 }
 ```
 
-#### q11
+#### q11: Queries of this template search for all offers of a given vendor by using a search condition (instead of starting the traversal from the given vendor as done in Q6). Then, for each offer, the price and the offerWebpage is requested, as well as data about the offered product.
 ```
 query subquerySearch {
   listOffer {
@@ -205,7 +205,7 @@ query subquerySearch {
 ```
 
 
-#### q12
+#### q12: Queries of this template retrieve data about offers for products of a given producer. These offers are filtered based on a given vendor ID. The filter condition in this query template is the same as the search condition in the previous template.
 ```
 query subqueryFilter1 {
   listOffer {

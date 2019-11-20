@@ -458,7 +458,7 @@
 
 	rr:subjectMap [
 		rr:template "http://lingbm.linkeddata.es/producer/{nr}";
-		rr:class schema:Producer
+		rr:class schema:ProducerWithProduct
 	];
 
 	rr:predicateObjectMap [

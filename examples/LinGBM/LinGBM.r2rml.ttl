@@ -626,3 +626,48 @@
 	];
 
 .
+
+<TMProductType>
+	rr:logicalTable  [
+		rr:tableName  "producttype";
+	];
+
+	rr:subjectMap [
+		rr:template "http://lingbm.linkeddata.es/producttype/{nr}";
+		rr:class schema:ProductType
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:nr;
+	  rr:objectMap    [ rr:column  "nr" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:label;
+	  rr:objectMap    [ rr:column  "label" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:comment;
+	  rr:objectMap    [ rr:column  "comment" ]
+	];
+
+	rr:predicateObjectMap [
+		rr:predicate ex:parent;
+		rr:objectMap    [
+			rr:parentTriplesMap <TMProductType>;
+			rr:joinCondition [ rr:child "parent" ; rr:parent "nr" ; ];
+		];
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:publisher;
+	  rr:objectMap    [ rr:column  "publisher" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:publishDate;
+	  rr:objectMap    [ rr:column  "publishDate" ]
+	];
+
+.

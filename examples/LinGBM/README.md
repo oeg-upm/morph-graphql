@@ -56,7 +56,8 @@ query offer_product_review {
 }
 ```
 
-#### q2
+#### q2: Queries of this template retrieve all the reviews about all the products of a given producer.
+
 ```
 {
   listProducerWithProduct(nr: "8") {
@@ -69,8 +70,33 @@ query offer_product_review {
     }
   }
 }
+```
+
+
+#### q3: Queries of this template retrieve several attributes of both the product type and its parent type for a product discussed by a given review.
+
 
 ```
+{
+  listReview(nr: "8") {
+    identifier
+    nr
+    reviewFor {
+      identifier
+      producttype {
+        identifier
+        nr
+        label
+        comment
+        parent {
+          identifier
+        }
+      }
+    }
+  }
+}
+```
+
 
 #### q4
 ```

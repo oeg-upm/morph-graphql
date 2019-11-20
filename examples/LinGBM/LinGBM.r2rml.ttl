@@ -450,6 +450,74 @@
 
 .
 
+<TMProducerWithProduct>
+	rr:logicalTable  [
+		# CREATE VIEW producer_with_product AS SELECT product.nr AS product, producer.* FROM producer INNER JOIN product WHERE producer.nr = product.producer
+		rr:tableName  "producer_with_product";
+	];
+
+	rr:subjectMap [
+		rr:template "http://lingbm.linkeddata.es/producer/{nr}";
+		rr:class schema:Producer
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:nr;
+	  rr:objectMap    [ rr:column  "nr" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:label;
+	  rr:objectMap    [ rr:column  "label" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:comment;
+	  rr:objectMap    [ rr:column  "comment" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:homepage;
+	  rr:objectMap    [ rr:column  "homepage" ]
+	];
+
+	rr:predicateObjectMap [
+		rr:predicate ex:country;
+		rr:objectMap    [
+			rr:parentTriplesMap <TMCountry>;
+			rr:joinCondition [ rr:child "country" ; rr:parent "code" ; ];
+		];
+	];
+
+	rr:predicateObjectMap [
+		rr:predicate ex:product;
+		rr:objectMap    [
+			rr:parentTriplesMap <TMProduct>;
+			rr:joinCondition [ rr:child "product" ; rr:parent "nr" ; ];
+		];
+	];
+
+	rr:predicateObjectMap [
+		rr:predicate ex:productWithReview;
+		rr:objectMap    [
+			rr:parentTriplesMap <TMProductWithReview>;
+			rr:joinCondition [ rr:child "product" ; rr:parent "nr" ; ];
+		];
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:publisher;
+	  rr:objectMap    [ rr:column  "publisher" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:publishDate;
+	  rr:objectMap    [ rr:column  "publishDate" ]
+	];
+
+.
+
+
 <TMPerson>
 	rr:logicalTable  [
 		rr:tableName  "person";

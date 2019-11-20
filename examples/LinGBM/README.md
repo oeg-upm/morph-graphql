@@ -116,7 +116,9 @@ query offer_product_review_person_country {
         rating3
         rating4
         reviewer {
+          identifier
           country {
+            identifier
             code
           }
         }

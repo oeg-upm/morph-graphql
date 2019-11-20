@@ -128,6 +128,41 @@ query offer_product_review_person_country {
 }
 ```
 
+#### q5
+```
+query product_review_product {
+  listProductWithReview(nr: "370") {
+    identifier
+    nr
+    review {
+      identifier
+      nr
+      title
+      reviewFor {
+        identifier
+        productWithReview {
+          identifier
+          nr
+          review {
+            identifier
+            nr
+            title
+            reviewFor {
+              identifier
+              product {
+                identifier
+                nr
+                label
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
 #### q6
 ```
 query vendor_offer_product_producer_country {

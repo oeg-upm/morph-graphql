@@ -654,10 +654,7 @@
 
 	rr:predicateObjectMap [
 		rr:predicate ex:parent;
-		rr:objectMap    [
-			rr:parentTriplesMap <TMProductType>;
-			rr:joinCondition [ rr:child "parent" ; rr:parent "nr" ; ];
-		];
+		rr:objectMap    [ rr:parent  "parent" ]
 	];
 
 	rr:predicateObjectMap [

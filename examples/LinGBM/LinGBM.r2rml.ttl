@@ -30,6 +30,14 @@
 	];
 
 	rr:predicateObjectMap [
+		rr:predicate ex:reviewFor;
+		rr:objectMap    [
+			rr:parentTriplesMap <TMProductTypeProduct>;
+			rr:joinCondition [ rr:child "product" ; rr:parent "product" ; ];
+		];
+	];
+
+	rr:predicateObjectMap [
 		rr:predicate ex:producer;
 		rr:objectMap    [
 			rr:parentTriplesMap <TMProducer>;

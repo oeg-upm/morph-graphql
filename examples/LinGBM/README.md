@@ -101,7 +101,7 @@ query review_product_producttype_parenttype {
 #### q4
 ```
 query offer_product_review_person_country {
-  listOffer(identifier: "http://lingbm.linkeddata.es/offer/2") {
+  listOffer(nr: "2") {
     identifier
     productWithReview {
       identifier

@@ -38,7 +38,7 @@ With docker:
 #### q1: Queries of this template retrieve several attributes of every review about a product in a given offer
 ```
 query offer_product_review {
-  listOffer(identifier: "http://lingbm.linkeddata.es/offer/2") {
+  listOffer(nr: "2") {
     identifier
     productWithReview {
       identifier

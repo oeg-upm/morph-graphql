@@ -1,6 +1,6 @@
 # morph-GraphQL
 
-## EXAMPLE LinGBM: Translating mappings online for Javascript and LinGBM dataset in SQLite database (assuming that you have npm and node or docker installed)
+## EXAMPLE LinGBM: Translating mappings online for Javascript and LinGBM dataset in SQLite database (assuming that you have npm and node or docker installed). See https://github.com/LiUGraphQL/LinGBM
 
 ### Dataset
 - in sqlite: https://github.com/oeg-upm/morph-graphql/raw/master/examples/LinGBM/LinGBM1000.db
@@ -35,7 +35,7 @@ With docker:
 
 ### Queries
 
-#### q1
+#### q1: Queries of this template retrieve several attributes of every review about a product in a given offer
 ```
 query offer_product_review {
   listOffer(identifier: "http://lingbm.linkeddata.es/offer/2") {

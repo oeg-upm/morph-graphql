@@ -1,14 +1,12 @@
-# morph-GraphQL
+# EXAMPLE LinGBM: Translating mappings online for Javascript and LinGBM dataset in SQLite database (assuming that you have npm and node or docker installed). See https://github.com/LiUGraphQL/LinGBM
 
-## EXAMPLE LinGBM: Translating mappings online for Javascript and LinGBM dataset in SQLite database (assuming that you have npm and node or docker installed). See https://github.com/LiUGraphQL/LinGBM
-
-### Dataset
+## Dataset
 - in sqlite: https://github.com/oeg-upm/morph-graphql/raw/master/examples/LinGBM/LinGBM1000.db
 
-### Mapping
+## Mapping
 - r2rml: https://raw.githubusercontent.com/oeg-upm/morph-graphql/master/examples/LinGBM/LinGBM.r2rml.ttl
 
-### Installation Instructions
+## Installation Instructions
 With Node:
 1. ```npm install```
 2. ```git clone https://github.com/oeg-upm/morph-graphql```
@@ -21,7 +19,7 @@ With Node:
 With docker:
 1. ```docker run -d -p 8082:8082 --name mapping-translator oegdataintegration/mapping-translator:1.0```
 
-### Running Instructions
+## Running Instructions
 1. ```mkdir LinGBM1000```
 2. ```cd LinGBM1000```
 3. Translate the corresponding mappings: 
@@ -33,9 +31,9 @@ With docker:
 8. ```npm start```
 9. Go to http://localhost:4321/graphql from your browser, use some of the queries below
 
-### Queries
+## Queries
 
-#### q1: Queries of this template retrieve several attributes of every review about a product in a given offer
+### q1: Queries of this template retrieve several attributes of every review about a product in a given offer
 ```
 query offer_product_review {
   listOffer(nr: "2") {
@@ -56,8 +54,7 @@ query offer_product_review {
 }
 ```
 
-#### q2: Queries of this template retrieve all the reviews about all the products of a given producer.
-
+### q2: Queries of this template retrieve all the reviews about all the products of a given producer.
 ```
 query producer_product_review {
   listProducerWithProduct(nr: "8") {
@@ -73,9 +70,7 @@ query producer_product_review {
 ```
 
 
-#### q3: Queries of this template retrieve several attributes of both the product type and its parent type for a product discussed by a given review.
-
-
+### q3: Queries of this template retrieve several attributes of both the product type and its parent type for a product discussed by a given review.
 ```
 query review_product_producttype_parenttype {
   listReview(nr: "8") {
@@ -98,7 +93,7 @@ query review_product_producttype_parenttype {
 ```
 
 
-#### q4: Queries of this template retrieve details of the reviews about the products in a given offer, including the country code of the reviewer’s country.
+### q4: Queries of this template retrieve details of the reviews about the products in a given offer, including the country code of the reviewer’s country.
 ```
 query offer_product_review_person_country {
   listOffer(nr: "2") {
@@ -128,7 +123,7 @@ query offer_product_review_person_country {
 }
 ```
 
-#### q5: Queries of this template go from a given product to its reviews and back, repeatedly for four times, and request the review titles along the way and the product label in the end.
+### q5: Queries of this template go from a given product to its reviews and back, repeatedly for four times, and request the review titles along the way and the product label in the end.
 ```
 query product_review_product {
   listProductWithReview(nr: "370") {
@@ -163,7 +158,7 @@ query product_review_product {
 }
 ```
 
-#### q6: Queries of this template retrieve the country of the producers that produce the products offered by a given vendor.
+### q6: Queries of this template retrieve the country of the producers that produce the products offered by a given vendor.
 ```
 query vendor_offer_product_producer_country {
   listOffer {
@@ -185,7 +180,7 @@ query vendor_offer_product_producer_country {
 }
 ```
 
-#### q11: Queries of this template search for all offers of a given vendor by using a search condition (instead of starting the traversal from the given vendor as done in Q6). Then, for each offer, the price and the offerWebpage is requested, as well as data about the offered product.
+### q11: Queries of this template search for all offers of a given vendor by using a search condition (instead of starting the traversal from the given vendor as done in Q6). Then, for each offer, the price and the offerWebpage is requested, as well as data about the offered product.
 ```
 query subquerySearch {
   listOffer {
@@ -205,7 +200,7 @@ query subquerySearch {
 ```
 
 
-#### q12: Queries of this template retrieve data about offers for products of a given producer. These offers are filtered based on a given vendor ID. The filter condition in this query template is the same as the search condition in the previous template.
+### q12: Queries of this template retrieve data about offers for products of a given producer. These offers are filtered based on a given vendor ID. The filter condition in this query template is the same as the search condition in the previous template.
 ```
 query subqueryFilter1 {
   listOffer {

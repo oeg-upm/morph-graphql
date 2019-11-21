@@ -166,8 +166,6 @@ class RMLParser {
         predicateObjectMaps.push(subjectMapAsPredicateObjectMapIdentifier)
 
         let triplesMap = new TriplesMap(logicalSource, subjectMap, predicateObjectMaps);
-        this.mapIdTriplesMap[triplesMapId] = triplesMap;
-
         return triplesMap;
     }
 

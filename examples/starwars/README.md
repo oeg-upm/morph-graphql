@@ -11,11 +11,11 @@
 - See: https://github.com/oeg-upm/morph-graphql
 
 ## Running Instructions
-1. ```mkdir output```
-2. ```cd output```
+1. ```mkdir starwars```
+2. ```cd starwars```
 3. Translate the corresponding mappings: 
-   ```curl -X POST http://localhost:8082/transform -H 'Content-Type: application/json' -d '{ "prog_lang": "javascript", "dataset_type":"csv", "mapping_url":"https://raw.githubusercontent.com/oeg-upm/morph-graphql/master/examples/starwars/mappings.r2rml.ttl", "db_name":"starwars.sqlite", "mapping_language":"r2rml", "queryplanner":"joinmonster" }' > output.zip```
-4. ```unzip output.zip```
+   ```curl -X POST http://localhost:8082/transform -H 'Content-Type: application/json' -d '{ "prog_lang": "javascript", "dataset_type":"csv", "mapping_url":"https://raw.githubusercontent.com/oeg-upm/morph-graphql/master/examples/starwars/mappings.r2rml.ttl", "db_name":"starwars.sqlite", "mapping_language":"r2rml", "queryplanner":"joinmonster" }' > starwars.zip```
+4. ```unzip starwars.zip```
 5. ```npm install```
 6. ```npm start```
 7. Go to http://localhost:4321/graphql from your browser, use some of the queries below

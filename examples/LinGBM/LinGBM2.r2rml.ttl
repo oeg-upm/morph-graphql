@@ -1,0 +1,720 @@
+@prefix rr: <http://www.w3.org/ns/r2rml#>.
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+@prefix ex: <http://www.example.com/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix fno: <http://w3id.org/function/ontology>.
+@prefix schema: <http://schema.org/>.
+
+<TMReview>
+	rr:logicalTable  [
+		rr:tableName  "review";
+	];
+
+	rr:subjectMap [
+		rr:template "http://lingbm.linkeddata.es/review/{nr}";
+		rr:class schema:Review
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:nr;
+	  rr:objectMap    [ rr:column  "nr" ]
+	];
+
+	rr:predicateObjectMap [
+		rr:predicate ex:product;
+		rr:objectMap    [
+			rr:parentTriplesMap <TMProduct>;
+			rr:joinCondition [ rr:child "product" ; rr:parent "nr" ; ];
+		];
+	];
+
+	rr:predicateObjectMap [
+		rr:predicate ex:reviewFor;
+		rr:objectMap    [
+			rr:parentTriplesMap <TMProductTypeProduct>;
+			rr:joinCondition [ rr:child "product" ; rr:parent "product" ; ];
+		];
+	];
+
+	rr:predicateObjectMap [
+		rr:predicate ex:producer;
+		rr:objectMap    [
+			rr:parentTriplesMap <TMProducer>;
+			rr:joinCondition [ rr:child "producer" ; rr:parent "nr" ; ];
+		];	
+	];
+
+	rr:predicateObjectMap [
+		rr:predicate ex:reviewer;
+		rr:objectMap    [
+			rr:parentTriplesMap <TMPerson>;
+			rr:joinCondition [ rr:child "person" ; rr:parent "nr" ; ];
+		];
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:reviewDate;
+	  rr:objectMap    [ rr:column  "reviewDate" ]
+	];
+
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:title;
+	  rr:objectMap    [ rr:column  "title" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:text;
+	  rr:objectMap    [ rr:column  "text" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:language;
+	  rr:objectMap    [ rr:column  "language" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:rating1;
+	  rr:objectMap    [ rr:column  "rating1" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:rating2;
+	  rr:objectMap    [ rr:column  "rating2" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:rating3;
+	  rr:objectMap    [ rr:column  "rating3" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:rating4;
+	  rr:objectMap    [ rr:column  "rating4" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:publisher;
+	  rr:objectMap    [ rr:column  "publisher" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:publishDate;
+	  rr:objectMap    [ rr:column  "publishDate" ]
+	];
+.
+
+
+<TMProduct>
+	rr:logicalTable  [
+		rr:tableName  "product";
+	];
+
+	rr:subjectMap [
+		rr:template "http://lingbm.linkeddata.es/product/{nr}";
+		rr:class schema:Product
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:nr;
+	  rr:objectMap    [ rr:column  "nr" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:label;
+	  rr:objectMap    [ rr:column  "label" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:comment;
+	  rr:objectMap    [ rr:column  "comment" ]
+	];
+
+	rr:predicateObjectMap [
+		rr:predicate ex:producer;
+		rr:objectMap    [
+			rr:parentTriplesMap <TMProducer>;
+			rr:joinCondition [ rr:child "producer" ; rr:parent "nr" ; ];
+		];
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:propertyNum1;
+	  rr:objectMap    [ rr:column  "propertyNum1" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:propertyNum2;
+	  rr:objectMap    [ rr:column  "propertyNum2" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:propertyNum3;
+	  rr:objectMap    [ rr:column  "propertyNum3" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:propertyNum4;
+	  rr:objectMap    [ rr:column  "propertyNum4" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:propertyNum5;
+	  rr:objectMap    [ rr:column  "propertyNum5" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:propertyNum6;
+	  rr:objectMap    [ rr:column  "propertyNum6" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:propertyTex1;
+	  rr:objectMap    [ rr:column  "propertyTex1" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:propertyTex2;
+	  rr:objectMap    [ rr:column  "propertyTex2" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:propertyTex3;
+	  rr:objectMap    [ rr:column  "propertyTex3" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:propertyTex4;
+	  rr:objectMap    [ rr:column  "propertyTex4" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:propertyTex5;
+	  rr:objectMap    [ rr:column  "propertyTex5" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:propertyTex6;
+	  rr:objectMap    [ rr:column  "propertyTex6" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:publisher;
+	  rr:objectMap    [ rr:column  "publisher" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:publishDate;
+	  rr:objectMap    [ rr:column  "publishDate" ]
+	];
+.
+
+<TMProductWithReview>
+	rr:logicalTable  [
+		#CREATE VIEW product_with_review AS SELECT product.*, review.nr as review_nr FROM product inner join review on product.nr = review.product
+		#rr:tableName  "product_with_review";
+		rr:sqlQuery  """SELECT product.*, review.nr as review_nr FROM product inner join review on product.nr = review.product""";
+	];
+
+	rr:subjectMap [
+		rr:template "http://lingbm.linkeddata.es/product_with_review/{nr}";
+		rr:class schema:ProductWithReview
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:nr;
+	  rr:objectMap    [ rr:column  "nr" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:label;
+	  rr:objectMap    [ rr:column  "label" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:comment;
+	  rr:objectMap    [ rr:column  "comment" ]
+	];
+
+	rr:predicateObjectMap [
+		rr:predicate ex:producer;
+		rr:objectMap    [
+			rr:parentTriplesMap <TMProducer>;
+			rr:joinCondition [ rr:child "producer" ; rr:parent "nr" ; ];
+		];
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:propertyNum1;
+	  rr:objectMap    [ rr:column  "propertyNum1" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:propertyNum2;
+	  rr:objectMap    [ rr:column  "propertyNum2" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:propertyNum3;
+	  rr:objectMap    [ rr:column  "propertyNum3" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:propertyNum4;
+	  rr:objectMap    [ rr:column  "propertyNum4" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:propertyNum5;
+	  rr:objectMap    [ rr:column  "propertyNum5" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:propertyNum6;
+	  rr:objectMap    [ rr:column  "propertyNum6" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:propertyTex1;
+	  rr:objectMap    [ rr:column  "propertyTex1" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:propertyTex2;
+	  rr:objectMap    [ rr:column  "propertyTex2" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:propertyTex3;
+	  rr:objectMap    [ rr:column  "propertyTex3" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:propertyTex4;
+	  rr:objectMap    [ rr:column  "propertyTex4" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:propertyTex5;
+	  rr:objectMap    [ rr:column  "propertyTex5" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:propertyTex6;
+	  rr:objectMap    [ rr:column  "propertyTex6" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:publisher;
+	  rr:objectMap    [ rr:column  "publisher" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:publishDate;
+	  rr:objectMap    [ rr:column  "publishDate" ]
+	];
+
+	rr:predicateObjectMap [
+		rr:predicate ex:review;
+		rr:objectMap    [
+			rr:parentTriplesMap <TMReview>;
+			rr:joinCondition [ rr:child "review_nr" ; rr:parent "nr" ; ];
+		];
+	];
+
+.
+
+<TMOffer>
+	rr:logicalTable  [
+		rr:tableName  "offer";
+	];
+
+	rr:subjectMap [
+		rr:template "http://lingbm.linkeddata.es/offer/{nr}";
+		rr:class schema:Offer
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:nr;
+	  rr:objectMap    [ rr:column  "nr" ]
+	];
+
+	rr:predicateObjectMap [
+		rr:predicate ex:product;
+		rr:objectMap    [
+			rr:parentTriplesMap <TMProduct>;
+			rr:joinCondition [ rr:child "product" ; rr:parent "nr" ; ];
+		];
+	];
+
+	rr:predicateObjectMap [
+		rr:predicate ex:productWithReview;
+		rr:objectMap    [
+			rr:parentTriplesMap <TMProductWithReview>;
+			rr:joinCondition [ rr:child "product" ; rr:parent "nr" ; ];
+		];
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:producer;
+		rr:objectMap    [
+			rr:parentTriplesMap <TMProducer>;
+			rr:joinCondition [ rr:child "producer" ; rr:parent "nr" ; ];
+		];	
+	];
+
+	rr:predicateObjectMap [
+		rr:predicate ex:vendor;
+		rr:objectMap    [
+			rr:parentTriplesMap <TMVendor>;
+			rr:joinCondition [ rr:child "vendor" ; rr:parent "nr" ; ];
+		];
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:price;
+	  rr:objectMap    [ rr:column  "price" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:validFrom;
+	  rr:objectMap    [ rr:column  "validFrom" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:validTo;
+	  rr:objectMap    [ rr:column  "validTo" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:deliveryDays;
+	  rr:objectMap    [ rr:column  "deliveryDays" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:offerWebpage;
+	  rr:objectMap    [ rr:column  "offerWebpage" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:publisher;
+	  rr:objectMap    [ rr:column  "publisher" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:publishDate;
+	  rr:objectMap    [ rr:column  "publishDate" ]
+	];
+
+.
+
+<TMProducer>
+	rr:logicalTable  [
+		rr:tableName  "producer";
+	];
+
+	rr:subjectMap [
+		rr:template "http://lingbm.linkeddata.es/producer/{nr}";
+		rr:class schema:Producer
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:nr;
+	  rr:objectMap    [ rr:column  "nr" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:label;
+	  rr:objectMap    [ rr:column  "label" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:comment;
+	  rr:objectMap    [ rr:column  "comment" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:homepage;
+	  rr:objectMap    [ rr:column  "homepage" ]
+	];
+
+	rr:predicateObjectMap [
+		rr:predicate ex:country;
+		rr:objectMap    [
+			rr:parentTriplesMap <TMCountry>;
+			rr:joinCondition [ rr:child "country" ; rr:parent "code" ; ];
+		];
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:publisher;
+	  rr:objectMap    [ rr:column  "publisher" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:publishDate;
+	  rr:objectMap    [ rr:column  "publishDate" ]
+	];
+
+.
+
+<TMProducerWithProduct>
+	rr:logicalTable  [
+		# CREATE VIEW producer_with_product AS SELECT product.nr AS product, producer.* FROM producer INNER JOIN product WHERE producer.nr = product.producer
+		#rr:tableName  "producer_with_product";
+		rr:sqlQuery  """SELECT product.nr AS product, producer.* FROM producer INNER JOIN product WHERE producer.nr = product.producer""";
+	];
+
+	rr:subjectMap [
+		rr:template "http://lingbm.linkeddata.es/producer/{nr}";
+		rr:class schema:ProducerWithProduct
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:nr;
+	  rr:objectMap    [ rr:column  "nr" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:label;
+	  rr:objectMap    [ rr:column  "label" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:comment;
+	  rr:objectMap    [ rr:column  "comment" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:homepage;
+	  rr:objectMap    [ rr:column  "homepage" ]
+	];
+
+	rr:predicateObjectMap [
+		rr:predicate ex:country;
+		rr:objectMap    [
+			rr:parentTriplesMap <TMCountry>;
+			rr:joinCondition [ rr:child "country" ; rr:parent "code" ; ];
+		];
+	];
+
+	rr:predicateObjectMap [
+		rr:predicate ex:product;
+		rr:objectMap    [
+			rr:parentTriplesMap <TMProduct>;
+			rr:joinCondition [ rr:child "product" ; rr:parent "nr" ; ];
+		];
+	];
+
+	rr:predicateObjectMap [
+		rr:predicate ex:productWithReview;
+		rr:objectMap    [
+			rr:parentTriplesMap <TMProductWithReview>;
+			rr:joinCondition [ rr:child "product" ; rr:parent "nr" ; ];
+		];
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:publisher;
+	  rr:objectMap    [ rr:column  "publisher" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:publishDate;
+	  rr:objectMap    [ rr:column  "publishDate" ]
+	];
+
+.
+
+
+<TMPerson>
+	rr:logicalTable  [
+		rr:tableName  "person";
+	];
+
+	rr:subjectMap [
+		rr:template "http://lingbm.linkeddata.es/person/{nr}";
+		rr:class schema:Person
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:nr;
+	  rr:objectMap    [ rr:column  "nr" ]
+	];
+
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:name;
+	  rr:objectMap    [ rr:column  "name" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:mbox_sha1sum;
+	  rr:objectMap    [ rr:column  "mbox_sha1sum" ]
+	];
+
+	rr:predicateObjectMap [
+		rr:predicate ex:country;
+		rr:objectMap    [
+			rr:parentTriplesMap <TMCountry>;
+			rr:joinCondition [ rr:child "country" ; rr:parent "code" ; ];
+		];
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:publisher;
+	  rr:objectMap    [ rr:column  "publisher" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:publishDate;
+	  rr:objectMap    [ rr:column  "publishDate" ]
+	];
+
+.
+
+<TMCountry>
+	rr:logicalTable  [
+		#CREATE VIEW country AS SELECT DISTINCT country AS code FROM person
+		# rr:tableName  "country";
+		rr:sqlQuery  """SELECT DISTINCT country AS code FROM person""";
+	];
+
+	rr:subjectMap [
+		rr:template "http://lingbm.linkeddata.es/country/{code}";
+		rr:class schema:Country
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:code;
+	  rr:objectMap    [ rr:column  "code" ]
+	];
+.
+
+
+<TMVendor>
+	rr:logicalTable  [
+		rr:tableName  "vendor";
+	];
+
+	rr:subjectMap [
+		rr:template "http://lingbm.linkeddata.es/vendor/{nr}";
+		rr:class schema:Vendor
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:label;
+	  rr:objectMap    [ rr:column  "label" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:comment;
+	  rr:objectMap    [ rr:column  "comment" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:homepage;
+	  rr:objectMap    [ rr:column  "homepage" ]
+	];
+
+	rr:predicateObjectMap [
+		rr:predicate ex:country;
+		rr:objectMap    [
+			rr:parentTriplesMap <TMCountry>;
+			rr:joinCondition [ rr:child "country" ; rr:parent "code" ; ];
+		];
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:publisher;
+	  rr:objectMap    [ rr:column  "publisher" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:publishDate;
+	  rr:objectMap    [ rr:column  "publishDate" ]
+	];
+
+.
+
+<TMProductType>
+	rr:logicalTable  [
+		rr:tableName  "producttype";
+	];
+
+	rr:subjectMap [
+		rr:template "http://lingbm.linkeddata.es/producttype/{nr}";
+		rr:class schema:ProductType
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:nr;
+	  rr:objectMap    [ rr:column  "nr" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:label;
+	  rr:objectMap    [ rr:column  "label" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:comment;
+	  rr:objectMap    [ rr:column  "comment" ]
+	];
+
+	rr:predicateObjectMap [
+		rr:predicate ex:parent;
+		rr:objectMap    [
+			rr:parentTriplesMap <TMProductType>;
+			rr:joinCondition [ rr:child "parent" ; rr:parent "nr" ; ];
+		];
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:publisher;
+	  rr:objectMap    [ rr:column  "publisher" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:publishDate;
+	  rr:objectMap    [ rr:column  "publishDate" ]
+	];
+
+.
+
+<TMProductTypeProduct>
+	rr:logicalTable  [
+		rr:tableName  "producttypeproduct";
+	];
+
+	rr:subjectMap [
+		rr:template "http://lingbm.linkeddata.es/producttypeproduct/{product}/{productType}";
+		rr:class schema:ProductTypeProduct
+	];
+
+	rr:predicateObjectMap [
+		rr:predicate ex:product;
+		rr:objectMap    [
+			rr:parentTriplesMap <TMProduct>;
+			rr:joinCondition [ rr:child "product" ; rr:parent "nr" ; ];
+		];
+	];
+
+	rr:predicateObjectMap [
+		rr:predicate ex:productWithReview;
+		rr:objectMap    [
+			rr:parentTriplesMap <TMProductWithReview>;
+			rr:joinCondition [ rr:child "product" ; rr:parent "nr" ; ];
+		];
+	];
+
+	rr:predicateObjectMap [
+		rr:predicate ex:producttype;
+		rr:objectMap    [
+			rr:parentTriplesMap <TMProductType>;
+			rr:joinCondition [ rr:child "productType" ; rr:parent "nr" ; ];
+		];
+	];
+.
+

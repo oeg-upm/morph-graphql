@@ -213,7 +213,8 @@
 <TMProductWithReview>
 	rr:logicalTable  [
 		#CREATE VIEW product_with_review AS SELECT product.*, review.nr as review_nr FROM product inner join review on product.nr = review.product
-		rr:tableName  "product_with_review";
+		#rr:tableName  "product_with_review";
+		rr:sqlQuery  """SELECT product.*, review.nr as review_nr FROM product inner join review on product.nr = review.product""";
 	];
 
 	rr:subjectMap [
@@ -461,7 +462,8 @@
 <TMProducerWithProduct>
 	rr:logicalTable  [
 		# CREATE VIEW producer_with_product AS SELECT product.nr AS product, producer.* FROM producer INNER JOIN product WHERE producer.nr = product.producer
-		rr:tableName  "producer_with_product";
+		#rr:tableName  "producer_with_product";
+		rr:sqlQuery  """SELECT product.nr AS product, producer.* FROM producer INNER JOIN product WHERE producer.nr = product.producer""";
 	];
 
 	rr:subjectMap [
@@ -575,7 +577,8 @@
 <TMCountry>
 	rr:logicalTable  [
 		#CREATE VIEW country AS SELECT DISTINCT country AS code FROM person
-		rr:tableName  "country";
+		# rr:tableName  "country";
+		rr:sqlQuery  """SELECT DISTINCT country AS code FROM person""";
 	];
 
 	rr:subjectMap [

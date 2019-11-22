@@ -35,11 +35,22 @@ class RMLParser {
     }
 
     buildLogicalSource(logicalSourceId) {
-        let logicalSource = null;
+        let logicalSource = new LogicalTable();
         for(var i=0;i<this.json["@graph"].length;i++) {
             let item = this.json["@graph"][i]
             if(item["@id"]==logicalSourceId){
-                logicalSource = item['rr:tableName']
+                if(item['rr:tableName']) {
+                    logicalSource.tableName = item['rr:tableName']
+                }
+                if(item['rr:sqlQuery']) {
+                    logicalSource.sqlQuery = item['rr:sqlQuery']
+
+                } 
+                if(item['rr:sqlVersion']) {
+                    logicalSource.sqlVersion = item['rr:sqlVersion']
+
+                } 
+                
                 break
             }
         }
@@ -477,6 +488,14 @@ class PredicateObjectMap {
   }
 }
 
+class LogicalTable {
+    constructor(tableName, sqlQuery, sqlVersion) {
+        this.tableName = tableName;
+        this.sqlQuery = sqlQuery;
+        this.sqlVersion = sqlVersion;
+    }
+}
+
 class TriplesMap {
     constructor(logicalSource, subjectMap, predicateObjectMaps) {
         this.logicalSource = logicalSource;
@@ -492,13 +511,21 @@ class TriplesMap {
     getSubjectMap() { return this.subjectMap; }
     getPredicateObjectMaps() { return this.predicateObjectMaps; }
 
-    getAlpha() { 
-        if(this.logicalSource.endsWith(".csv")) {
-            return this.logicalSource.split(".csv")[0].split("/")[this.logicalSource.split(".csv")[0].split("/").length-1];
+    getAlpha() {
+        let alpha = null;
+        if(this.logicalSource.tableName) {
+            let tableName = this.logicalSource.tableName;
+            if(tableName.endsWith(".csv")) {
+                alpha = tableName.split(".csv")[0].split("/")[tableName.split(".csv")[0].split("/").length-1];
+            } else {
+                alpha = tableName; 
+            }
         } else {
-            return this.logicalSource; 
+            alpha = `(${this.logicalSource.sqlQuery})`;
         }
-        
+
+        console.log(`alpha = ${alpha}`)
+        return alpha;
     }
 
     genPRSQL() {

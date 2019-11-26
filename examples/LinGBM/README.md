@@ -113,19 +113,12 @@ query offer_product_review_person_country {
 ### q5: Queries of this template go from a given product to its reviews and back, repeatedly for four times, and request the review titles along the way and the product label in the end.
 ```
 query product_review_product {
-  listProductWithReview(nr: "370") {
-    identifier
-    nr
-    review {
-      identifier
-      nr
+  listProductWithReviews(nr: "370") {
+    reviews {
       title
       reviewFor {
-        identifier
-        productWithReview {
-          identifier
-          nr
-          review {
+        productWithReviews {
+          reviews {
             identifier
             nr
             title

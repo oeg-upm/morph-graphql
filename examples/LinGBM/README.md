@@ -86,9 +86,7 @@ query review_product_producttype_parenttype {
 ```
 query offer_product_review_person_country {
   listOffer(nr: "2") {
-    identifier
     productWithReview {
-      identifier
       label
       comment
       review {

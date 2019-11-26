@@ -141,18 +141,13 @@ query product_review_product {
 ### q6: Queries of this template retrieve the country of the producers that produce the products offered by a given vendor.
 ```
 query vendor_offer_product_producer_country {
-  listOffer {
-    identifier
-    vendor(identifier: "http://lingbm.linkeddata.es/vendor/1") {
-      identifier
-    }
-    product {
-      identifier
-      producer {
-        identifier
-        country {
-          identifier
-          code
+  listVendorWithOffers(nr: "1") {
+    offers {
+      product {
+        producer {
+          country {
+            code
+          }
         }
       }
     }

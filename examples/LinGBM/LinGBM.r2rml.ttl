@@ -604,6 +604,11 @@
 	];
 
 	rr:predicateObjectMap [
+	  rr:predicate ex:nr;
+	  rr:objectMap    [ rr:column  "nr" ]
+	];
+	
+	rr:predicateObjectMap [
 	  rr:predicate ex:label;
 	  rr:objectMap    [ rr:column  "label" ]
 	];
@@ -646,6 +651,11 @@
 	rr:subjectMap [
 		rr:template "http://lingbm.linkeddata.es/vendor/{nr}";
 		rr:class schema:VendorWithOffers
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:nr;
+	  rr:objectMap    [ rr:column  "nr" ]
 	];
 
 	rr:predicateObjectMap [

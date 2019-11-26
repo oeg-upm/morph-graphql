@@ -607,7 +607,7 @@
 	  rr:predicate ex:nr;
 	  rr:objectMap    [ rr:column  "nr" ]
 	];
-	
+
 	rr:predicateObjectMap [
 	  rr:predicate ex:label;
 	  rr:objectMap    [ rr:column  "label" ]
@@ -692,7 +692,7 @@
 	];
 
 	rr:predicateObjectMap [
-		rr:predicate ex:products;
+		rr:predicate ex:offers;
 		rr:objectMap    [
 			rr:parentTriplesMap <TMOffer>;
 			rr:joinCondition [ rr:child "offer_nr" ; rr:parent "nr" ; ];

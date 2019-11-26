@@ -645,7 +645,7 @@
 
 	rr:subjectMap [
 		rr:template "http://lingbm.linkeddata.es/vendor/{nr}";
-		rr:class schema:Vendor
+		rr:class schema:VendorWithOffers
 	];
 
 	rr:predicateObjectMap [

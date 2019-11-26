@@ -64,17 +64,16 @@ query producer_product_review {
 ```
 query review_product_producttype_parenttype {
   listReview(nr: "8") {
-    identifier
-    nr
     reviewFor {
-      identifier
       producttype {
-        identifier
         nr
         label
         comment
         parent {
           identifier
+          nr
+          label
+          comment
         }
       }
     }

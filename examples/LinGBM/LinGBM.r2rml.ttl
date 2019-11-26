@@ -638,6 +638,59 @@
 
 .
 
+<TMVendorWithOffers>
+	rr:logicalTable  [
+		rr:sqlQuery  """SELECT vendor.*, offer.nr AS offer_nr FROM vendor INNER JOIN offer WHERE vendor.nr = offer.vendor""";
+	];
+
+	rr:subjectMap [
+		rr:template "http://lingbm.linkeddata.es/vendor/{nr}";
+		rr:class schema:Vendor
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:label;
+	  rr:objectMap    [ rr:column  "label" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:comment;
+	  rr:objectMap    [ rr:column  "comment" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:homepage;
+	  rr:objectMap    [ rr:column  "homepage" ]
+	];
+
+	rr:predicateObjectMap [
+		rr:predicate ex:country;
+		rr:objectMap    [
+			rr:parentTriplesMap <TMCountry>;
+			rr:joinCondition [ rr:child "country" ; rr:parent "code" ; ];
+		];
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:publisher;
+	  rr:objectMap    [ rr:column  "publisher" ]
+	];
+
+	rr:predicateObjectMap [
+	  rr:predicate ex:publishDate;
+	  rr:objectMap    [ rr:column  "publishDate" ]
+	];
+
+	rr:predicateObjectMap [
+		rr:predicate ex:products;
+		rr:objectMap    [
+			rr:parentTriplesMap <TMOffer>;
+			rr:joinCondition [ rr:child "offer_nr" ; rr:parent "nr" ; ];
+		];
+	];
+.
+
+
 <TMProductType>
 	rr:logicalTable  [
 		rr:tableName  "producttype";

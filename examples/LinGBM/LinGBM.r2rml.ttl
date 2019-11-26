@@ -459,7 +459,7 @@
 
 .
 
-<TMProducerWithProduct>
+<TMProducerWithProducts>
 	rr:logicalTable  [
 		# CREATE VIEW producer_with_product AS SELECT product.nr AS product, producer.* FROM producer INNER JOIN product WHERE producer.nr = product.producer
 		#rr:tableName  "producer_with_product";
@@ -500,7 +500,7 @@
 	];
 
 	rr:predicateObjectMap [
-		rr:predicate ex:product;
+		rr:predicate ex:products;
 		rr:objectMap    [
 			rr:parentTriplesMap <TMProduct>;
 			rr:joinCondition [ rr:child "product" ; rr:parent "nr" ; ];

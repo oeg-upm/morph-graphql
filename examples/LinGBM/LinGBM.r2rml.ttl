@@ -210,7 +210,7 @@
 	];
 .
 
-<TMProductWithReview>
+<TMProductWithReviews>
 	rr:logicalTable  [
 		#CREATE VIEW product_with_review AS SELECT product.*, review.nr as review_nr FROM product inner join review on product.nr = review.product
 		#rr:tableName  "product_with_review";
@@ -219,7 +219,7 @@
 
 	rr:subjectMap [
 		rr:template "http://lingbm.linkeddata.es/product_with_review/{nr}";
-		rr:class schema:ProductWithReview
+		rr:class schema:ProductWithReviews
 	];
 
 	rr:predicateObjectMap [
@@ -316,7 +316,7 @@
 	];
 
 	rr:predicateObjectMap [
-		rr:predicate ex:review;
+		rr:predicate ex:reviews;
 		rr:objectMap    [
 			rr:parentTriplesMap <TMReview>;
 			rr:joinCondition [ rr:child "review_nr" ; rr:parent "nr" ; ];
@@ -349,9 +349,9 @@
 	];
 
 	rr:predicateObjectMap [
-		rr:predicate ex:productWithReview;
+		rr:predicate ex:productWithReviews;
 		rr:objectMap    [
-			rr:parentTriplesMap <TMProductWithReview>;
+			rr:parentTriplesMap <TMProductWithReviews>;
 			rr:joinCondition [ rr:child "product" ; rr:parent "nr" ; ];
 		];
 	];
@@ -508,9 +508,9 @@
 	];
 
 	rr:predicateObjectMap [
-		rr:predicate ex:productWithReview;
+		rr:predicate ex:productWithReviews;
 		rr:objectMap    [
-			rr:parentTriplesMap <TMProductWithReview>;
+			rr:parentTriplesMap <TMProductWithReviews>;
 			rr:joinCondition [ rr:child "product" ; rr:parent "nr" ; ];
 		];
 	];
@@ -702,9 +702,9 @@
 	];
 
 	rr:predicateObjectMap [
-		rr:predicate ex:productWithReview;
+		rr:predicate ex:productWithReviews;
 		rr:objectMap    [
-			rr:parentTriplesMap <TMProductWithReview>;
+			rr:parentTriplesMap <TMProductWithReviews>;
 			rr:joinCondition [ rr:child "product" ; rr:parent "nr" ; ];
 		];
 	];

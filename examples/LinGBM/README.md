@@ -7,17 +7,7 @@
 - r2rml: https://raw.githubusercontent.com/oeg-upm/morph-graphql/master/examples/LinGBM/LinGBM.r2rml.ttl
 
 ## Installation Instructions
-With Node:
-1. ```npm install```
-2. ```git clone https://github.com/oeg-upm/morph-graphql```
-3. ```cd morph-graphql```
-4. ```cd javascript```
-5. ```cd rdb```
-6. ```npm install```
-7. ```node app.js```
-
-With docker:
-1. ```docker run -d -p 8082:8082 --name mapping-translator oegdataintegration/mapping-translator:1.0```
+- See: https://github.com/oeg-upm/morph-graphql
 
 ## Running Instructions
 1. ```mkdir LinGBM1000```
@@ -74,17 +64,16 @@ query producer_product_review {
 ```
 query review_product_producttype_parenttype {
   listReview(nr: "8") {
-    identifier
-    nr
     reviewFor {
-      identifier
       producttype {
-        identifier
         nr
         label
         comment
         parent {
           identifier
+          nr
+          label
+          comment
         }
       }
     }
@@ -97,9 +86,7 @@ query review_product_producttype_parenttype {
 ```
 query offer_product_review_person_country {
   listOffer(nr: "2") {
-    identifier
     productWithReview {
-      identifier
       label
       comment
       review {

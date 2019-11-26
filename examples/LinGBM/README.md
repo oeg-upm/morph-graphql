@@ -28,9 +28,9 @@
 query offer_product_review {
   listOffer(nr: "2") {
     identifier
-    productWithReview {
+    productWithReviews {
       identifier
-      review {
+      reviews {
         identifier
         title
         text
@@ -49,9 +49,9 @@ query offer_product_review {
 query producer_product_review {
   listProducerWithProduct(nr: "8") {
     nr
-    productWithReview {
+    productWithReviews {
       nr
-      review {
+      reviews {
         title
       }
     }
@@ -86,10 +86,10 @@ query review_product_producttype_parenttype {
 ```
 query offer_product_review_person_country {
   listOffer(nr: "2") {
-    productWithReview {
+    productWithReviews {
       label
       comment
-      review {
+      reviews {
         identifier
         title
         text

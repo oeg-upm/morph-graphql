@@ -47,12 +47,11 @@ query offer_product_review {
 ### q2: Queries of this template retrieve all the reviews about all the products of a given producer.
 ```
 query producer_product_review {
-  listProducerWithProduct(nr: "8") {
-    nr
-    productWithReviews {
-      nr
-      reviews {
-        title
+  listReview {
+    title
+    product {
+      producer(nr: "8") {
+        nr
       }
     }
   }
@@ -141,18 +140,13 @@ query product_review_product {
 ### q6: Queries of this template retrieve the country of the producers that produce the products offered by a given vendor.
 ```
 query vendor_offer_product_producer_country {
-  listOffer {
-    identifier
-    vendor(identifier: "http://lingbm.linkeddata.es/vendor/1") {
-      identifier
-    }
-    product {
-      identifier
-      producer {
-        identifier
-        country {
-          identifier
-          code
+  listVendorWithOffers(nr: "1") {
+    offers {
+      product {
+        producer {
+          country {
+            code
+          }
         }
       }
     }
@@ -164,14 +158,12 @@ query vendor_offer_product_producer_country {
 ```
 query subquerySearch {
   listOffer {
-    identifier
     price
     offerWebpage
-    vendor(identifier: "http://lingbm.linkeddata.es/vendor/1") {
-      identifier
+    vendor(nr: "1") {
+      nr
     }
     product {
-      identifier
       label
       comment
     }
@@ -187,14 +179,14 @@ query subqueryFilter1 {
     identifier
     price
     offerWebpage
-    vendor(identifier: "http://lingbm.linkeddata.es/vendor/1") {
+    vendor(nr: "1") {
       identifier
     }
     product {
       identifier
       label
       comment
-      producer(identifier: "http://lingbm.linkeddata.es/producer/16") {
+      producer(nr: "16") {
         identifier
       }
     }

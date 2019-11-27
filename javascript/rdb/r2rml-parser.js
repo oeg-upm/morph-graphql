@@ -3,8 +3,116 @@ const uuid = require('uuid');
 class RMLParser {
     constructor(json) {
         this.json = json;
+        this.mapTriplesMapId = {};
     }
 
+    isRefObjectMap(json, termMapId) {
+        var result = false;
+
+        for(let i=0;i<json["@graph"].length;i++) {
+            let item = json["@graph"][i]
+            if(item["@id"]==termMapId){
+                if(item['rr:parentTriplesMap']) {
+                    result = true;
+                } 
+            }  
+        }
+
+        return result;
+    }
+
+    jsonToTermMap(json, termMapId, termMapType) {
+        let termMap = new TermMap();
+
+        if("SUBJECTMAP" == termMapType) {
+            termMap = new SubjectMap()
+        } else if("OBJECTMAP" == termMapType) {
+            termMap = new ObjectMap()
+        } 
+
+        for(let i=0;i<json["@graph"].length;i++) {
+            let item = json["@graph"][i]
+            if(item["@id"]==termMapId){
+                if(item['rr:parentTriplesMap']) {
+                    //this.parentTriplesMap = item['rr:parentTriplesMap']["@id"];
+                    let parentTriplesMapId = item['rr:parentTriplesMap']["@id"];
+                    termMap.parentTriplesMapId = parentTriplesMapId;
+                    let cachedTriplesMap = this.mapTriplesMapId[parentTriplesMapId];
+                    console.log(`cachedTriplesMap = ${cachedTriplesMap}`);
+                    if(cachedTriplesMap) {
+                        termMap.parentTriplesMap = cachedTriplesMap;
+                    } else {
+                        termMap.parentTriplesMap = this.buildTriplesMapWithoutPredicateObjectMaps(parentTriplesMapId);
+                    }
+
+                    if(item['rr:joinCondition']) {
+                        let joinConditionId = item['rr:joinCondition']["@id"];
+                        termMap.joinCondition = this.jsonToJoinCondition(json, joinConditionId)
+                    }
+                } else {
+                    termMap.referenceValue = item['rr:column']; 
+                    termMap.template = item['rr:template']; 
+                    termMap.functionString = item['rmlc:functions'];
+                    termMap.datatype = 'String';
+                    if(item['rr:datatype']){
+                        var xsdType = item['rr:datatype']['@id'].split(':')[1];
+                         switch (xsdType) { //ToDo how to include all possible datatypes? xsd:decimal, etc.
+                             case 'integer':
+                                termMap.datatype = 'Int';
+                                 break;
+                             case 'decimal':
+                                termMap.datatype = 'Float';
+                                 break;
+                             case 'float':
+                                termMap.datatype = 'Float';
+                                 break;
+                             case 'double':
+                                termMap.datatype = 'Float';
+                                 break;
+                             case 'boolean':
+                                termMap.datatype = 'Boolean';
+                                 break;
+                        }
+                    }
+                    else {
+                        termMap.datatype = 'String';
+                    }
+                }
+
+                break;
+            }
+        }
+
+        return termMap;
+    }
+
+    jsonToJoinCondition(json, joinConditionId) {
+        let joinCondition = new JoinCondition();;
+
+        for(var i=0;i<json["@graph"].length;i++){
+            let item = json["@graph"][i];
+            let itemId = item["@id"];
+            //console.log(`itemId = ${itemId}`);
+            //console.log(`\tjoinCondition = ${joinCondition}`);
+            if(item["@id"]==joinConditionId){
+                let childId = item["rr:child"];
+                // console.log(`childId = ${childId}`);
+                //let child = new TermMap();
+                //child.parseFromJson(json, childId);
+                //console.log(`child = ${child}`);
+                let parentId = item["rr:parent"];
+                // console.log(`parentId = ${parentId}`);
+                //let parent = new TermMap();
+                //parent.parseFromJson(json, parentId);
+                //console.log(`parent = ${parent}`);
+                joinCondition.child = childId;
+                joinCondition.parent = parentId ;
+                break
+            }
+        }
+        //console.log(`joinCondition = ${joinCondition}`);
+        return joinCondition;
+    }
 
     getTriplesMapsIds() {
         let triplesMapsIds = [];
@@ -74,8 +182,10 @@ class RMLParser {
     }
 
     buildSubjectMap(subjectMapId) {
-        var subjectMap = new SubjectMap();
-        subjectMap.parseFromJson(this.json, subjectMapId)
+        //var subjectMap = new SubjectMap();
+        //subjectMap.parseFromJson(this.json, subjectMapId)
+        var subjectMap = this.jsonToTermMap(this.json, subjectMapId, "SUBJECTMAP");
+
         for(var i=0;i<this.json["@graph"].length;i++) {
             let item = this.json["@graph"][i]
             if(item["@id"]==subjectMapId){
@@ -132,31 +242,12 @@ class RMLParser {
 
         for (var i=0; i < predicateObjectMapsIds.length; i++) {
             var predicateObjectMapId = predicateObjectMapsIds[i];
-            //console.log(`\tpredicateObjectMapId = ${predicateObjectMapId}`)
-
             let predicateObjectMap = this.buildPredicateObjectMap(predicateObjectMapId);
-            //console.log(`\t\tpredicateObjectMap.predicate = ${predicateObjectMap.predicate}`)
-            //console.log(`\t\tpredicateObjectMap.objectMap = ${predicateObjectMap.objectMap}`)
-
-            /*
-            if(predicateObjectMap.objectMap.parentTriplesMap) {
-                console.log(`\t\tpredicateObjectMap.objectMap.parentTriplesMap = ${predicateObjectMap.objectMap.parentTriplesMap}`)
-                console.log(`\t\tpredicateObjectMap.objectMap.parentTriplesMap.subjectMap.className = ${predicateObjectMap.objectMap.parentTriplesMap.subjectMap.className}`)
-            }
-            
-            if(predicateObjectMap.objectMap.joinCondition) {
-                console.log(`\t\tpredicateObjectMap.objectMap.joinCondition = ${predicateObjectMap.objectMap.joinCondition}`)
-                console.log(`\t\tpredicateObjectMap.objectMap.joinCondition.child.referenceValue = ${predicateObjectMap.objectMap.joinCondition.child.referenceValue}`)
-                console.log(`\t\tpredicateObjectMap.objectMap.joinCondition.child.functionString = ${predicateObjectMap.objectMap.joinCondition.child.functionString}`)
-                console.log(`\t\tpredicateObjectMap.objectMap.joinCondition.parent.referenceValue = ${predicateObjectMap.objectMap.joinCondition.parent.referenceValue}`)
-                console.log(`\t\tpredicateObjectMap.objectMap.joinCondition.parent.functionString = ${predicateObjectMap.objectMap.joinCondition.parent.functionString}`)
-            }
-            */
-
             predicateObjectMaps.push(predicateObjectMap)
         }
 
         let triplesMap = new TriplesMap(logicalSource, subjectMap, predicateObjectMaps);
+        this.mapTriplesMapId[triplesMapId] = triplesMap;
         return triplesMap;
     }
 
@@ -175,6 +266,16 @@ class RMLParser {
         subjectMapAsPredicateObjectMapIdentifier.predicate = "identifier";
         subjectMapAsPredicateObjectMapIdentifier.objectMap = subjectMap;
         predicateObjectMaps.push(subjectMapAsPredicateObjectMapIdentifier)
+
+        for (var i=0; i < predicateObjectMapsIds.length; i++) {
+            var predicateObjectMapId = predicateObjectMapsIds[i];
+            let objectId = this.getObjectMapId(predicateObjectMapId);
+            //console.log(`isRefObjectMap : ${this.isRefObjectMap(this.json, objectId)} ...`)
+            if(!this.isRefObjectMap(this.json, objectId)) {
+                let predicateObjectMap = this.buildPredicateObjectMap(predicateObjectMapId);
+                predicateObjectMaps.push(predicateObjectMap)
+            }
+        }
 
         let triplesMap = new TriplesMap(logicalSource, subjectMap, predicateObjectMaps);
         return triplesMap;
@@ -218,11 +319,11 @@ class RMLParser {
         return objectMapId
     }
 
-
-
     buildObjectMap(objectMapId) {
-        let objectMap = new ObjectMap();
-        objectMap.parseFromJson(this.json, objectMapId);
+        //let objectMap = new ObjectMap();
+        //objectMap.parseFromJson(this.json, objectMapId);
+        var objectMap = this.jsonToTermMap(this.json, objectMapId, "OBJECTMAP");
+        //console.log(`objectMap = ${objectMap}`);
         return objectMap;
     }
 
@@ -307,6 +408,7 @@ class TermMap {
         return prSQL;
     }
 
+    /*
     parseFromJson(json, termMapId) {
 
         for(let i=0;i<json["@graph"].length;i++) {
@@ -363,6 +465,7 @@ class TermMap {
         //console.log("termMap.template: " + termMap.template)
         //console.log("termMap.functionString: " + termMap.functionString)
     }
+    */
 
     // IMPORTANTE
 
@@ -371,19 +474,18 @@ class TermMap {
 
         for(var i=0;i<json["@graph"].length;i++){
             let item = json["@graph"][i];
-            let itemId = item["@id"];
             //console.log(`itemId = ${itemId}`);
             //console.log(`\tjoinCondition = ${joinCondition}`);
             if(item["@id"]==joinConditionId){
                 let childId = item["rr:child"];
                 // console.log(`childId = ${childId}`);
-                let child = new TermMap();
-                child.parseFromJson(json, childId);
+                //let child = new TermMap();
+                //child.parseFromJson(json, childId);
                 //console.log(`child = ${child}`);
                 let parentId = item["rr:parent"];
                 // console.log(`parentId = ${parentId}`);
-                let parent = new TermMap();
-                parent.parseFromJson(json, parentId);
+                //let parent = new TermMap();
+                //parent.parseFromJson(json, parentId);
                 //console.log(`parent = ${parent}`);
                 joinCondition.child = childId;
                 joinCondition.parent = parentId ;
@@ -648,25 +750,14 @@ exports.getSubjectMapRef = function(json, subjectMapId){
     return subjectMapRef
 }
 
+/*
 exports.getSubjectMap = function(json, subjectMapId){
-
-    // var subjectMap = this.getTermMap(json, subjectMapId)
-    // for(i=0;i<json["@graph"].length;i++) {
-    //     item = json["@graph"][i]
-    //
-    //     if(item["@id"]==subjectMapId){
-    //         subjectMap.referenceValue = item['rml:reference'];
-    //         subjectMap.template = item['rr:template'];
-    //         break;
-    //     }
-    // }
-
     var subjectMap = new SubjectMap();
     subjectMap.parseFromJson(json, subjectMapId)
     subjectMap.className = this.get_class_name(json)
-
     return subjectMap
 }
+*/
 
 exports.getTermMap = function(json, termMapId){
     var termMap = new TermMap();
@@ -832,7 +923,8 @@ exports.get_jsonld_from_mapping = function(mapping_url) {
 
     let smId = this.getSubjectMapId(j);
     let subjectMapRef = this.getSubjectMapRef(j, smId)
-    let subjectMap = this.getSubjectMap(j, smId)
+    //let subjectMap = this.getSubjectMap(j, smId)
+    let subjectMap = rmlParser.jsonToTermMap(j, smId, "SUBJECTMAP")
 
 
     var listOfPredicateObject =  this.get_predicate_object_map_list(j)

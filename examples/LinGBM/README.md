@@ -180,14 +180,14 @@ query subqueryFilter1 {
     identifier
     price
     offerWebpage
-    vendor(identifier: "http://lingbm.linkeddata.es/vendor/1") {
+    vendor(nr: "1") {
       identifier
     }
     product {
       identifier
       label
       comment
-      producer(identifier: "http://lingbm.linkeddata.es/producer/16") {
+      producer(nr: "16") {
         identifier
       }
     }

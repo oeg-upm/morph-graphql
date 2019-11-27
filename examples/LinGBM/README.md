@@ -157,16 +157,14 @@ query vendor_offer_product_producer_country {
 
 ### q11: Queries of this template search for all offers of a given vendor by using a search condition (instead of starting the traversal from the given vendor as done in Q6). Then, for each offer, the price and the offerWebpage is requested, as well as data about the offered product.
 ```
-query subquerySearch {
+{
   listOffer {
-    identifier
     price
     offerWebpage
-    vendor(identifier: "http://lingbm.linkeddata.es/vendor/1") {
-      identifier
+    vendor(nr: "1") {
+      nr
     }
     product {
-      identifier
       label
       comment
     }

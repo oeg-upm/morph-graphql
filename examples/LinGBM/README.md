@@ -21,6 +21,9 @@
 8. ```npm start```
 9. Go to http://localhost:4321/graphql from your browser, use some of the queries below
 
+## Deployment
+One instance of the LinGBM benchmark has been deployed at: http://lingbm1000.graphql.mappingpedia.linkeddata.es
+
 ## Queries
 
 ### q1: Queries of this template retrieve several attributes of every review about a product in a given offer

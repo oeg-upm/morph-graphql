@@ -1,16 +1,16 @@
-# EXAMPLE Starwars: Translating mappings online for Javascript and a set of CSV files (assuming that you have npm and node or docker installed)
+EXAMPLE Starwars: Translating mappings online for Javascript and a set of CSV files (assuming that you have npm and node or docker installed)
 
-## Dataset
+# Dataset
 ![schema](https://raw.githubusercontent.com/oeg-upm/morph-graphql/master/examples/starwars/schema.png)
 - url: https://github.com/oeg-upm/morph-graphql/tree/master/examples/starwars
 
-## Mapping
+# Mapping
 - url: https://raw.githubusercontent.com/oeg-upm/morph-graphql/master/examples/starwars/mappings.r2rml.ttl
 
-## Installation Instructions
+# Installation Instructions
 - See: https://github.com/oeg-upm/morph-graphql
 
-## Running Instructions
+# Running Instructions
 1. ```mkdir starwars```
 2. ```cd starwars```
 3. Translate the corresponding mappings: 
@@ -20,10 +20,13 @@
 6. ```npm start```
 7. Go to http://localhost:4321/graphql from your browser, use some of the queries below
 
-## Queries
+# Deployment
+- http://starwars.graphql.mappingpedia.linkeddata.es/graphql
+
+# Queries
 ![](https://raw.githubusercontent.com/oeg-upm/morph-graphql/master/examples/starwars/queries.png)
 
-### To query the hero in every episode
+## To query the hero in every episode
 ```
 {
   listHeroes {
@@ -39,7 +42,7 @@
 }
 ```
 
-### to query for the ID and friends of R2-D2
+## to query for the ID and friends of R2-D2
 ```
 {
   listCharacter(name: "R2 D2") {
@@ -54,7 +57,7 @@
 }
 ```
 
-### to query for Luke Skywalker directly, using his ID
+## to query for Luke Skywalker directly, using his ID
 ```
 {
   listCharacter(identifier: "http://starwars.mappingpedia.linkeddata.es/character/1000") {
@@ -63,7 +66,7 @@
 }
 ```
 
-### to query for both Luke and Leia
+## to query for both Luke and Leia
 ```
 query FetchLukeAndLeiaAliased {
   luke: listCharacter(identifier: "http://starwars.mappingpedia.linkeddata.es/character/1000") {
@@ -75,7 +78,7 @@ query FetchLukeAndLeiaAliased {
 }
 ```
 
-### to verify that R2-D2 is a droid
+## to verify that R2-D2 is a droid
 ```
 {
   listCharacter(name: "R2 D2") {
@@ -89,7 +92,7 @@ query FetchLukeAndLeiaAliased {
 }
 ```
 
-### to verify that the hero of episode Empire is a human
+## to verify that the hero of episode Empire is a human
 ```
 {
   listHeroes {

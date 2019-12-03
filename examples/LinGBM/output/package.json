@@ -1,0 +1,51 @@
+{
+  "name": "join-monster-demo",
+  "version": "1.0.0",
+  "description": "A live demo of the Join Monster library.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "babel-node server.js"
+  },
+  "engines": {
+    "node": ">=6.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stems/join-monster-demo.git"
+  },
+  "keywords": [
+    "join",
+    "monster",
+    "sql",
+    "graphql",
+    "schema",
+    "compile",
+    "translate"
+  ],
+  "author": "Andrew Carlson <acarl005@g.ucla.edu>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/stems/join-monster-demo/issues"
+  },
+  "homepage": "https://github.com/stems/join-monster-demo#readme",
+  "dependencies": {
+    "babel-cli": "^6.16.0",
+    "babel-preset-node6": "^11.0.0",
+    "babel-preset-stage-0": "^6.16.0",
+    "graphql": "^0.9.0",
+    "graphql-relay": "^0.4.3",
+    "graphsiql": "0.0.6",
+    "join-monster": "^2.0.0",
+    "kcors": "^1.3.2",
+    "knex": ">=0.19.5",
+    "koa": "^2.2.0",
+    "koa-convert": "^1.2.0",
+    "koa-custom-graphiql": "^1.0.0",
+    "koa-graphql": "^0.6.2",
+    "koa-router": "^7.1.1",
+    "koa-static": "^3.0.0",
+    "pg": "^6.1.0",
+    "sqlite3": "^4.0.4"
+  }
+}

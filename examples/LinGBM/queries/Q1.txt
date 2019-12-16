@@ -1,0 +1,16 @@
+query offer_product_review($offerID:String)
+{
+  listOffer(nr:$offerID) {
+    productWithReviews{
+      reviews{
+        title
+        text
+        reviewDate
+        publishDate
+        rating1
+        rating2
+      }
+    }
+  }
+}
+

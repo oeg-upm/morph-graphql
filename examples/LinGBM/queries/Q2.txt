@@ -1,0 +1,8 @@
+query producer_product_review($producerID:String)
+{
+  listProducerWithProduct(nr:$producerID) {
+    productWithReviews {
+      reviews { title }
+    }
+  }
+}

@@ -1,0 +1,27 @@
+query product_review_product($productID: String) {
+  listProductWithReviews(nr: $productID) {
+    reviews {
+      title
+      reviewFor {
+        productWithReviews {
+          reviews {
+            title
+            reviewFor {
+              productWithReviews {
+                reviews {
+                  title
+                  reviewFor {
+                    product {
+                      label
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+

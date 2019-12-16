@@ -20,8 +20,6 @@
 5. ```wget https://github.com/oeg-upm/morph-graphql/raw/master/examples/LinGBM/LinGBM1000.db```
 6. ```mv LinGBM1000.db data```
 7. ```npm install```
-8. ```npm start```
-9. Go to http://localhost:4321/graphql from your browser, use some of the queries below
 
 ### With the script:
 1. ```mkdir LinGBM1000``` (you can create this directory any where)

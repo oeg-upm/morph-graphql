@@ -9,7 +9,7 @@
 ## Installation Instructions
 - See: https://github.com/oeg-upm/morph-graphql
 
-## Running Instructions
+## Setup Instructions
 
 ### Manually
 1. ```mkdir LinGBM1000```
@@ -24,12 +24,13 @@
 9. Go to http://localhost:4321/graphql from your browser, use some of the queries below
 
 ### With the script:
-1. ```mkdir LinGBM1000```
+1. ```mkdir LinGBM1000``` (you can create this directory any where)
 2. ```cd LinGBM1000```
-3. ```sh setup.sh```
-4. ```npm start```
-5. Go to http://localhost:4321/graphql from your browser, use some of the queries below
+3. ```sh setup.sh``` (if you create the LinGBM1000 directory in another location, make sure to copy the setup.sh as well)
 
+## Running instructions:
+1. ```npm start```
+2. Go to http://localhost:4321/graphql from your browser, use some of the queries below
 
 ## Deployment
 One instance of the LinGBM benchmark has been deployed at: http://lingbm1000.graphql.mappingpedia.linkeddata.es

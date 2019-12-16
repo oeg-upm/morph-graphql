@@ -16,7 +16,7 @@ With docker:
 
 
 ## Running
-visit ```http://http://127.0.0.1:8082/```
+visit ```http://127.0.0.1:8082/```
 
 
 ## Examples

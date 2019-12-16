@@ -10,6 +10,8 @@
 - See: https://github.com/oeg-upm/morph-graphql
 
 ## Running Instructions
+
+### Manually
 1. ```mkdir LinGBM1000```
 2. ```cd LinGBM1000```
 3. Translate the corresponding mappings: 
@@ -20,6 +22,14 @@
 7. ```npm install```
 8. ```npm start```
 9. Go to http://localhost:4321/graphql from your browser, use some of the queries below
+
+### With the script:
+1. ```mkdir LinGBM1000```
+2. ```cd LinGBM1000```
+3. ```sh setup.sh```
+4. ```npm start```
+5. Go to http://localhost:4321/graphql from your browser, use some of the queries below
+
 
 ## Deployment
 One instance of the LinGBM benchmark has been deployed at: http://lingbm1000.graphql.mappingpedia.linkeddata.es

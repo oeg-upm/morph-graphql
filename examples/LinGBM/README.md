@@ -52,7 +52,7 @@ query offer_product_review {
 query producer_product_review {
   listReview {
     title
-    product {
+    products {
       producer(nr: "8") {
         nr
       }

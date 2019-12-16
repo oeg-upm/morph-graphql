@@ -1,0 +1,14 @@
+query vendor_offer_product_producer_country($vendorID: String) {
+  listVendorWithOffers(nr: $vendorID) {
+    offers {
+      product {
+        producer {
+          country {
+            code
+          }
+        }
+      }
+    }
+  }
+}
+

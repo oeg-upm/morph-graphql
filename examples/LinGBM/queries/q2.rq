@@ -1,0 +1,6 @@
+select * where {
+    <http://lingbm.linkeddata.es/producer/8> a <http://schema.org/Producer> .
+    <http://lingbm.linkeddata.es/producer/8> <http://www.example.com/productWithReviews> ?product .
+    ?product <http://www.example.com/reviews> ?review .
+    ?review <http://www.example.com/title> ?reviewTitle .
+}

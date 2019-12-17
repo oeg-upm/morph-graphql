@@ -1,0 +1,12 @@
+select * where {
+    <http://lingbm.linkeddata.es/review/8> a <http://schema.org/Review> .
+    <http://lingbm.linkeddata.es/review/8> <http://www.example.com/reviewFor> ?producttypeproduct .
+    ?producttypeproduct <http://www.example.com/producttype> ?type .
+    ?type <http://www.example.com/nr> ?typeNr .
+    ?type <http://www.example.com/label> ?typeLabel .
+    ?type <http://www.example.com/comment> ?typeComment .
+    ?type <http://www.example.com/parent> ?typeParent .
+    ?typeParent <http://www.example.com/nr> ?parentNr .
+    ?typeParent <http://www.example.com/label> ?parentLabel .
+    ?typeParent <http://www.example.com/comment> ?parentComment .
+}

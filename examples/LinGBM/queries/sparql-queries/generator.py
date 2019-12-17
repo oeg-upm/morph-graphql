@@ -20,7 +20,6 @@ def main():
             os.system("mkdir ./" + size)
             os.system("mkdir ./" + size + "/" + query)
             for index in range(len(config[query][size])):
-                print(config[query][size][index])
                 translated_query = re.sub("%.*%", str(config[query][size][index]), content)
                 f = open("./" + size + "/" + query + "/" + str(config[query][size][index]) + ".rq","w+")
                 f.write(translated_query)

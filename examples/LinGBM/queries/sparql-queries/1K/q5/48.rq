@@ -1,6 +1,6 @@
 select * where {
-    <http://lingbm.linkeddata.es/product_with_review/$productID> a <http://schema.org/ProductWithReviews> .
-    <http://lingbm.linkeddata.es/product_with_review/$productID> <http://www.example.com/reviews> ?review1 .
+    <http://lingbm.linkeddata.es/product_with_review/48> a <http://schema.org/ProductWithReviews> .
+    <http://lingbm.linkeddata.es/product_with_review/48> <http://www.example.com/reviews> ?review1 .
     ?review1 <http://www.example.com/title> ?review1Title .
     ?review1 <http://www.example.com/reviewFor> ?review1For .
     ?review1For <http://www.example.com/productWithReviews> ?product2 .

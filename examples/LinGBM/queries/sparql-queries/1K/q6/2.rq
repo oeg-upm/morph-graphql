@@ -1,0 +1,9 @@
+select *
+where {
+    <http://lingbm.linkeddata.es/vendor/$vendorID> a <http://schema.org/Vendor> .
+    <http://lingbm.linkeddata.es/vendor/$vendorID> <http://www.example.com/offers> ?offer .
+    ?offer <http://www.example.com/product> ?product .
+    ?product <http://www.example.com/producer> ?producer .
+    ?producer <http://www.example.com/country> ?country .
+    ?country <http://www.example.com/code> ?countryCode .
+}

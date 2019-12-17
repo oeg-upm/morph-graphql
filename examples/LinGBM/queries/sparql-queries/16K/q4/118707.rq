@@ -1,0 +1,16 @@
+select * where {
+    <http://lingbm.linkeddata.es/offer/$offerID> a <http://schema.org/Offer> .
+    <http://lingbm.linkeddata.es/offer/$offerID> <http://www.example.com/productWithReviews> ?product .
+    ?product <http://www.example.com/label> ?productLabel .
+    ?product <http://www.example.com/comment> ?productComment .
+    ?product <http://www.example.com/reviews> ?review .
+    ?review <http://www.example.com/title> ?reviewTitle .
+    ?review <http://www.example.com/text> ?reviewText .
+    OPTIONAL { ?review <http://www.example.com/rating1> ?reviewRating1 . } 
+    OPTIONAL { ?review <http://www.example.com/rating2> ?reviewRating2 . }
+    OPTIONAL { ?review <http://www.example.com/rating3> ?reviewRating3 . } 
+    OPTIONAL { ?review <http://www.example.com/rating4> ?reviewRating4 . }
+    ?review <http://www.example.com/reviewer> ?reviewer .
+    ?reviewer <http://www.example.com/country> ?country .
+    ?country <http://www.example.com/code> ?code .
+}

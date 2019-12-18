@@ -1,5 +1,5 @@
 select * where {
-    <http://lingbm.linkeddata.es/review/%reviewID%> a <http://schema.org/Review> .
+    <http://lingbm.linkeddata.es/review/%reviewID%> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/Review> .
     <http://lingbm.linkeddata.es/review/%reviewID%> <http://www.example.com/reviewFor> ?producttypeproduct .
     ?producttypeproduct <http://www.example.com/producttype> ?type .
     ?type <http://www.example.com/nr> ?typeNr .

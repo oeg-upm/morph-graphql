@@ -9,10 +9,10 @@ Rows: generators
 
 Cells: data source
 
-|              | JavaScript   | Java    | Python  |
-|--------------|--------------|---------|---------|
-| *JavaScript* | SQLite / CSV |         | MongoDB |
-| *Java*       |              | MongoDB |         |
+|                | JavaScript   | Java    | Python  |
+|----------------|--------------|---------|---------|
+| **JavaScript** | SQLite / CSV |         | MongoDB |
+| **Java**       |              | MongoDB |         |
 
 
 ## JavaScript generator

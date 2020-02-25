@@ -1,0 +1,10 @@
+query faculty_university_graduateStudent($facultyID: String = "1") {
+  listFaculty(nr: $facultyID) {
+    doctoralDegreeFrom {
+      undergraduateDegreeObtainedBystudent {
+        identifier
+        emailAddress
+      }
+    }
+  }
+}

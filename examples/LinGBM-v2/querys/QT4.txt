@@ -1,0 +1,17 @@
+query lecturer_university_graduateStudent_professor_department($lecturerID: String ="1") 
+{ 
+  listLecturer(nr:$lecturerID) { 
+    doctoralDegreeFrom { 
+      identifier 
+      undergraduateDegreeObtainedBystudent { 
+        identifier 
+        emailAddress 
+        advisor { 
+          identifier 
+          emailAddress  
+          worksFor {identifier} 
+        } 
+      } 
+    } 
+  } 
+} 

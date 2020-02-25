@@ -1,0 +1,11 @@
+query university_graduateStudents_supervisor_department($universityID: String = "0") {
+  listUniversity(nr: $universityID) {
+    undergraduateDegreeObtainedBystudent {
+      advisor {
+        worksFor {
+          identifier
+        }
+      }
+    }
+  }
+}

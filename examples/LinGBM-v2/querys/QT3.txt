@@ -1,0 +1,13 @@
+query researchGroup_department_head_doctorDegreeFrom($researchGroupID: String="1") {
+  listResearchGroup(nr: $researchGroupID) {
+    subOrganizationOf {
+      head {
+        identifier
+        emailAddress
+        doctoralDegreeFrom {
+          identifier
+        }
+      }
+    }
+  }
+}

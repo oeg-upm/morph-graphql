@@ -1,0 +1,9 @@
+query university_faculty_publications($universityID: String = "0") {
+  listUniversity(nr: $universityID) {
+    doctoralDegreeObtainers {
+      publications {
+        title
+      }
+    }
+  }
+}

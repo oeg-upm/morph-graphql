@@ -1,0 +1,18 @@
+query department_faculty_university_graduateStudents_department($departmentID: String="0") {
+  listDepartment(nr: $departmentID) {
+    identifier
+    faculties {
+      identifier
+      emailAddress
+      doctoralDegreeFrom {
+        undergraduateDegreeObtainedBystudent {
+          identifier
+          emailAddress
+          memberOf {
+            identifier
+          }
+        }
+      }
+    }
+  }
+}

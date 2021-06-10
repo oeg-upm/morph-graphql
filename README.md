@@ -3,7 +3,6 @@ Translate OBDA mappings (R2RML/RML) into GraphQL Resolvers
 
 ## Installation Instructions
 With Node:
-1. ```npm install```
 2. ```git clone https://github.com/oeg-upm/morph-graphql```
 3. ```cd morph-graphql```
 4. ```cd javascript```

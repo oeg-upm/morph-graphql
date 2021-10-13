@@ -1,4 +1,4 @@
-# morph-GraphQL
+# morph-GraphQL (DEPRECATED)
 Translate OBDA mappings (R2RML/RML) into GraphQL Resolvers
 
 ## Installation Instructions
